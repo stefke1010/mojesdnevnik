@@ -8,10 +8,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname)); // Služi index.html iz istog foldera
+app.use(express.static(__dirname));
 
 // Povezivanje na MongoDB preko ekološke varijable sa Rendera
 const MONGO_URI = process.env.MONGO_URI;
+
 if (!MONGO_URI) {
     console.error("KRITIČNA GREŠKA: MONGO_URI nije podešen u Environment Variables na Renderu!");
 }
@@ -87,8 +88,8 @@ app.post('/api/sacuvaj', async (req, res) => {
     }
 });
 
-// Otvaranje index.html na glavnom domenu - ISPRAVLJENO za novu verziju Express-a
-app.get('(.*)', (req, res) => {
+// Otvaranje index.html na glavnom domenu - ispravljeno za Express 5+
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
