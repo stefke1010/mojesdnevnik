@@ -88,8 +88,8 @@ app.post('/api/sacuvaj', async (req, res) => {
     }
 });
 
-// Otvaranje index.html na glavnom domenu - Novo rešenje za Express 5+
-app.get('/:splat*', (req, res) => {
+// Rešenje za Express 5+ bez rutera i zvezdica: hvata sve preostale zahteve i šalje index.html
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
