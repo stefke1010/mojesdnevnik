@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static(__dirname)); // Služi index.html iz istog foldera
 
 // Povezivanje na MongoDB preko ekološke varijable sa Rendera
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = mongodb+srv://stefanmihajlovic:mojesdnevnik@cluster0.y9ztubl.mongodb.net/?appName=Cluster0;
 
 if (!MONGO_URI) {
     console.error("KRITIČNA GREŠKA: MONGO_URI nije podešen u Environment Variables na Renderu!");
