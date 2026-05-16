@@ -88,8 +88,8 @@ app.post('/api/sacuvaj', async (req, res) => {
     }
 });
 
-// Otvaranje index.html na glavnom domenu
-app.get('*', (req, res) => {
+// Otvaranje index.html na glavnom domenu - ISPRAVLJENO za novu verziju Express-a
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
