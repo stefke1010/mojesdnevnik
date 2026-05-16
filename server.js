@@ -88,8 +88,8 @@ app.post('/api/sacuvaj', async (req, res) => {
     }
 });
 
-// Otvaranje index.html na glavnom domenu - ispravljeno za Express 5+
-app.get('/*', (req, res) => {
+// Otvaranje index.html na glavnom domenu - Novo rešenje za Express 5+
+app.get('/:splat*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
