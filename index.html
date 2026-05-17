@@ -307,14 +307,14 @@
                         <div class="profile-right">
                             <div class="tabs-header">
                                 <div class="tab-link active trans-node" data-cyr="Оцене i Активности" data-lat="Ocene i Aktivnosti" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Оцене i Активности</div>
-                                <div class="tab-link trans-node" data-cyr="Изостанци" data-lat="Izostanci" onclick="otvoriLokalniTab(event, 'tab-dosije-izostanci')">Изостанci</div>
+                                <div class="tab-link trans-node" data-cyr="Изостанци" data-lat="Izostanci" onclick="otvoriLokalniTab(event, 'tab-dosije-izostanci')">Изостанци</div>
                                 <div class="tab-link trans-node" data-cyr="Владање i Укори" data-lat="Vladanje i Ukori" onclick="otvoriLokalniTab(event, 'tab-dosije-vladanje')">Владање i Укори</div>
                             </div>
                             <div id="tab-dosije-ocene" class="tab-content active">
                                 <table class="meseci-table">
                                     <thead><tr><th>IX</th><th>X</th><th>XI</th><th>XII</th><th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th><th>VI</th></tr></thead>
                                     <tbody><tr><td id="m-9"></td><td id="m-10"></td><td id="m-11"></td><td id="m-12"></td><td id="m-1"></td><td id="m-2"></td><td id="m-3"></td><td id="m-4"></td><td id="m-5"></td><td id="m-6"></td></tr></tbody>
-                                </table>
+                                end</table>
                                 <div style="display:flex; gap:10px; margin-bottom:25px; background:#f8fafc; padding:15px; border-radius:6px; border:1px solid var(--es-border);">
                                     <div class="sel-block">
                                         <span style="font-size:11px; font-weight:bold; margin-bottom:4px;" class="trans-node" data-cyr="Закључна оцена из предмета:" data-lat="Zaključna ocena iz predmeta:">Закључна оцена из предмета:</span>
@@ -626,13 +626,12 @@
             aktivanCasPodaci = { lekcija, rbr, odeljenje, predmetId: predmet };
             lokalniIzostanciNaCasu = {};
 
-            document.getElementById('tok-casa-naslov-tekst').innerText = `${rbr}. час - ${predmet} (${odeljenje}) | Лекија: ${lekcija}`;
+            document.getElementById('tok-casa-naslov-tekst').innerText = `${rbr}. час - ${predmet} (${odeljenje}) | Лекција: ${lekcija}`;
             document.getElementById('m-tok-casa').style.display = 'flex';
             switchPage('stranica-tok-casa');
             renderujUcenikeZaProzivku();
         }
 
-        /* VRACEN PUN ISPIS UCENIKA ZA PROZIVKU SA CRVENIM DUGMETOM */
         function renderujUcenikeZaProzivku() {
             let kontejner = document.getElementById('mreza-ucenika-tok-casa'); 
             if(!kontejner) return;
@@ -640,7 +639,7 @@
             
             let filtrirani = sviUcenici.filter(u => u.odeljenje === aktivanCasPodaci.odeljenje);
             if(filtrirani.length === 0) {
-                kontejner.innerHTML = "<p style='padding:20px;'>Нема учеnika у овом одељењу за прозивку.</p>";
+                kontejner.innerHTML = "<p style='padding:20px;'>Нема ученика у овом одељењу за прозивку.</p>";
                 return;
             }
 
@@ -686,7 +685,7 @@
                 }
             }
             
-            alert("Час је успешно затворен, евидентиран и сви извештаји су уписани!");
+            alert("Час је успешно затворен!");
             document.getElementById('m-tok-casa').style.display = 'none';
             document.getElementById('lekcija-naziv').value = "";
             await osvežiSvePodatkeSaServera(); switchPage('stranica-imenik');
@@ -868,6 +867,26 @@
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
         }
+
+        /* VRAĆENE I POPRAVLJENE DETALJNE KONTROLE TABOVA KOJE SU FALILE */
+        function prebaciAdminTab(pId, bId) {
+            document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pId).classList.add('active');
+            document.getElementById(bId).classList.add('active');
+        }
+        
+        function otvoriLokalniTab(e, tName) {
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active'));
+            document.getElementById(tName).classList.add('active');
+            e.currentTarget.classList.add('active');
+        }
+
+        function zatvoriModal(id) { document.getElementById(id).style.setProperty('display', 'none', 'important'); }
+        function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
+        function promenaFiltera() { ucitajUcenikeUMrezu(); }
+        function osveziDosijeAkoJeOtvoren() { if(odabraniUcenikId) prikažiDosijeUčenika(odabraniUcenikId); }
     </script>
 </body>
 </html>
