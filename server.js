@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Povezivanje sa MongoDB
+// Povezivanje sa MongoDB bazom (Zameni tvojim Atlas linkom ako šalješ na Render)
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ednevnik';
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Uspešno povezan sa MongoDB bazoм!'))
@@ -43,13 +43,13 @@ const UcenikSchema = new mongoose.Schema({
 });
 const Ucenik = mongoose.model('Ucenik', UcenikSchema);
 
-// --- API RUTE ---
+// --- API RUTE (ENDPOINTS) ---
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.send('Server radi i sluša zahteve na /api/podaci');
 });
 
-// Povlačenje svih podataka iz baze
+// Povlačenje svih podataka pri paljenju aplikacije
 app.get('/api/podaci', async (req, res) => {
     try {
         let kat = await Kategorije.findOne();
@@ -57,10 +57,12 @@ app.get('/api/podaci', async (req, res) => {
         const ucenici = await Ucenik.find();
         const casovi = await Cas.find();
         res.json({ kat, ucenici, casovi });
-    } catch (err) { res.status(500).json({ error: err.message }); }
+    } catch (err) { 
+        res.status(500).json({ error: err.message }); 
+    }
 });
 
-// Čuvanje kategorija
+// Čuvanje i ažuriranje sistemskih kategorija iz admin panela
 app.post('/api/kategorije', async (req, res) => {
     try {
         let kat = await Kategorije.findOne();
@@ -70,29 +72,69 @@ app.post('/api/kategorije', async (req, res) => {
         kat.aktivnosti = req.body.aktivnosti;
         await kat.save();
         res.json(kat);
-    } catch (err) { res.status(400).json({ error: err.message }); }
+    } catch (err) { 
+        res.status(400).json({ error: err.message }); 
+    }
 });
 
-// Časovi
+// Časovi: Upis novog održanog časa
 app.post('/api/casovi', async (req, res) => {
-    try { const nov = await Cas.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
+    try { 
+        const nov = await Cas.create(req.body); 
+        res.status(200).json(nov); 
+    } catch (err) { 
+        res.status(400).json(err); 
+    }
 });
+
+// Časovi: Izmena časa
 app.put('/api/casovi/:id', async (req, res) => {
-    try { const azur = await Cas.findByIdAndUpdate(req.params.id, req.body, { new: true }); res.json(azur); } catch (err) { res.status(400).json(err); }
+    try { 
+        const azur = await Cas.findByIdAndUpdate(req.params.id, req.body, { new: true }); 
+        res.json(azur); 
+    } catch (err) { 
+        res.status(400).json(err); 
+    }
 });
+
+// Časovi: Brisanje časa
 app.delete('/api/casovi/:id', async (req, res) => {
-    try { await Cas.findByIdAndDelete(req.params.id); res.json({ m: "Obrisano" }); } catch (err) { res.status(400).json(err); }
+    try { 
+        await Cas.findByIdAndDelete(req.params.id); 
+        res.json({ m: "Čas obrisan" }); 
+    } catch (err) { 
+        res.status(400).json(err); 
+    }
 });
 
-// Učenici
+// Učenici: Dodavanje novog učenika u bazu podataka
 app.post('/api/ucenici', async (req, res) => {
-    try { const nov = await Ucenik.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
-});
-app.put('/api/ucenici/:id', async (req, res) => {
-    try { const azur = await Ucenik.findByIdAndUpdate(req.params.id, req.body, { new: true }); res.json(azur); } catch (err) { res.status(400).json(err); }
-});
-app.delete('/api/ucenici/:id', async (req, res) => {
-    try { await Ucenik.findByIdAndDelete(req.params.id); res.json({ m: "Obrisano" }); } catch (err) { res.status(400).json(err); }
+    try { 
+        const nov = await Ucenik.create(req.body); 
+        res.status(200).json(nov); 
+    } catch (err) { 
+        res.status(400).json(err); 
+    }
 });
 
-app.listen(PORT, () => console.log(`🚀 Server radi na portu ${PORT}`));
+// Učenici: Upis ocena, izostanaka, vladanja i aktivnosti
+app.put('/api/ucenici/:id', async (req, res) => {
+    try { 
+        const azur = await Ucenik.findByIdAndUpdate(req.params.id, req.body, { new: true }); 
+        res.json(azur); 
+    } catch (err) { 
+        res.status(400).json(err); 
+    }
+});
+
+// Učenici: Brisanje đaka iz baze podataka
+app.delete('/api/ucenici/:id', async (req, res) => {
+    try { 
+        await Ucenik.findByIdAndDelete(req.params.id); 
+        res.json({ m: "Učenik obrisan" }); 
+    } catch (err) { 
+        res.status(400).json(err); 
+    }
+});
+
+app.listen(PORT, () => console.log(`🚀 Server radi i sluša na portu ${PORT}`));
