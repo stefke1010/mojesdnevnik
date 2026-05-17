@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Povezivanje sa MongoDB bazom (Zameni tvojim Atlas linkom ako šalješ na Render)
+// Povezivanje sa MongoDB bazom
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ednevnik';
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Uspešno povezan sa MongoDB bazoм!'))
@@ -45,8 +45,9 @@ const Ucenik = mongoose.model('Ucenik', UcenikSchema);
 
 // --- API RUTE (ENDPOINTS) ---
 
+// FIKS: Ovo sada šalje tvoj prelepi index.html direktno na ekran čim otvoriš link!
 app.get('/', (req, res) => {
-    res.send('Server radi i sluša zahteve na /api/podaci');
+    res.sendFile(__dirname + '/index.html');
 });
 
 // Povlačenje svih podataka pri paljenju aplikacije
