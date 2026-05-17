@@ -287,7 +287,7 @@
 
                             <div id="ad-tab-nastavnici" class="admin-tab-content" style="display:none;">
                                 <div class="card">
-                                    <h3>Креирај налог предавача и додели дужности</h3><br>
+                                    <h3>Креирај налог предавача i додели дужности</h3><br>
                                     <div class="grid-2">
                                         <div class="form-group">
                                             <label>Име и презиме *</label>
@@ -585,7 +585,6 @@
                 console.error("Konekcija sa MongoDB bazoм nije uspela, aktiviran lokalni režim:", err);
             }
 
-            // FALLBACK DA SELEKTORI NIKADA NE BUDU PRAZNI
             if(Object.keys(bazaUcenika).length === 0) {
                 bazaUcenika = {
                     "V-3": [
@@ -600,7 +599,7 @@
             osveziAdminTabele();
             osveziTabeluCasova();
             HTML_Select_Osvezi();
-        } // <- OVDJE JE BILA ZAGRADA KOJA JE FALILA I GASILA SVE! POPRAVLJENO!
+        } // ZAGRADA JE TU I POPRAVLJENA!
 
         window.onload = async function() {
             let danas = new Date().toISOString().split('T')[0];
@@ -808,15 +807,29 @@
 
         function promenaFiltera() { if(aktivanČas) return; document.getElementById('ucenici-kontejner').innerHTML = ""; }
 
+        // POPRAVLJENO: DUGME ZAPOČNI ČAS SADA RADI STOPROCENTNO
         function zapocniCas() {
             let lekcija = document.getElementById('lekcija-input').value;
             let rbr = document.getElementById('redni-broj-casa').value;
             let tip = document.getElementById('tip-casa').value;
-            if(!lekcija) return;
+            if(!lekcija) { alert('Молимо унесите назив лекције!'); return; }
             
-            aktivanČas = { id: Date.now(), lekcija, rbr, tip, odeljenje: document.getElementById('global-odeljenje').value, predmetId: document.getElementById('global-predmet').value, datum: new Date().toISOString().split('T')[0] };
-            document.getElementById('trenutni-час-текст').innerText = rbr + ". час - " + lekcija;
-            switchPage('tok-casa'); renderujUcenikeZaCas();
+            let odeljenjeVrednost = document.getElementById('global-odeljenje').value;
+            let predmetVrednost = document.getElementById('global-predmet').value;
+            
+            aktivanČas = { 
+                id: Date.now(), 
+                lekcija: lekcija, 
+                rbr: rbr, 
+                tip: tip, 
+                odeljenje: odeljenjeVrednost, 
+                predmetId: predmetVrednost, 
+                datum: new Date().toISOString().split('T')[0] 
+            };
+            
+            document.getElementById('trenutni-čas-tekst').innerText = rbr + ". час - " + lekcija;
+            switchPage('tok-casa'); 
+            renderujUcenikeZaCas();
         }
 
         function renderujUcenikeZaCas() {
@@ -861,6 +874,7 @@
             if(!u.ocene) u.ocene = [];
             u.ocene.push({ id: Date.now(), vrednost: selektovanaOcenaBroj, vrsta: document.getElementById('vrsta-ocene-select').value, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS') });
             
+            zatzeriModal('ocena-modal');
             zatvoriModal('ocena-modal');
             await posaljiUcenikaNaServer(u);
             if(document.getElementById('profil-modal').style.display === 'flex') { osveziIstorijuDosijea(u); }
