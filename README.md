@@ -1,2 +1,2 @@
-moj esdnevnik se pokrece preko linka: https://mojesdnevnik.onrender.com
-OVAJ DNEVNIK NIJE PRAVI I SLUZI SAMO ZA TESTIRANJE
+moj esdnevnik se pokreće preko linka: https://mojesdnevnik.onrender.com
+OVAJ DNEVNIK NIJE PRAVI I SLUžI SAMO ZA TESTIRANJE ILI ZA KUĆNO ŠKOLOVANJE
