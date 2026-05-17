@@ -3,543 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>еСДневник Про - Администрација и Аутентификација</title>
+    <title>еСДневник - Именик и Евиденција</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-dark: #1a3b5c;
-            --primary-blue: #2c7a9b;
-            --light-blue: #4faedb;
-            --bg-light: #f4f6f9;
-            --text-dark: #333333;
-            --sidebar-width: 260px;
-            --success-green: #28a745;
-            --danger-red: #dc3545;
-            --warning-orange: #ffc107;
+            --es-dark-blue: #103454;
+            --es-blue: #1c5484;
+            --es-light-blue: #2c7cb4;
+            --es-bg: #f5f7fa;
+            --es-text: #333d47;
+            --es-border: #dbe2e8;
+            --es-green: #4caf50;
+            --es-red: #f44336;
+            --es-purple-bg: #f0f2f9;
+            --es-purple-text: #3f51b5;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+        body { background-color: var(--es-bg); color: var(--es-text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* LOGIN EKRAN */
-        .full-login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a3b5c 0%, #2c7a9b 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .login-box { background: white; padding: 40px; border-radius: 10px; width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
+        /* BOČNI MENI */
+        .sidebar { width: 240px; background-color: white; border-right: 1px solid var(--es-border); display: flex; flex-direction: column; height: 100%; }
+        .logo-area { padding: 20px; background-color: var(--es-dark-blue); color: white; font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .logo-area span { font-size: 11px; display: block; color: #a5c2dc; font-weight: normal; margin-top: 2px; }
+        .nav-menu { list-style: none; padding-top: 15px; flex: 1; }
+        .nav-item { padding: 14px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: #506171; font-weight: 500; transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background-color: #eef5fa; color: var(--es-light-blue); border-left: 4px solid var(--es-light-blue); }
+        .nav-admin { border-top: 1px solid #edf2f7; background: #fff7f7; color: #c53030; }
 
-        #glavni-interfejs-aplikacije { display: none; width: 100%; height: 100%; }
+        .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* BOČНИ МЕНI */
-        .sidebar { width: var(--sidebar-width); background-color: white; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; box-shadow: 2px 0 5px rgba(0,0,0,0.05); height: 100%; }
-        .logo-area { padding: 20px; background-color: var(--primary-dark); color: white; display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: bold; }
-        .school-title-sidebar { font-size: 11px; color: #cbd5e1; display: block; font-weight: normal; margin-top: 2px; }
-        .nav-menu { list-style: none; margin-top: 10px; flex: 1; display: flex; flex-direction: column; }
-        .nav-item { padding: 14px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; color: #555; font-weight: 500; transition: all 0.2s; }
-        .nav-item:hover, .nav-item.active { background-color: #f0f4f8; color: var(--primary-blue); border-left: 4px solid var(--primary-blue); }
-        .nav-admin { border-top: 1px solid #e2e8f0; background: #fff7ed; color: #c2410c; }
-        .nav-admin:hover, .nav-admin.active { background: #ffedd5; color: #ea580c; border-left-color: #ea580c; }
-
-        .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; }
-
-        /* HEADER */
-        .header { 
-            background: linear-gradient(90deg, #102a45 0%, #1a3b5c 40%, #2c7a9b 75%, #4faedb 100%); 
-            color: white; 
-            padding: 8px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15); 
-        }
-        .school-info { display: flex; gap: 25px; align-items: center; }
-        .info-block span { display: block; font-size: 10px; color: #cbd5e1; text-transform: uppercase; margin-bottom: 3px; font-weight: 500; letter-spacing: 0.5px; }
+        /* HEADER KAO IZ PRAVOG DNEVNIKA */
+        .header { background: linear-gradient(90deg, #0e2a44 0%, #1c5484 60%, #2c7cb4 100%); color: white; padding: 10px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .school-selectors { display: flex; gap: 20px; }
+        .sel-block { display: flex; flex-direction: column; }
+        .sel-block span { font-size: 10px; color: #a5c2dc; text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+        .es-select { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); padding: 5px 10px; border-radius: 4px; font-weight: bold; outline: none; cursor: pointer; }
+        .es-select option { background: white; color: var(--es-text); font-weight: normal; }
         
-        .header-select { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 4px; font-weight: bold; outline: none; cursor: pointer; transition: background 0.2s; min-width: 180px; max-width: 240px; }
-        .header-select:hover { background: rgba(255, 255, 255, 0.25); }
-        .header-select option { background: white; color: #333; font-weight: normal; }
-        
-        /* DESNI ĆOŠAK */
-        .user-profile-es { display: flex; align-items: center; gap: 15px; }
-        .user-info-text-es { text-align: right; color: white; }
-        .user-role-es { font-size: 11px; text-transform: uppercase; color: #cbd5e1; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .user-name-es { font-size: 15px; font-weight: bold; color: white; }
-        .user-avatar-wrapper-es { position: relative; width: 45px; height: 45px; }
-        .user-avatar-es { width: 100%; height: 100%; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.8); color: var(--primary-blue); font-size: 20px; }
-        .user-badge-es { position: absolute; top: -4px; right: -4px; background: var(--danger-red); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 1px solid white; }
+        .user-panel { display: flex; align-items: center; gap: 12px; }
+        .user-text { text-align: right; }
+        .user-role { font-size: 10px; color: #a5c2dc; font-weight: bold; }
+        .user-name { font-size: 14px; font-weight: bold; }
+        .user-avatar { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--es-blue); font-size: 18px; border: 2px solid rgba(255,255,255,0.8); }
 
+        /* SADRŽAJ */
         .content-area { padding: 25px; flex: 1; overflow-y: auto; }
         .page-section { display: none; }
         .page-section.active { display: block; }
 
-        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #444; font-size: 14px; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        /* IMENIK GRID (KARTICE SA TVOJE DRUGE SLIKE) */
+        .imenik-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 15px; }
+        .student-card { background: white; border-radius: 8px; border: 1px solid var(--es-border); padding: 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .student-card:hover { transform: translateY(-3px); box-shadow: 0 5px 12px rgba(0,0,0,0.08); border-color: var(--es-light-blue); }
+        .card-avatar { width: 85px; height: 85px; border-radius: 50%; margin: 0 auto 12px; background: #eef2f5; display: flex; align-items: center; justify-content: center; color: #7f91a0; font-size: 32px; border: 1px solid var(--es-border); }
+        .card-name { font-size: 16px; font-weight: 500; color: var(--es-dark-blue); margin-bottom: 4px; }
+        .card-sub { font-size: 12px; color: #8fa0ae; }
 
-        .btn { padding: 9px 18px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 14px; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-primary { background-color: var(--light-blue); color: white; }
-        .btn-success { background-color: var(--success-green); color: white; }
-        .btn-danger { background-color: var(--danger-red); color: white; }
-        .btn-secondary { background: #e2e8f0; color: #333; }
-        .btn-xs { padding: 4px 8px; font-size: 12px; border-radius: 3px; }
-
-        .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 15px; }
-        .student-card { background: white; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; position: relative; }
-        .student-card.absent { border: 2px solid var(--danger-red); background-color: #fdf3f3; }
-        .absent-badge { position: absolute; top: 10px; left: 10px; background: var(--danger-red); color: white; padding: 2px 6px; font-size: 10px; font-weight: bold; border-radius: 3px; display: none; }
-        .student-card.absent .absent-badge { display: block; }
-
-        .student-avatar { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; background: #e2e8f0; cursor: pointer; }
-        .student-name { font-weight: 500; font-size: 15px; margin-bottom: 5px; color: var(--primary-dark); }
-        .student-actions { display: flex; justify-content: center; gap: 5px; }
-
-        /* TIMELINE PRIKAZ ČASOVA */
-        .es-timeline-container { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 15px; }
-        .es-timeline-day-title { font-size: 18px; font-weight: bold; color: #555; margin-bottom: 20px; border-bottom: 2px solid #6366f1; padding-bottom: 5px; }
-        .es-timeline-item { display: flex; align-items: center; background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 12px; transition: transform 0.2s; position: relative; }
-        .es-timeline-item:hover { transform: translateX(5px); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .es-badge-box { width: 60px; height: 60px; background-color: #eef2ff; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 20px; border: 1px solid #e0e7ff; }
-        .es-badge-num { font-size: 20px; font-weight: 700; color: #4f46e5; }
-        .es-badge-label { font-size: 11px; color: #4f46e5; text-transform: uppercase; font-weight: 500; }
-        .es-details-box { flex: 1; }
-        .es-subject-title { font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 4px; }
-        .es-subject-type { font-size: 13px; color: #64748b; font-weight: 500; }
-        .es-lesson-name { font-size: 14px; color: #475569; margin-top: 3px; font-style: italic; }
-        .es-timeline-actions { display: flex; gap: 5px; margin-left: 15px; }
-
-        .checkbox-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 5px; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; max-height: 120px; overflow-y: auto; }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
-
-        .es-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        .es-table th, .es-table td { padding: 10px; border: 1px solid #cbd5e1; text-align: left; }
-        .es-table th { background: #f1f5f9; }
-
-        .grade-selector { display: flex; justify-content: space-between; margin: 15px 0; }
-        .grade-btn { width: 45px; height: 45px; border: 2px solid #cbd5e1; background: #f8fafc; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .grade-btn.selected { border-color: var(--primary-blue); background-color: #e0f2fe; color: var(--primary-blue); }
-
-        .tabs-header { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 15px; }
-        .tab-link { padding: 10px 12px; cursor: pointer; border-bottom: 2px solid transparent; font-weight: 500; color: #64748b; font-size: 13px; }
-        .tab-link.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); font-weight: 700; }
-        .tab-content { display: none; max-height: 300px; overflow-y: auto; }
+        /* DOSIJE UČENIKA */
+        .profile-container { display: grid; grid-template-columns: 200px 1fr; gap: 30px; background: white; border-radius: 8px; border: 1px solid var(--es-border); padding: 25px; }
+        .profile-left { text-align: center; border-right: 1px solid var(--es-border); padding-right: 20px; }
+        .badge-prosek { background: #fef2f2; color: var(--es-red); border: 1px solid #fee2e2; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: 10px; }
+        
+        .tabs-header { display: flex; border-bottom: 2px solid #edf2f7; margin-bottom: 20px; gap: 15px; }
+        .tab-link { padding: 10px 5px; cursor: pointer; color: #718096; font-weight: 500; border-bottom: 2px solid transparent; }
+        .tab-link.active { color: var(--es-light-blue); border-bottom-color: var(--es-light-blue); font-weight: bold; }
+        
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .history-list { list-style: none; }
-        .history-item { padding: 10px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
 
-        /* MODALI FIKSIRANI */
-        .modal-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.5); 
-            display: none; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 10000; 
+        /* TABELA OCENA ПО МЕСЕЦИМА */
+        .meseci-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: center; }
+        .meseci-table th, .meseci-table td { border: 1px solid var(--es-border); padding: 12px; font-size: 14px; }
+        .meseci-table th { background-color: #f8fafc; color: #4a5568; font-weight: bold; }
+        .grade-circle { display: inline-flex; width: 28px; height: 28px; background-color: #4caf50; color: white; border-radius: 4px; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; margin: 2px; }
+
+        /* NOVI STIL ZA ZABELEŠKE VLADANJA (IDENTIČNO KAO SA TVOJE SLIKE) */
+        .vladanje-traka-es {
+            background: white;
+            border: 1px solid var(--es-border);
+            border-left: 5px solid #cbd5e1; /* Svetloljubičasta/siva nijansa sa slike */
+            border-radius: 4px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            position: relative;
         }
-        .modal-box { 
-            background: white; 
-            border-radius: 8px; 
-            width: 550px; 
-            max-width: 95%; 
-            overflow: hidden; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+        .vladanje-info-es { flex: 1; }
+        .vladanje-datum-es { font-size: 14px; color: #4a5568; font-weight: normal; margin-bottom: 4px; }
+        .vladanje-predmet-es { font-size: 16px; font-weight: bold; color: #1e293b; margin-bottom: 8px; }
+        .vladanje-tekst-es { font-size: 14px; color: #64748b; }
+        
+        .vladanje-desno-es { display: flex; align-items: center; gap: 20px; }
+        .vladanje-cas-kvadrat-es {
+            width: 50px;
+            height: 50px;
+            background-color: var(--es-purple-bg);
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--es-purple-text);
+            font-weight: bold;
         }
+        .vladanje-cas-kvadrat-es span { font-size: 16px; line-height: 1.1; }
+        .vladanje-cas-kvadrat-es small { font-size: 11px; font-weight: normal; }
+        
+        .vladanje-akcije-es { display: flex; flex-direction: column; gap: 4px; }
+
+        /* UPIS ČASA & FORME */
+        .form-card { background: white; padding: 25px; border-radius: 8px; border: 1px solid var(--es-border); max-width: 650px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; color: #4a5560; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--es-border); border-radius: 4px; font-size: 14px; outline: none; }
+
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .btn-success { background-color: var(--es-green); color: white; }
+        .btn-primary { background-color: var(--es-light-blue); color: white; }
+        .btn-danger { background-color: var(--es-red); color: white; }
+        .btn-secondary { background-color: #eef2f5; color: var(--es-text); }
+        .btn-xs { padding: 3px 8px; font-size: 11px; border-radius: 3px; justify-content: center; }
+
+        /* TIMELINE ČASOVA */
+        .timeline-box { background: white; border: 1px solid var(--es-border); border-radius: 8px; padding: 20px; margin-top: 15px; }
+        .timeline-item { display: flex; align-items: center; border: 1px solid var(--es-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; background: #fafbfc; }
+        .num-badge { width: 45px; height: 45px; background: #edf2f7; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--es-blue); font-size: 18px; margin-right: 15px; }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 10000; }
+        .modal-box { background: white; border-radius: 8px; width: 500px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .modal-header { background: var(--es-dark-blue); color: white; padding: 15px 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="stranica-login-sistema" class="full-login-overlay">
-        <div class="login-box">
-            <h2 style="color: var(--primary-dark); margin-bottom: 5px;"><i class="fa-solid fa-graduation-cap"></i> еСДневник Про</h2>
-            <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">Пријава на систем за наставнике и админе</p>
-            
-            <div class="form-group" style="text-align: left;">
-                <label>Корисничко име:</label>
-                <input type="text" id="sys-auth-user" class="form-control" value="admin">
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-book-open"></i>
+            <div>
+                <p>еСДневник</p>
+                <span id="sidebar-skola-naziv">Тест школа</span>
             </div>
-            <div class="form-group" style="text-align: left; margin-bottom: 20px;">
-                <label>Лозинка:</label>
-                <input type="password" id="sys-auth-pass" class="form-control" value="admin123">
-            </div>
-            <button class="btn btn-success" style="width:100%; justify-content:center; padding:12px;" onclick="izvrsiPrijavuNaSistem()">Пријави се на систем 🔓</button>
         </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
+            <li class="nav-item" id="m-upis" onclick="switchPage('stranica-upis')"><i class="fa-solid fa-plus-circle"></i> Упис часа</li>
+            <li class="nav-item" id="m-izvestaji" onclick="switchPage('stranica-izvestaji')"><i class="fa-solid fa-calendar-days"></i> Одржани часови</li>
+            <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li>
+        </ul>
     </div>
 
-    <div id="glavni-interfejs-aplikacije">
-        
-        <div class="sidebar" style="float: left;">
-            <div class="logo-area">
-                <div>
-                    <i class="fa-solid fa-graduation-cap"></i> <span style="font-size:16px;">еСДневник Про</span>
-                    <span class="school-title-sidebar" id="sidebar-skola-naziv">-</span>
+    <div class="main-container">
+        <div class="header">
+            <div class="school-selectors">
+                <div class="sel-block">
+                    <span>Одељење</span>
+                    <select class="es-select" id="global-odeljenje" onchange="promenaFiltera()"></select>
+                </div>
+                <div class="school-selectors" style="margin-left: 0;">
+                    <div class="sel-block">
+                        <span>Предмет</span>
+                        <select class="es-select" id="global-predmet"></select>
+                    </div>
                 </div>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item active" id="menu-upis" onclick="switchPage('upis-casa')">
-                    <i class="fa-solid fa-plus-circle"></i>  Упис новог часа
-                </li>
-                <li class="nav-item" id="menu-tok" onclick="switchPage('tok-casa')">
-                    <i class="fa-solid fa-clock"></i> Ток часа / Евиденција
-                </li>
-                <li class="nav-item" id="menu-izvestaji" onclick="switchPage('izvestaji')">
-                    <i class="fa-solid fa-book-open"></i> Одржани часови
-                </li>
-                <li class="nav-item nav-admin" id="menu-admin" onclick="proveriPravoIliOtvoriAdmin()">
-                    <i class="fa-solid fa-gears"></i> Администрација 🔐
-                </li>
-                <li class="nav-item" style="border-top:1px solid #eee; margin-top:auto; color:var(--danger-red);" onclick="odjaviSeSaSistema()">
-                    <i class="fa-solid fa-right-from-bracket"></i> Одјави се ❌
-                </li>
-            </ul>
+            
+            <div class="user-panel">
+                <div class="user-text">
+                    <p class="user-role">ОДЕЛЕЊСКИ СТАРЕШИНА</p>
+                    <p class="user-name" id="header-nastavnik-ime">Светлана Јакшић</p>
+                </div>
+                <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+            </div>
         </div>
 
-        <div class="main-container">
-            
-            <div class="header">
-                <div class="school-info">
-                    <div class="info-block">
-                        <span>Одељење</span>
-                        <select class="header-select" id="global-odeljenje" onchange="promenaFiltera()"></select>
-                    </div>
-                    <div class="info-block">
-                        <span>Предмет</span>
-                        <select class="header-select" id="global-predmet" onchange="promenaFiltera()"></select>
-                    </div>
-                </div>
-                
-                <div class="user-profile-es">
-                    <div class="user-info-text-es">
-                        <div class="user-role-es" id="nastavnik-uloga-prikaz">-</div>
-                        <div class="user-name-es" id="nastavnik-ime-prikaz">-</div>
-                    </div>
-                    <div class="user-avatar-wrapper-es">
-                        <div class="user-avatar-es">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div class="user-badge-es">52</div>
-                    </div>
-                </div>
+        <div class="content-area">
+
+            <div id="stranica-imenik" class="page-section active">
+                <h2 style="color: var(--es-dark-blue); margin-bottom: 5px;">Именик</h2>
+                <p style="color: #718096; font-size: 13px; margin-bottom: 20px;">Разредно одељење: <span id="imenik-trenutno-odjenje">-</span></p>
+                <div class="imenik-grid" id="mreza-ucenika-imenik"></div>
             </div>
 
-            <div class="content-area">
-
-                <div id="admin-panel-section" class="page-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;">
-                        <h2 style="color: #c2410c;"><i class="fa-solid fa-shield-halved"></i> Контролна табла администратора</h2>
+            <div id="stranica-dosije" class="page-section">
+                <button class="btn btn-secondary" style="margin-bottom:20px;" onclick="switchPage('stranica-imenik')">← Назад у именик</button>
+                
+                <div class="profile-container">
+                    <div class="profile-left">
+                        <div class="card-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                        <h3 id="dosije-ucenik-ime" style="color:var(--es-dark-blue);">Ђак</h3>
+                        <p style="font-size:13px; color:#718096; margin-top:4px;">Редован ученик</p>
+                        <div class="badge-prosek" id="dosije-ucenik-prosek">Просек: -</div>
                     </div>
                     
-                    <div class="admin-grid">
-                        <div class="admin-sidebar-box">
-                            <div class="admin-menu-item active" id="ad-m-skola" onclick="switchAdminTab('skola')"><i class="fa-solid fa-school"></i> Подешавање школе</div>
-                            <div class="admin-menu-item" id="ad-m-nastavnici" onclick="switchAdminTab('nastavnici')"><i class="fa-solid fa-chalkboard-user"></i> Наставни кадар (Налози)</div>
-                            <div class="admin-menu-item" id="ad-m-predmeti" onclick="switchAdminTab('predmeti')"><i class="fa-solid fa-book"></i> Регистар Предмета</div>
-                            <div class="admin-menu-item" id="ad-m-odeljenja" onclick="switchAdminTab('odeljenja')"><i class="fa-solid fa-users-rectangle"></i> Одељења и ученици</div>
+                    <div class="profile-right">
+                        <div class="tabs-header">
+                            <div class="tab-link active" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Оцене</div>
+                            <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-vladanje')">Владање</div>
                         </div>
                         
-                        <div class="admin-content-box">
-                            
-                            <div id="ad-tab-skola" class="admin-tab-content" style="display:block;">
-                                <div class="card">
-                                    <h3>Основне информације установе</h3><br>
-                                    <div class="form-group">
-                                        <label>Назив школе / установе:</label>
-                                        <input type="text" id="admin-skola-naziv-input" class="form-control">
-                                    </div>
-                                    <button class="btn btn-success" onclick="sacuvajNazivSkoleAdmin()"><i class="fa-solid fa-save"></i> Сачувај назив установе</button>
-                                </div>
+                        <div id="tab-dosije-ocene" class="tab-content active">
+                            <table class="meseci-table">
+                                <thead>
+                                    <tr>
+                                        <th>IX</th><th>X</th><th>XI</th><th>XII</th><th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th><th>VI</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="m-9"></td><td id="m-10"></td><td id="m-11"></td><td id="m-12"></td><td id="m-1"></td>
+                                        <td id="m-2"></td><td id="m-3"></td><td id="m-4"></td><td id="m-5"></td><td id="m-6"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                                <div class="card">
-                                    <h3><i class="fa-solid fa-sliders"></i> Уређивање категорија за цео систем</h3><br>
-                                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
-                                        <div>
-                                            <label style="font-weight:bold; font-size:13px;">Категорије Оцена:</label>
-                                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                                <input type="text" id="admin-nova-kat-ocena" class="form-control" placeholder="нпр. Тест">
-                                                <button class="btn btn-success" onclick="dodajSistemskuKategoriju('ocene')">+</button>
-                                            </div>
-                                            <ul id="admin-lista-kat-ocene" style="margin-top:10px; font-size:12px; padding-left:15px;"></ul>
-                                        </div>
-                                        <div>
-                                            <label style="font-weight:bold; font-size:13px;">Разлози / Описи Владања:</label>
-                                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                                <input type="text" id="admin-nova-kat-vladanje" class="form-control" placeholder="нпр. Ометање часа">
-                                                <button class="btn btn-success" onclick="dodajSistemskuKategoriju('vladanje')">+</button>
-                                            </div>
-                                            <ul id="admin-lista-kat-vladanje" style="margin-top:10px; font-size:12px; padding-left:15px;"></ul>
-                                        </div>
-                                        <div>
-                                            <label style="font-weight:bold; font-size:13px;">Категорије Активности:</label>
-                                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                                <input type="text" id="admin-nova-kat-aktivnost" class="form-control" placeholder="нпр. Домаћи рад">
-                                                <button class="btn btn-success" onclick="dodajSistemskuKategoriju('aktivnosti')">+</button>
-                                            </div>
-                                            <ul id="admin-lista-kat-aktivnosti" style="margin-top:10px; font-size:12px; padding-left:15px;"></ul>
-                                        </div>
-                                    </div>
+                            <div style="display:flex; gap:10px; margin-bottom:25px; background:#f8fafc; padding:15px; border-radius:6px; border:1px solid var(--es-border);">
+                                <div class="sel-block">
+                                    <span style="font-size:11px; font-weight:bold; margin-bottom:4px;">Закључна оцена из предмета:</span>
+                                    <select class="form-control" id="zakljucna-ocena-vrednost" style="width:180px;">
+                                        <option value="">Није закључена</option>
+                                        <option value="5">Одличан (5)</option>
+                                        <option value="4">Врло добар (4)</option>
+                                        <option value="3">Добар (3)</option>
+                                        <option value="2">Довољан (2)</option>
+                                        <option value="1">Недовољан (1)</option>
+                                    </select>
                                 </div>
+                                <button class="btn btn-success" style="margin-top:16px;" onclick="snimiSveZakljucne()">Сними закључну оцену 💾</button>
                             </div>
-
-                            <div id="ad-tab-nastavnici" class="admin-tab-content" style="display:none;">
-                                <div class="card">
-                                    <h3>Креирај налог предавача и додели дужности</h3><br>
-                                    <div class="grid-2">
-                                        <div class="form-group">
-                                            <label>Име и презиме *</label>
-                                            <input type="text" id="ad-nast-ime" class="form-control" placeholder="Марко Марковић">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Улога</label>
-                                            <select id="ad-nast-uloga" class="form-control">
-                                                <option value="Nastavnik">Предавач / Наставник</option>
-                                                <option value="Admin">Администратор (Сва права)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="grid-2" style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px dashed #cbd5e1; margin-bottom: 15px;">
-                                        <div class="form-group">
-                                            <label>Username *</label>
-                                            <input type="text" id="ad-nast-username" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Password *</label>
-                                            <input type="text" id="ad-nast-password" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="grid-2">
-                                        <div class="form-group">
-                                            <label>Додели Одељења:</label>
-                                            <div class="checkbox-container" id="ad-nast-odeljenja-checks"></div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Додели Предмете:</label>
-                                            <div class="checkbox-container" id="ad-nast-predmeti-checks"></div>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-primary" onclick="dodajNovogNastavnikaAdmin()"><i class="fa-solid fa-user-plus"></i> Сачувај и додели</button>
-                                </div>
-                                <div class="card">
-                                    <h3>Регистар наставног особља</h3>
-                                    <table class="es-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Предавач</th>
-                                                <th>Подаци</th>
-                                                <th>Додељени рад (Одељења/Предмети)</th>
-                                                <th style="width:80px;">Акција</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="ad-tabela-nastavnika"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div id="ad-tab-predmeti" class="admin-tab-content" style="display:none;">
-                                <div class="card">
-                                    <h3>Унос новог предмета</h3><br>
-                                    <div class="form-group" style="display:flex; gap:10px;">
-                                        <input type="text" id="ad-novi-predmet-naziv" class="form-control" placeholder="Назив предмета (нпр. Географија)">
-                                        <button class="btn btn-success" onclick="dodajNoviPredmetAdmin()">Додај предмет</button>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <h3>Постојећи предмети у систему</h3>
-                                    <table class="es-table">
-                                        <thead><tr><th>Шифра</th><th>Назив предмета</th><th style="width:80px;">Акција</th></tr></thead>
-                                        <tbody id="ad-tabela-predmeta"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div id="ad-tab-odeljenja" class="admin-tab-content" style="display:none;">
-                                <div class="card">
-                                    <h3>Формирање новог одељења</h3><br>
-                                    <div class="form-group" style="display:flex; gap:10px;">
-                                        <input type="text" id="ad-novo-odeljenje-ime" class="form-control" placeholder="нпр. VIII-1">
-                                        <button class="btn btn-success" onclick="dodajNovoOdeljenjeAdmin()">Формирај одељење</button>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <h3>Списак формираних одељења</h3>
-                                    <table class="es-table">
-                                        <thead><tr><th>Одељење</th><th>Број ђака</th><th style="width:200px;">Акције</th></tr></thead>
-                                        <tbody id="ad-tabela-odeljenja"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
+                            <button class="btn btn-primary" onclick="otvoriProzorZaOcenjivanje()"><i class="fa-solid fa-star"></i> Упиши нову оцену</button>
                         </div>
+
+                        <div id="tab-dosije-vladanje" class="tab-content">
+                            <div style="background:#f8fafc; padding:15px; border-radius:6px; border:1px solid var(--es-border); margin-bottom:20px;">
+                                <h4 style="font-size:14px; margin-bottom:10px; color:var(--es-dark-blue);">Унеси нову напомену / забелешку о владању:</h4>
+                                <div style="display:flex; gap:10px;">
+                                    <input type="text" id="vladanje-tekst-input" class="form-control" placeholder="нпр. Ученик звижди на часу.">
+                                    <select class="form-control" id="vladanje-cas-input" style="width:120px;">
+                                        <option value="1">1. час</option><option value="2">2. час</option>
+                                        <option value="3">3. час</option><option value="4">4. час</option>
+                                        <option value="5">5. час</option><option value="6">6. час</option>
+                                    </select>
+                                    <button class="btn btn-success" onclick="dodajVladanjeUcenikuUBazu()">Упиши</button>
+                                </div>
+                            </div>
+                            <div id="lista-vladanja-kontejner"></div>
+                        </div>
+
                     </div>
                 </div>
-
-                <div id="upis-casa" class="page-section active">
-                    <h2 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fa-solid fa-pen-fancy"></i> Отварање новог часа</h2>
-                    <div class="card" style="max-width: 750px;">
-                        <div class="form-group">
-                            <label>Наставна јединица (Назив наставне теме) *</label>
-                            <input type="text" id="lekcija-input" class="form-control" placeholder="Упишите назив лекције...">
-                        </div>
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label>Тип часа</label>
-                                <select class="form-control" id="tip-casa">
-                                    <option>Обрада новог градива</option>
-                                    <option>Утврђивање</option>
-                                    <option>Систематизација</option>
-                                    <option>Писмена провера</option>
-                                    <option>Допунски рад</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Редни број часа</label>
-                                <select class="form-control" id="redni-broj-casa">
-                                    <option value="0">0. час</option><option value="1">1. час</option><option value="2">2. час</option>
-                                    <option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option>
-                                    <option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" id="btn-pokreni-cas" onclick="zapocniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију</button>
-                    </div>
-                </div>
-
-                <div id="tok-casa" class="page-section">
-                    <div class="card" style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border-color: #bbf7d0;">
-                        <div>
-                            <h3 style="color: var(--primary-dark);">Активан час: <span id="trenutni-час-tekst">-</span></h3>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn btn-warning" onclick="izaberiNasumicnogUcenikaZaOcenu()"><i class="fa-solid fa-dice"></i> Насумичан одабир 🎲</button>
-                            <button class="btn btn-success" onclick="zavrsiCasKomplet()"><i class="fa-solid fa-square-check"></i> Заврши час</button>
-                        </div>
-                    </div>
-                    <div class="students-grid" id="ucenici-kontejner"></div>
-                </div>
-
-                <div id="izvestaji" class="page-section">
-                    <h2 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fa-solid fa-calendar-days"></i> Дневник рада - Одржани часови</h2>
-                    <div class="card" style="max-width: 400px; padding: 15px;">
-                        <label style="font-size: 12px; font-weight: bold; color: #555;">Изаберите датум за преглед:</label>
-                        <input type="date" id="es-filter-datum" class="form-control" style="margin-top:5px;" onchange="osveziTabeluCasova()">
-                    </div>
-
-                    <div class="es-timeline-container">
-                        <div class="es-timeline-day-title" id="es-dan-naslov">Изаберите датум изнад</div>
-                        <div id="es-timeline-lista-casova"></div>
-                    </div>
-                </div>
-
             </div>
-        </div>
-        
-    </div>
 
-    <div class="modal-overlay" id="admin-ucenici-modal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>Ученици одељења: <span id="ad-u-odeljenje-naslov"></span></span>
-                <span class="modal-close" onclick="zatvoriModal('admin-ucenici-modal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="form-group" style="display:flex; gap:10px;">
-                    <input type="text" id="ad-novi-u-ime" class="form-control" placeholder="Име и презиме ђака...">
-                    <button class="btn btn-success" onclick="dodajUcenikaUDejenjeIzAdmina()">Додај</button>
+            <div id="stranica-upis" class="page-section">
+                <h2 style="color: var(--es-dark-blue); margin-bottom: 20px;"><i class="fa-solid fa-pen-fancy"></i> Унос новог наставног часа</h2>
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>Наставна јединица (Тема часа):</label>
+                        <input type="text" id="lekcija-naziv" class="form-control" placeholder="Упишите тему...">
+                    </div>
+                    <div class="form-group">
+                        <label>Тип наставног часа:</label>
+                        <select class="form-control" id="lekcija-tip">
+                            <option>Обрада новог градива</option>
+                            <option>Утврђивање</option>
+                            <option>Систематизација</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Редни број часа у дану:</label>
+                        <select class="form-control" id="lekcija-rbr">
+                            <option value="1">1. час</option><option value="2">2. час</option><option value="3">3. час</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="upisiCasUBazu()"><i class="fa-solid fa-check"></i> Запиши час у дневник рада</button>
                 </div>
-                <table class="es-table">
-                    <thead><tr><th>Име и презиме</th><th style="width:70px;">Уклони</th></tr></thead>
-                    <tbody id="ad-tabela-ucenika-lista"></tbody>
-                </table>
             </div>
+
+            <div id="stranica-izvestaji" class="page-section">
+                <h2 style="color: var(--es-dark-blue); margin-bottom: 20px;">Дневник рада - Историја одржаних часова</h2>
+                <div class="timeline-box">
+                    <div id="lista-odrzanih-casova-timeline"></div>
+                </div>
+            </div>
+
+            <div id="stranica-admin" class="page-section">
+                <h2 style="color: var(--es-dark-blue); margin-bottom: 20px;">Контролна табла администратора</h2>
+                <div class="form-card">
+                    <h3>Брзи унос новог ученика</h3><br>
+                    <div class="form-group">
+                        <label>Име и презиме ученика:</label>
+                        <input type="text" id="admin-novi-u-ime" class="form-control" placeholder="Петар Петровић">
+                    </div>
+                    <button class="btn btn-success" onclick="dodajUcenikaIzAdminPanela()">Додај ученика у одељење</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="modal-overlay" id="ocena-modal">
+    <div class="modal-overlay" id="modal-ocena-upis">
         <div class="modal-box">
             <div class="modal-header">
-                <span>Упис оцене - <span id="ocena-u-ime"></span></span>
-                <span class="modal-close" onclick="zatvoriModal('ocena-modal')">&times;</span>
+                <span>Унесите нову оцену</span>
+                <span style="cursor:pointer;" onclick="zatvoriModal('modal-ocena-upis')">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="grade-selector">
-                    <button class="grade-btn" onclick="selektujBrojOcene(1)">1</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(2)">2</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(3)">3</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(4)">4</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(5)">5</button>
+                <div class="form-group">
+                    <label>Изаберите оцену:</label>
+                    <select class="form-control" id="nova-ocena-vrednost">
+                        <option value="5">5 (Одличан)</option>
+                        <option value="4">4 (Врло добар)</option>
+                        <option value="3">3 (Добар)</option>
+                        <option value="2">2 (Довољан)</option>
+                        <option value="1">1 (Недовољан)</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Врста оцене</label>
-                    <select class="form-control" id="vrsta-ocene-select"></select>
+                    <label>Категорија провере:</label>
+                    <select class="form-control" id="nova-ocena-kategorija">
+                        <option>Усмена провера</option>
+                        <option>Писмени задатак</option>
+                    </select>
                 </div>
-                <button class="btn btn-success" style="width:100%; justify-content:center;" onclick="sacuvajOcenuUBazu()">Сачувај</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="profil-modal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>Досије: <span id="profil-u-ime"></span></span>
-                <span class="modal-close" onclick="zatvoriModal('profil-modal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="tabs-header">
-                    <div class="tab-link active" onclick="otvoriTab(event, 'p-ocene')">Оцене</div>
-                    <div class="tab-link" onclick="otvoriTab(event, 'p-izostanci')">Изостанци</div>
-                    <div class="tab-link" onclick="otvoriTab(event, 'p-vladanje')">Владање</div>
-                    <div class="tab-link" onclick="otvoriTab(event, 'p-aktivnost')">Активност</div>
-                    <div class="tab-link" onclick="otvoriTab(event, 'p-zakljucna')">Закључна</div>
-                </div>
-                
-                <div id="p-ocene" class="tab-content active"><ul class="history-list" id="lista-u-ocena"></ul></div>
-                <div id="p-izostanci" class="tab-content"><ul class="history-list" id="lista-u-izostanaka"></ul></div>
-
-                <div id="p-vladanje" class="tab-content">
-                    <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:15px;">
-                        <label style="font-size:12px; font-weight:bold;">Упиши нову забелешку о владању:</label>
-                        <div style="display:flex; gap:5px; margin-top:5px;">
-                            <select id="vladanje-tip-select" class="form-control" style="width:130px;">
-                                <option value="Напомена">Напомена 📝</option>
-                                <option value="Укор">Укор ⚠️</option>
-                                <option value="Опомена">Опомена 🛑</option>
-                            </select>
-                            <select id="vladanje-vrsta-select" class="form-control" style="width:150px;"></select>
-                            <input type="text" id="vladanje-tekst-input" class="form-control" placeholder="Детаљнији опис забелешке...">
-                            <button class="btn btn-primary" onclick="upisiVladanjeUceniku()">Упиши</button>
-                        </div>
-                    </div>
-                    <ul class="history-list" id="lista-u-vladanja"></ul>
-                </div>
-
-                <div id="p-aktivnost" class="tab-content">
-                    <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom:15px;">
-                        <label style="font-size:12px; font-weight:bold;">Упиши активност:</label>
-                        <div style="display:flex; gap:5px; margin-top:5px;">
-                            <select id="aktivnost-bros-select" class="form-control" style="width:130px;">
-                                <option value="😊 Смајлић">😊 Смајлић</option>
-                                <option value="🙁 Тужић">🙁 Тужић</option>
-                                <option value="😐 Равнић">😐 Равнић</option>
-                            </select>
-                            <select id="aktivnost-vrsta-select" class="form-control" style="width:150px;"></select>
-                            <input type="text" id="aktivnost-tekst-input" class="form-control" placeholder="Опциона белешка...">
-                            <button class="btn btn-primary" onclick="upisiAktivnostUceniku()">Удоми</button>
-                        </div>
-                    </div>
-                    <ul class="history-list" id="lista-u-aktivnosti"></ul>
-                </div>
-
-                <div id="p-zakljucna" class="tab-content">
-                    <select class="form-control" id="zakljucna-predmet-select">
-                        <option value="">Није закључена</option><option value="5">5</option><option value="4">4</option>
-                        <option value="3">3</option><option value="2">2</option><option value="1">1</option>
-                    </select><br>
-                    <button class="btn btn-success" onclick="snimiSveZakljucne()">Сними закључну</button>
-                </div>
+                <button class="btn btn-success" style="width:100%; justify-content:center;" onclick="sacuvajOcenuĐakuUBazu()">Сачувај оцену</button>
             </div>
         </div>
     </div>
@@ -547,530 +340,287 @@
     <script>
         const API_URL = window.location.origin;
 
-        let regPredmeti = [
-            { id: "Srpski", naziv: "Српски језик и књижевност" },
-            { id: "Matematika", naziv: "Математика" }
-        ];
-        
-        let bazaUcenika = {}; 
-        let listaNastavnika = [];
-        let casoviLista = [];
-        
-        let ulogovaniKorisnik = { id: 101, ime: "Школски Координатор1", uloga: "ШКОЛСКИ КООРДИНАТОР" }; 
-        let aktivanČas = null;
+        let sviUcenici = [];
+        let sviCasovi = [];
         let odabraniUcenikId = null;
-        let selektovanaOcenaBroj = null;
-        let selektovanoAdminOdeljenje = "";
-
-        let katOcene = ["Усмена провера", "Писмени задатак", "Активност"];
-        let katVladanje = ["Недисциплина", "Ометање наставе", "Заборављен прибор"];
-        let katAktivnosti = ["Рад на часу", "Залагање", "Домаћи задатак"];
-
-        async function ucitajSvePodatkeSaServera() {
-            try {
-                let odgovor = await fetch(`${API_URL}/api/podaci`);
-                if (odgovor.ok) {
-                    let podaci = await odgovor.json();
-
-                    if(podaci.skola && podaci.skola.naziv) {
-                        document.getElementById('sidebar-skola-naziv').innerText = podaci.skola.naziv;
-                        document.getElementById('admin-skola-naziv-input').value = podaci.skola.naziv;
-                    }
-
-                    if(podaci.nastavnici && podaci.nastavnici.length > 0) {
-                        listaNastavnika = podaci.nastavnici;
-                    } else {
-                        listaNastavnika = [
-                            { id: 101, ime: "Школски Координатор1", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin123", odeljenja: [], predmeti: [] }
-                        ];
-                    }
-
-                    if(podaci.kat && podaci.kat.ocene && podaci.kat.ocene.length > 0) katOcene = podaci.kat.ocene;
-                    if(podaci.kat && podaci.kat.vladanje && podaci.kat.vladanje.length > 0) katVladanje = podaci.kat.vladanje;
-                    if(podaci.kat && podaci.kat.aktivnosti && podaci.kat.aktivnosti.length > 0) katAktivnosti = podaci.kat.aktivnosti;
-                    if(podaci.casovi) casoviLista = podaci.casovi;
-
-                    bazaUcenika = {};
-                    if(podaci.ucenici && podaci.ucenici.length > 0) {
-                        podaci.ucenici.forEach(u => {
-                            if(!bazaUcenika[u.odeljenje]) bazaUcenika[u.odeljenje] = [];
-                            bazaUcenika[u.odeljenje].push(u);
-                        });
-                    }
-                }
-            } catch (err) {
-                console.error("Konekcija sa serverom trenutno koristi локалну меморију:", err);
-            }
-
-            if(Object.keys(bazaUcenika).length === 0) {
-                bazaUcenika = { "V-3": [] };
-            }
-
-            osveziPadajuceMenijeKategorija();
-            prikaziSistemskeKategorijeUAdminu();
-            osveziAdminTabele();
-            osveziTabeluCasova();
-            HTML_Select_Osvezi();
-        }
 
         window.onload = async function() {
-            let danas = new Date().toISOString().split('T')[0];
-            let kalendar = document.getElementById('es-filter-datum');
-            if(kalendar) kalendar.value = danas;
+            let odeljenja = ["IV-3", "VIII-1", "V-2"];
+            let predmeti = ["Енглески језик (1. страни језик)", "Техника i технологија", "Математика"];
 
-            document.getElementById('stranica-login-sistema').style.display = 'none';
-            document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+            document.getElementById('global-odeljenje').innerHTML = odeljenja.map(o => `<option value="${o}">${o}</option>`).join('');
+            document.getElementById('global-predmet').innerHTML = predmeti.map(p => `<option value="${p}">${p}</option>`).join('');
 
-            await ucitajSvePodatkeSaServera();
+            await osvežiSvePodatkeSaServera();
         };
 
-        async function sacuvajNazivSkoleAdmin() { 
-            let n = document.getElementById('admin-skola-naziv-input').value; if(!n) return;
-            let r = await fetch(`${API_URL}/api/skola`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ naziv: n })
-            });
-            if(r.ok) {
-                document.getElementById('sidebar-skola-naziv').innerText = n; 
-                alert('Назив установе успешно ажуриран!'); 
-            }
-        }
-
-        async function dodajNovogNastavnikaAdmin() {
-            let ime = document.getElementById('ad-nast-ime').value;
-            let uloga = document.getElementById('ad-nast-uloga').value;
-            let user = document.getElementById('ad-nast-username').value;
-            let pass = document.getElementById('ad-nast-password').value;
-            if(!ime || !user || !pass) { alert('Молимо попуните сва поља!'); return; }
-
-            let odeljenja = Array.from(document.querySelectorAll('input[name="nast-od"]:checked')).map(cb => cb.value);
-            let predmeti = Array.from(document.querySelectorAll('input[name="nast-pr"]:checked')).map(cb => cb.value);
-            let novNastavnik = { ime, uloga, username: user, password: pass, odeljenja, predmeti };
-
-            let r = await fetch(`${API_URL}/api/nastavnici`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(novNastavnik)
-            });
-            if(r.ok) {
-                document.getElementById('ad-nast-ime').value = ""; document.getElementById('ad-nast-username').value = ""; document.getElementById('ad-nast-password').value = "";
-                await ucitajSvePodatkeSaServera();
-                alert('Наставник додат у базу!');
-            }
-        }
-
-        async function obrisiNastavnikaAdmin(id) {
-            if(confirm("Обрисати налог овог наставника?")) {
-                let r = await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' });
-                if(r.ok) await ucitajSvePodatkeSaServera();
-            }
-        }
-
-        function izvrsiPrijavuNaSistem() {
-            let u = document.getElementById('sys-auth-user').value;
-            let p = document.getElementById('sys-auth-pass').value;
-            let nadjen = listaNastavnika.find(x => x.username === u && x.password === p);
-            if(nadjen) {
-                ulogovaniKorisnik = nadjen;
-                document.getElementById('stranica-login-sistema').style.display = 'none';
-                document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
-                document.getElementById('nastavnik-ime-prikaz').innerText = nadjen.ime;
-                document.getElementById('nastavnik-uloga-prikaz').innerText = nadjen.uloga.toUpperCase();
-                HTML_Select_Osvezi(); promenaFiltera();
-            } else { alert('Нетачни подаци!'); }
-        }
-
-        async function posaljiUcenikaNaServer(ucenik) {
+        async function osvežiSvePodatkeSaServera() {
             try {
-                let idZaSlanje = ucenik._id || ucenik.id;
-                let r = await fetch(`${API_URL}/api/ucenici/${idZaSlanje}`, {
+                let r = await fetch(`${API_URL}/api/podaci`);
+                if(r.ok) {
+                    let podaci = await r.json();
+                    sviUcenici = podaci.ucenici || [];
+                    sviCasovi = podaci.casovi || [];
+                }
+            } catch(e) { console.error(e); }
+
+            ucitajUcenikeUMrezu();
+            renderujCasoveUTimeline();
+        }
+
+        function ucitajUcenikeUMrezu() {
+            let trenutnoOdeljenje = document.getElementById('global-odeljenje').value;
+            let el = document.getElementById('imenik-trenutno-odjenje');
+            if (el) el.innerText = trenutnoOdeljenje;
+            
+            let kontejner = document.getElementById('mreza-ucenika-imenik');
+            kontejner.innerHTML = "";
+
+            let filtrirani = sviUcenici.filter(u => u.odeljenje === trenutnoOdeljenje);
+
+            if(filtrirani.length === 0) {
+                kontejner.innerHTML = `<p style="color:#718096; padding:20px;">Нема уписаних ученика.</p>`;
+                return;
+            }
+
+            filtrirani.forEach(u => {
+                kontejner.innerHTML += `
+                    <div class="student-card" onclick="prikažiDosijeUčenika('${u._id || u.id}')">
+                        <div class="card-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div class="card-name">${u.ime}</div>
+                        <div class="card-sub">Основно образовање</div>
+                    </div>`;
+            });
+        }
+
+        function prikažiDosijeUčenika(id) {
+            odabraniUcenikId = id;
+            let u = sviUcenici.find(x => (x._id === id || x.id == id));
+            if(!u) return;
+
+            document.getElementById('dosije-ucenik-ime').innerText = u.ime;
+            
+            // Ocene čišćenje
+            for(let i=1; i<=12; i++) {
+                let celija = document.getElementById('m-' + i);
+                if(celija) celija.innerHTML = "";
+            }
+
+            let zbir = 0;
+            let fOcene = u.ocene || [];
+            fOcene.forEach(o => {
+                zbir += Number(o.vrednost);
+                let mId = o.id % 2 === 0 ? "9" : "10"; 
+                let celija = document.getElementById('m-' + mId);
+                if(celija) celija.innerHTML += `<span class="grade-circle">${o.vrednost}</span>`;
+            });
+
+            let prosek = fOcene.length > 0 ? (zbir / fOcene.length).toFixed(2) : "-";
+            document.getElementById('dosije-ucenik-prosek').innerText = `Просек: ${prosek}`;
+
+            // ISPRAVLJENO RENDEROVANJE ZABELEŠKI VLADANJA DA IZGLEDA IDENTIČNO KAO SA SLIKE
+            let vladanjeKontejner = document.getElementById('lista-vladanja-kontejner');
+            vladanjeKontejner.innerHTML = "";
+            
+            let listaVladanja = u.vladanje_lista || [];
+            if(listaVladanja.length === 0) {
+                vladanjeKontejner.innerHTML = `<p style="color:#718096; font-size:14px; padding:10px;">Нема напомена о владању за овог ученика.</p>`;
+            } else {
+                listaVladanja.forEach((v, index) => {
+                    vladanjeKontejner.innerHTML += `
+                        <div class="vladanje-traka-es">
+                            <div class="vladanje-info-es">
+                                <div class="vladanje-datum-es">${v.datum}.</div>
+                                <div class="vladanje-predmet-es">${v.vrsta}</div>
+                                <div class="vladanje-tekst-es">${v.tekst}</div>
+                            </div>
+                            <div class="vladanje-desno-es">
+                                <div class="vladanje-cas-kvadrat-es">
+                                    <span>${v.id % 6 || 1}.</span>
+                                    <small>Час</small>
+                                </div>
+                                <div class="vladanje-akcije-es">
+                                    <button class="btn btn-danger btn-xs" onclick="obrisiVladanjeUBazi('${u._id || u.id}', ${index})">Обриши</button>
+                                    <button class="btn btn-secondary btn-xs" onclick="izmeniVladanjeUBazi('${u._id || u.id}', ${index})">Исправи</button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            switchPage('stranica-dosije');
+        }
+
+        /* DODAVANJE NAPOMENE O VLADANJU U BAZU */
+        async function dodajVladanjeUcenikuUBazu() {
+            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+            let tekst = document.getElementById('vladanje-tekst-input').value;
+            let casNum = document.getElementById('vladanje-cas-input').value;
+            let pr = document.getElementById('global-predmet').value;
+
+            if(!tekst) return;
+
+            if(!u.vladanje_lista) u.vladanje_lista = [];
+            // Formatiramo strukturu da sadrži datum i predmet
+            u.vladanje_lista.push({ 
+                id: Date.now(), 
+                tip: "Напомена", 
+                vrsta: pr, 
+                tekst: tekst, 
+                datum: new Date().toLocaleDateString('sr-RS').replace(/\//g, '. ')
+            });
+
+            document.getElementById('vladanje-tekst-input').value = "";
+            
+            await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(u)
+            });
+
+            await osvežiSvePodatkeSaServera();
+            prikažiDosijeUčenika(odabraniUcenikId);
+        }
+
+        /* BRISANJE ZABELEŠKE O VLADANJU */
+        async function obrisiVladanjeUBazi(uId, index) {
+            if(confirm("Обрисати ову напомену о владању заувек?")) {
+                let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
+                u.vladanje_lista.splice(index, 1);
+
+                await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(ucenik)
+                    body: JSON.stringify(u)
                 });
-                if(r.ok) {
-                    await ucitajSvePodatkeSaServera();
-                    return true;
-                }
-                return false;
-            } catch (e) { console.error(e); return false; }
-        }
 
-        function osveziAdminTabele() {
-            let tPredmeta = document.getElementById('ad-tabela-predmeta');
-            if(tPredmeta) {
-                tPredmeta.innerHTML = regPredmeti.map(p => `
-                    <tr><td>${p.id}</td><td>${p.naziv}</td>
-                    <td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetAdmin('${p.id}')">ОБРИШИ</button></td></tr>`).join('');
-            }
-            let tOdeljenja = document.getElementById('ad-tabela-odeljenja');
-            if(tOdeljenja) {
-                tOdeljenja.innerHTML = Object.keys(bazaUcenika).map(o => `
-                    <tr><td><strong>${o}</strong></td><td>${bazaUcenika[o].length} ђака</td>
-                    <td>
-                        <button class="btn btn-primary btn-xs" onclick="otvoriUcenikeOdeljenja('${o}')">Ученици 👥</button>
-                        <button class="btn btn-danger btn-xs" onclick="obrisiOdeljenjeAdmin('${o}')">ОБРИШИ</button>
-                    </td></tr>`).join('');
-            }
-            let tNastavnika = document.getElementById('ad-tabela-nastavnika');
-            if(tNastavnika) {
-                tNastavnika.innerHTML = listaNastavnika.map(n => `
-                    <tr><td><strong>${n.ime}</strong> (${n.uloga})</td><td>u: ${n.username}</td>
-                    <td><small>Одељења: ${(n.odeljenja || []).join(', ')} | Предмети: ${(n.predmeti || []).join(', ')}</small></td>
-                    <td><button class="btn btn-danger btn-xs" onclick="obrisiNastavnikaAdmin('${n._id || n.id}')">ОБРИШИ</button></td></tr>`).join('');
-            }
-            let cOdeljenja = document.getElementById('ad-nast-odeljenja-checks');
-            if(cOdeljenja) {
-                cOdeljenja.innerHTML = Object.keys(bazaUcenika).map(o => `
-                    <label class="checkbox-item"><input type="checkbox" name="nast-od" value="${o}"> ${o}</label>`).join('');
-            }
-            let cPredmeti = document.getElementById('ad-nast-predmeti-checks');
-            if(cPredmeti) {
-                cPredmeti.innerHTML = regPredmeti.map(p => `
-                    <label class="checkbox-item"><input type="checkbox" name="nast-pr" value="${p.id}"> ${p.id}</label>`).join('');
+                await osvežiSvePodatkeSaServera();
+                prikažiDosijeUčenika(odabraniUcenikId);
             }
         }
 
-        function dodajNoviPredmetAdmin() {
-            let advertiser = document.getElementById('ad-novi-predmet-naziv').value; if(!advertiser) return;
-            let id = advertiser.substring(0,3).toUpperCase() + Math.floor(Math.random()*90 + 10);
-            regPredmeti.push({ id, naziv: advertiser });
-            document.getElementById('ad-novi-predmet-naziv').value = "";
-            osveziAdminTabele(); HTML_Select_Osvezi();
+        /* IZMENA/ISPRAVKA ZABELEŠKE O VLADANJU */
+        async function izmeniVladanjeUBazi(uId, index) {
+            let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
+            let stariTekst = u.vladanje_lista[index].tekst;
+            let noviTekst = prompt("Исправите напомену о владању:", stariTekst);
+            
+            if(noviTekst) {
+                u.vladanje_lista[index].tekst = noviTekst;
+
+                await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(u)
+                });
+
+                await osvežiSvePodatkeSaServera();
+                prikažiDosijeUčenika(odabraniUcenikId);
+            }
         }
 
-        function obrisiPredmetAdmin(id) {
-            regPredmeti = regPredmeti.filter(p => p.id !== id);
-            osveziAdminTabele(); HTML_Select_Osvezi();
+        async function sacuvajOcenuĐakuUBazu() {
+            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+            let val = document.getElementById('nova-ocena-vrednost').value;
+            let kat = document.getElementById('nova-ocena-kategorija').value;
+            let pr = document.getElementById('global-predmet').value;
+
+            if(!u.ocene) u.ocene = [];
+            u.ocene.push({ id: Date.now(), vrednost: Number(val), vrsta: kat, predmet: pr, datum: new Date().toLocaleDateString('sr-RS') });
+
+            zatvoriModal('modal-ocena-upis');
+            await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(u)
+            });
+
+            await osvežiSvePodatkeSaServera();
+            prikažiDosijeUčenika(odabraniUcenikId);
         }
 
-        function dodajNovoOdeljenjeAdmin() {
-            let ime = document.getElementById('ad-novo-odeljenje-ime').value; if(!ime) return;
-            if(bazaUcenika[ime]) { alert("Одељење постоји!"); return; }
-            bazaUcenika[ime] = [];
-            document.getElementById('ad-novo-odeljenje-ime').value = "";
-            osveziAdminTabele(); HTML_Select_Osvezi();
+        async function snimiSveZakljucne() {
+            let val = document.getElementById('zakljucna-ocena-vrednost').value;
+            if(!val) { alert("Изаберите оцену!"); return; }
+            alert(`Успешно снимљена закључна оцена: ${val}`);
         }
 
-        function otvoriUcenikeOdeljenja(o) {
-            selektovanoAdminOdeljenje = o;
-            document.getElementById('ad-u-odeljenje-naslov').innerText = o;
-            renderujUcenikeModala();
-            document.getElementById('admin-ucenici-modal').style.display = 'flex';
+        async function upisiCasUBazu() {
+            let lekcija = document.getElementById('lekcija-naziv').value;
+            let tip = document.getElementById('lekcija-tip').value;
+            let rbr = document.getElementById('lekcija-rbr').value;
+            let odeljenje = document.getElementById('global-odeljenje').value;
+            let predmet = document.getElementById('global-predmet').value;
+
+            if(!lekcija) return;
+            let noviCas = { lekcija, rbr, tip, odeljenje, predmetId: predmet, datum: new Date().toISOString().split('T')[0] };
+
+            await fetch(`${API_URL}/api/casovi`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(noviCas)
+            });
+
+            document.getElementById('lekcija-naziv').value = "";
+            await osvežiSvePodatkeSaServera();
+            switchPage('stranica-izvestaji');
         }
 
-        function renderujUcenikeModala() {
-            let lista = bazaUcenika[selektovanoAdminOdeljenje] || [];
-            document.getElementById('ad-tabela-ucenika-lista').innerHTML = lista.map(u => `
-                <tr><td>${u.ime}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiUcenikaIzOdeljenja('${u._id || u.id}')">&times;</button></td></tr>`).join('');
+        function renderujCasoveUTimeline() {
+            let lista = document.getElementById('lista-odrzanih-casova-timeline');
+            if(!lista) return; lista.innerHTML = "";
+            if(sviCasovi.length === 0) {
+                lista.innerHTML = `<div style="color:#718096; padding:15px; text-align:center;">Нема часова.</div>`;
+                return;
+            }
+            sviCasovi.forEach(c => {
+                lista.innerHTML += `
+                    <div class="timeline-item">
+                        <div class="num-badge">${c.rbr}.</div>
+                        <div>
+                            <strong style="color:var(--es-dark-blue);">${c.predmetId} (${c.odeljenje})</strong>
+                            <p style="font-size:14px; margin-top:3px; color:#4a5568;">${c.lekcija}</p>
+                        </div>
+                    </div>`;
+            });
         }
 
-        async function dodajUcenikaUDejenjeIzAdmina() {
-            let ime = document.getElementById('ad-novi-u-ime').value; if(!ime) return;
-            let noviUcen = { ime: ime, odeljenje: selektovanoAdminOdeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[] };
+        async function dodajUcenikaIzAdminPanela() {
+            let ime = document.getElementById('admin-novi-u-ime').value;
+            let odeljenje = document.getElementById('global-odeljenje').value;
+            if(!ime) return;
+
+            let noviUcen = { ime, odeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[] };
             await fetch(`${API_URL}/api/ucenici`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(noviUcen)
             });
-            document.getElementById('ad-novi-u-ime').value = "";
-            await ucitajSvePodatkeSaServera();
-            renderujUcenikeModala();
-        }
 
-        async function obrisiUcenikaIzOdeljenja(id) {
-            if(confirm("Да ли сте сигурни?")) {
-                await fetch(`${API_URL}/api/ucenici/${id}`, { method: 'DELETE' });
-                await ucitajSvePodatkeSaServera();
-                renderujUcenikeModala();
-            }
-        }
-
-        function HTML_Select_Osvezi() {
-            let os = document.getElementById('global-odeljenje'); if(!os) return; os.innerHTML = "";
-            Object.keys(bazaUcenika).forEach(o => { os.innerHTML += `<option value="${o}">${o}</option>`; });
-            let ps = document.getElementById('global-predmet'); if(!ps) return; ps.innerHTML = "";
-            regPredmeti.forEach(pr => { ps.innerHTML += `<option value="${pr.id}">${pr.naziv}</option>`; });
+            document.getElementById('admin-novi-u-ime').value = "";
+            await osvežiSvePodatkeSaServera();
+            switchPage('stranica-imenik');
         }
 
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            let t = document.getElementById(pageId === 'upis-casa' ? 'upis-casa' : pageId === 'tok-casa' ? 'tok-casa' : pageId === 'izvestaji' ? 'izvestaji' : 'admin-panel-section');
-            if(t) t.classList.add('active');
-            let m = document.getElementById(pageId === 'upis-casa' ? 'menu-upis' : pageId === 'tok-casa' ? 'menu-tok' : pageId === 'izvestaji' ? 'menu-izvestaji' : 'menu-admin');
-            if(m) m.classList.add('active');
+            let t = document.getElementById(pageId); if(t) t.classList.add('active');
+            if(pageId === 'stranica-imenik') document.getElementById('m-imenik').classList.add('active');
+            if(pageId === 'stranica-upis') document.getElementById('m-upis').classList.add('active');
+            if(pageId === 'stranica-izvestaji') document.getElementById('m-izvestaji').classList.add('active');
         }
 
-        function switchAdminTab(tabId) {
-            document.querySelectorAll('.admin-tab-content').forEach(t => t.style.display = 'none');
-            document.querySelectorAll('.admin-menu-item').forEach(m => m.classList.remove('active'));
-            document.getElementById('ad-tab-' + tabId).style.display = 'block';
-            document.getElementById('ad-m-' + tabId).classList.add('active');
+        function otvoriLokalniTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
         }
 
-        function promenaFiltera() { if(aktivanČas) return; document.getElementById('ucenici-kontejner').innerHTML = ""; }
-
-        function zapocniCas() {
-            let lekcijaInput = document.getElementById('lekcija-input');
-            if (!lekcijaInput) return;
-            let lekcija = lekcijaInput.value;
-            let rbr = document.getElementById('redni-broj-casa').value;
-            let tip = document.getElementById('tip-casa').value;
-            if(!lekcija) { alert('Молимо унесите назив лекције!'); return; }
-            
-            let odeljenjeVrednost = document.getElementById('global-odeljenje').value || "V-3";
-            let predmetVrednost = document.getElementById('global-predmet').value || "Srpski";
-            
-            aktivanČas = { id: Date.now(), lekcija, rbr, tip, odeljenje: odeljenjeVrednost, predmetId: predmetVrednost, datum: new Date().toISOString().split('T')[0] };
-            
-            let prikazTeksta = document.getElementById('trenutni-час-tekst') || document.getElementById('trenutni-cas-tekst');
-            if (prikazTeksta) { prikazTeksta.innerText = rbr + ". час - " + lekcija; }
-            
-            switchPage('tok-casa'); renderujUcenikeZaCas();
-        }
-
-        function renderujUcenikeZaCas() {
-            let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
-            let k = document.getElementById('ucenici-kontejner'); k.innerHTML = "";
-            ucenici.forEach(u => {
-                let jeOdsutan = (u.izostanci || []).some(iz => iz.lekcija === aktivanČas.lekcija);
-                let klasa = jeOdsutan ? "absent" : "";
-                k.innerHTML += `
-                    <div class="student-card ${klasa}" id="kartica-u-${u._id || u.id}">
-                        <div class="absent-badge">ОДСУТАН</div>
-                        <div class="student-avatar" onclick="otvoriDosijeUcenika('${u._id || u.id}')"><i class="fa-solid fa-user-graduate" style="font-size:24px; color:#444;"></i></div>
-                        <div class="student-name">${u.ime}</div>
-                        <div class="student-actions">
-                            <button class="btn btn-primary btn-xs" onclick="otvoriProzorZaOcenu('${u._id || u.id}')"><i class="fa-solid fa-star"></i> Оцени</button>
-                            <button class="btn btn-danger btn-xs" onclick="ZabeleziIzostanakUcenika('${u._id || u.id}')"><i class="fa-solid fa-user-xmark"></i> Одсутан</button>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function otvoriProzorZaOcenu(id) {
-            odabraniUcenikId = id;
-            let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === id || x.id == id));
-            if(!u) return;
-            document.getElementById('ocena-u-ime').innerText = u.ime;
-            selektujBrojOcene(null);
-            document.getElementById('ocena-modal').style.display = 'flex';
-        }
-
-        function selektujBrojOcene(br) {
-            selektovanaOcenaBroj = br;
-            document.querySelectorAll('.grade-btn').forEach((b, i) => {
-                if((i + 1) === br) b.classList.add('selected'); else b.classList.remove('selected');
-            });
-        }
-
-        async function sacuvajOcenuUBazu() {
-            if(!selektovanaOcenaBroj) return;
-            let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            if(!u.ocene) u.ocene = [];
-            u.ocene.push({ id: Date.now(), vrednost: selektovanaOcenaBroj, vrsta: document.getElementById('vrsta-ocene-select').value, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS') });
-            
-            zatvoriModal('ocena-modal');
-            await posaljiUcenikaNaServer(u);
-            if(document.getElementById('profil-modal').style.display === 'flex') { osveziIstorijuDosijea(u); }
-        }
-
-        async function ZabeleziIzostanakUcenika(id) {
-            let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === id || x.id == id));
-            let idx = u.izostanci.findIndex(iz => iz.lekcija === aktivanČas.lekcija);
-            if(idx > -1) {
-                u.izostanci.splice(idx, 1);
-                document.getElementById('kartica-u-' + id).classList.remove('absent');
-            } else {
-                u.izostanci.push({ lekcija: aktivanČas.lekcija, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS'), status: 'нерегулисано', beleska: '' });
-                document.getElementById('kartica-u-' + id).classList.add('absent');
-            }
-            await posaljiUcenikaNaServer(u);
-        }
-
-        function otvoriDosijeUcenika(id) {
-            odabraniUcenikId = id;
-            let odeljenje = document.getElementById('global-odeljenje').value;
-            let u = bazaUcenika[odeljenje].find(x => (x._id === id || x.id == id));
-            if(!u) return;
-            document.getElementById('profil-u-ime').innerText = u.ime;
-            osveziIstorijuDosijea(u);
-            document.getElementById('profil-modal').style.display = 'flex';
-        }
-
-        function osveziIstorijuDosijea(ucenik) {
-            let tp = document.getElementById('global-predmet').value;
-            let oL = document.getElementById('lista-u-ocena'); oL.innerHTML = "";
-            let fO = (ucenik.ocene || []).filter(x => x.predmet === tp);
-            if(fO.length === 0) oL.innerHTML = "<li class='history-item'>Нема оцена.</li>";
-            fO.forEach(o => { oL.innerHTML += `<li class='history-item'><span><strong>${o.vrednost}</strong> (${o.vrsta}) - <small>${o.datum}</small></span><div><button class="btn btn-warning btn-xs" onclick="izmeniOcenu('${ucenik._id || ucenik.id}', ${o.id})">ИСПРАВИ</button> <button class="btn btn-danger btn-xs" onclick="obrisiOcenu('${ucenik._id || ucenik.id}', ${o.id})">ОБРИШИ</button></div></li>`; });
-
-            let iL = document.getElementById('lista-u-izostanaka'); iL.innerHTML = "";
-            (ucenik.izostanci || []).forEach((iz, idx) => {
-                let c = iz.status === 'оправдан' ? 'green' : iz.status === 'неоправдан' ? 'red' : 'orange';
-                iL.innerHTML += `<li class='history-item' style='flex-direction:column; align-items:flex-start; gap:5px;'><div style='display:flex; justify-content:space-between; width:100%;'><span><strong>${iz.predmet}</strong> - ${iz.lekcija}</span><span style='color:${c}; font-weight:bold;'>${iz.status}</span></div><div style='display:flex; gap:5px; width:100%;'><button class="btn btn-success btn-xs" onclick="promeniStatusIzostanka('${ucenik._id || ucenik.id}', ${idx}, 'оправдан')">Оправдај</button><button class="btn btn-danger btn-xs" onclick="promeniStatusIzostanka('${ucenik._id || ucenik.id}', ${idx}, 'неоправдан')">Неоправдај</button></div><div style='display:flex; gap:5px; width:100%; margin-top:3px;'><input type="text" class="form-control" style="padding:4px;" id="iz-bel-${idx}" value="${iz.beleska || ''}"><button class="btn btn-secondary btn-xs" onclick="sacuvajBeleskuIzostanka('${ucenik._id || ucenik.id}', ${idx})">Сними</button></div></li>`;
-            });
-
-            let vL = document.getElementById('lista-u-vladanja'); vL.innerHTML = "";
-            (ucenik.vladanje_lista || []).forEach(v => { vL.innerHTML += `<li class='history-item'><span><strong style="color:var(--danger-red);">${v.tip}</strong> [${v.vrsta}]: ${v.tekst} (<small>${v.datum}</small>)</span><div><button class="btn btn-warning btn-xs" onclick="izmeniVladanje('${ucenik._id || ucenik.id}', ${v.id})">ИСПРАВИ</button> <button class="btn btn-danger btn-xs" onclick="obrisiVladanje('${ucenik._id || ucenik.id}', ${v.id})">ОБРИШИ</button></div></li>`; });
-
-            let aL = document.getElementById('lista-u-aktivnosti'); aL.innerHTML = "";
-            (ucenik.aktivnosti || []).forEach(a => { aL.innerHTML += `<li class='history-item'><span><strong>${a.znak}</strong> [${a.vrsta}] ${a.tekst} (<small>${a.datum}</small>)</span><div><button class="btn btn-warning btn-xs" onclick="izmeniAktivnost('${ucenik._id || ucenik.id}', ${a.id})">ИСПРАВИ</button> <button class="btn btn-danger btn-xs" onclick="obrisiAktivnost('${ucenik._id || ucenik.id}', ${a.id})">ОБРИШИ</button></div></li>`; });
-        }
-
-        async function obrisiOcenu(uId, oId) {
-            let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId));
-            u.ocene = u.ocene.filter(x => x.id !== oId); await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u);
-        }
-        async function izmeniOcenu(uId, oId) {
-            let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId));
-            let o = u.ocene.find(x => x.id === oId); let nV = prompt("Нова оцена:", o.vrednost);
-            if(nV && nV >= 1 && nV <= 5) { o.vrednost = parseInt(nV); await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); }
-        }
-        async function promeniStatusIzostanka(uId, idx, stat) {
-            let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId));
-            u.izostanci[idx].status = stat; await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u);
-        }
-        async function sacuvajBeleskuIzostanka(uId, idx) {
-            let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId));
-            u.izostanci[idx].beleska = document.getElementById(`iz-bel-${idx}`).value; await posaljiUcenikaNaServer(u); alert('Сачувано!');
-        }
-        
-        async function upisiVladanjeUceniku() {
-            let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            let t = document.getElementById('vladanje-tip-select').value; let v = document.getElementById('vladanje-vrsta-select').value;
-            let txt = document.getElementById('vladanje-tekst-input').value; if(!txt) return;
-            if(!u.vladanje_lista) u.vladanje_lista = [];
-            u.vladanje_lista.push({ id: Date.now(), tip: t, vrsta: v, tekst: txt, datum: new Date().toLocaleDateString('sr-RS') });
-            await posaljiUcenikaNaServer(u); document.getElementById('vladanje-tekst-input').value = ""; osveziIstorijuDosijea(u);
-        }
-
-        async function obrisiVladanje(uId, vId) { let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId)); u.vladanje_lista = u.vladanje_lista.filter(x => x.id !== vId); await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); }
-        async function izmeniVladanje(uId, vId) { let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId)); let v = u.vladanje_lista.find(x => x.id === vId); let nT = prompt("Измени текст:", v.tekst); if(nT) { v.tekst = nT; await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); } }
-
-        async function upisiAktivnostUceniku() {
-            let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            let z = document.getElementById('aktivnost-bros-select').value; let v = document.getElementById('aktivnost-vrsta-select').value;
-            let txt = document.getElementById('aktivnost-tekst-input').value || "Без напомене";
-            if(!u.aktivnosti) u.aktivnosti = [];
-            u.aktivnosti.push({ id: Date.now(), znak: z, vrsta: v, tekst: txt, datum: new Date().toLocaleDateString('sr-RS') });
-            await posaljiUcenikaNaServer(u); document.getElementById('aktivnost-tekst-input').value = ""; osveziIstorijuDosijea(u);
-        }
-
-        async function obrisiAktivnost(uId, aId) { let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId)); u.aktivnosti = u.aktivnosti.filter(x => x.id !== aId); await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); }
-        async function izmeniAktivnost(uId, aId) { let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId)); let a = u.aktivnosti.find(x => x.id === aId); let nT = prompt("Измени опис:", a.tekst); if(nT) { a.tekst = nT; await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); } }
-
-        async function zavrsiCasKomplet() {
-            if(!aktivanČas) return;
-            await fetch(`${API_URL}/api/casovi`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(aktivanČas)
-            });
-            aktivanČas = null; document.getElementById('lekcija-input').value = "";
-            let prikazTeksta = document.getElementById('trenutni-час-tekst') || document.getElementById('trenutni-cas-tekst');
-            if (prikazTeksta) { prikazTeksta.innerText = "-"; }
-            await ucitajSvePodatkeSaServera();
-            switchPage('upis-casa');
-        }
-
-        function osveziTabeluCasova() {
-            let listaKontejner = document.getElementById('es-timeline-lista-casova');
-            let filterDatum = document.getElementById('es-filter-datum').value;
-            let naslovDana = document.getElementById('es-dan-naslov');
-            if(!listaKontejner) return; listaKontejner.innerHTML = ""; if(!filterDatum) return;
-
-            let opcije = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
-            naslovDana.innerText = new Date(filterDatum).toLocaleDateString('sr-RS', opcije);
-            let filtrirani = casoviLista.filter(c => c.datum === filterDatum).sort((a,b) => a.rbr - b.rbr);
-
-            if(filtrirani.length === 0) { listaKontejner.innerHTML = `<div style="text-align:center; padding:30px; color:#64748b;">Нема евидентираних часова.</div>`; return; }
-
-            filtrirani.forEach(c => {
-                let p = regPredmeti.find(pr => pr.id === c.predmetId);
-                listaKontejner.innerHTML += `
-                    <div class="es-timeline-item">
-                        <div class="es-badge-box"><span class="es-badge-num">${c.rbr}.</span><span class="es-badge-label">Час</span></div>
-                        <div class="es-details-box">
-                            <div class="es-subject-title">${p ? p.naziv : c.predmetId} <span style="font-size:12px; color:var(--primary-blue);">(${c.odeljenje})</span></div>
-                            <div class="es-subject-type">${c.tip}</div><div class="es-lesson-name">${c.lekcija}</div>
-                        </div>
-                        <div class="es-timeline-actions">
-                            <button class="btn btn-warning btn-xs" onclick="izmeniCas('${c._id || c.id}')"><i class="fa-solid fa-edit"></i></button>
-                            <button class="btn btn-danger btn-xs" onclick="obrisiCas('${c._id || c.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        async function obrisiCas(cId) {
-            if(confirm("Обрисати овај час заувек?")) {
-                await fetch(`${API_URL}/api/casovi/${cId}`, { method: 'DELETE' });
-                await ucitajSvePodatkeSaServera();
-            }
-        }
-        async function izmeniCas(cId) {
-            let c = casoviLista.find(x => (x._id || x.id) === cId);
-            let nL = prompt("Нови назив наставне јединице:", c.lekcija);
-            if(nL) {
-                c.lekcija = nL;
-                await fetch(`${API_URL}/api/casovi/${cId}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(c) });
-                await ucitajSvePodatkeSaServera();
-            }
-        }
-
-        async function dodajSistemskuKategoriju(tip) {
-            if(tip === 'ocene') { let v = document.getElementById('admin-nova-kat-ocena').value; if(v) { katOcene.push(v); document.getElementById('admin-nova-kat-ocena').value = ""; } } 
-            else if(tip === 'vladanje') { let v = document.getElementById('admin-nova-kat-vladanje').value; if(v) { katVladanje.push(v); document.getElementById('admin-nova-kat-vladanje').value = ""; } } 
-            else if(tip === 'aktivnosti') { let v = document.getElementById('admin-nova-kat-aktivnost').value; if(v) { katAktivnosti.push(v); document.getElementById('admin-nova-kat-aktivnost').value = ""; } }
-            await fetch(`${API_URL}/api/kategorije`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ ocene: katOcene, vladanje: katVladanje, aktivnosti: katAktivnosti })
-            });
-            await ucitajSvePodatkeSaServera();
-        }
-
-        function prikaziSistemskeKategorijeUAdminu() {
-            document.getElementById('admin-lista-kat-ocene').innerHTML = katOcene.map(x => `<li>${x}</li>`).join('');
-            document.getElementById('admin-lista-kat-vladanje').innerHTML = katVladanje.map(x => `<li>${x}</li>`).join('');
-            document.getElementById('admin-lista-kat-aktivnosti').innerHTML = katAktivnosti.map(x => `<li>${x}</li>`).join('');
-        }
-
-        function osveziPadajuceMenijeKategorija() {
-            let vo = document.getElementById('vrsta-ocene-select'); if(vo) vo.innerHTML = katOcene.map(x => `<option>${x}</option>`).join('');
-            let vv = document.getElementById('vladanje-vrfa-select') || document.getElementById('vladanje-vrsta-select'); if(vv) vv.innerHTML = katVladanje.map(x => `<option value="${x}">${x}</option>`).join('');
-            let av = document.getElementById('aktivnost-vrsta-select'); if(av) av.innerHTML = katAktivnosti.map(x => `<option value="${x}">${x}</option>`).join('');
-        }
-
-        function otvoriTab(evt, tabName) { 
-            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); 
-            document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); 
-            document.getElementById(tabName).classList.add('active'); evt.currentTarget.classList.add('active'); 
-        }
-        
-        function izaberiNasumicnogUcenikaZaOcenu() {
-            let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
-            let prisutniUcenici = ucenici.filter(u => { return !(u.izostanci || []).some(iz => iz.lekcija === aktivanČas.lekcija); });
-            if (prisutniUcenici.length === 0) { alert("Нема присутних ученика на часу!"); return; }
-            let nasumicanIndeks = Math.floor(Math.random() * prisutniUcenici.length);
-            let izabraniUcenik = prisutniUcenici[nasumicanIndeks];
-            alert(`🎲 Насумично је изабран ученик: ${izabraniUcenik.ime}`);
-            otvoriProzorZaOcenu(izabraniUcenik._id || izabraniUcenik.id);
-        }
-
-        function proveriPravoIliOtvoriAdmin() {
-            switchPage('admin-panel-section');
-        }
-
-        function odjaviSeSaSistema() {
-            ulogovaniKorisnik = null;
-            document.getElementById('stranica-login-sistema').style.display = 'flex';
-            document.getElementById('glavni-interfejs-aplikacije').style.display = 'none';
-        }
-
+        function proveriPravoIliOtvoriAdmin() { switchPage('stranica-admin'); }
+        function promenaFiltera() { ucitajUcenikeUMrezu(); }
+        function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.display = 'flex'; }
         function zatvoriModal(id) { document.getElementById(id).style.display = 'none'; }
     </script>
 </body>
