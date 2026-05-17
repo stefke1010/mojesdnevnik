@@ -25,17 +25,46 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         body { background-color: var(--es-bg); color: var(--es-text); display: flex; height: 100vh; overflow: hidden; width: 100vw; }
 
+        /* CENTRIRAN LOGIN EKRAN */
         .full-login-overlay { 
-            position: fixed; top: 0; left: 0; width: 100vw !important; height: 100vh !important; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw !important; 
+            height: 100vh !important; 
             background: linear-gradient(135deg, #0e2a44 0%, #1c5484 100%); 
-            display: flex !important; align-items: center !important; justify-content: center !important; z-index: 99999; 
+            display: flex !important; 
+            align-items: center !important; 
+            justify-content: center !important; 
+            z-index: 99999; 
         }
-        .login-box { background: white; padding: 40px; border-radius: 12px; width: 90%; max-width: 420px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); text-align: center; }
-        .login-box h2 { color: var(--es-dark-blue); font-size: 26px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        .login-box { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            width: 90%; 
+            max-width: 420px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            text-align: center; 
+        }
+
+        .login-box h2 {
+            color: var(--es-dark-blue);
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
         .login-box p { color: #718096; font-size: 14px; margin-bottom: 30px; }
 
         #glavni-interfejs-aplikacije { display: none; width: 100vw; height: 100vh; }
 
+        /* BOČNI MENI */
         .sidebar { width: 240px; background-color: white; border-right: 1px solid var(--es-border); display: flex; flex-direction: column; height: 100%; float: left; }
         .logo-area { padding: 20px; background-color: var(--es-dark-blue); color: white; font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
         .logo-area span { font-size: 11px; color: #a5c2dc; font-weight: normal; margin-top: 2px; }
@@ -46,6 +75,7 @@
 
         .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; }
 
+        /* TOP HEADER */
         .header { background: linear-gradient(90deg, #0e2a44 0%, #1c5484 60%, #2c7cb4 100%); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; flex-shrink: 0; }
         .school-selectors { display: flex; align-items: center; gap: 20px; }
         .sel-block { display: flex; flex-direction: column; }
@@ -233,7 +263,7 @@
                 
                 <div class="user-panel" onclick="toggleLogoutDropdown(event)">
                     <div class="user-text">
-                        <p class="user-role id-role-trans" data-cyr="ШКОЛСКИ КООРДИНАТОР" data-lat="ŠKOLSKI KOORDINATOR">ШКОЛСКИ КООРДИНАТОР</p>
+                        <p class="user-role class-role-trans" data-cyr="ШКОЛСКИ КООРДИНАТОР" data-lat="ŠKOLSKI KOORDINATOR">ШКОЛСКИ КООРДИНАТОР</p>
                         <p class="user-name" id="header-nastavnik-ime">Стефан Михајловић <i class="fa-solid fa-chevron-down" id="arrow-logout-icon"></i></p>
                     </div>
                     <div class="user-avatar"><i class="fa-solid fa-user-shield"></i></div>
@@ -295,7 +325,7 @@
                                     </div>
                                     <button class="btn btn-success trans-node" data-cyr="Сними закључну оцену 💾" data-lat="Snimi zaključnu ocenu 💾" style="margin-top:16px;" onclick="snimiSveZakljucne()">Сними закључну оцену 💾</button>
                                 </div>
-                                <button class="btn btn-primary trans-node" data-cyr="Упиши нову оцену / Активност" data-lat="Upisi novu ocenu / Aktivnost" onclick="otvoriProzorZaOcenjivanje()"><i class="fa-solid faStar"></i> Упиши нову оцену / Активност</button>
+                                <button class="btn btn-primary trans-node" data-cyr="Упиши нову оцену / Активност" data-lat="Upisi novu ocenu / Aktivnost" onclick="otvoriProzorZaOcenjivanje()"><i class="fa-solid fa-star"></i> Упиши нову оцену / Активност</button>
                                 <br><br><h4 class="trans-node" data-cyr="Историја i измена појединачних оцена и активности:" data-lat="Istorija i izmena pojedinačnih ocena i aktivnosti:">Историја i измена појединачних оцена и активности:</h4>
                                 <ul class="history-list" id="lista-svih-ocena-ucenika"></ul>
                             </div>
@@ -314,7 +344,7 @@
                                     <h4 style="font-size:14px; margin-bottom:10px; color:var(--es-dark-blue);" class="trans-node" data-cyr="Унос нове васпитно-дисциплинске мере:" data-lat="Unos nove vaspitno-disciplinske mere:">Унос нове васпитно-дисциплинске мере:</h4>
                                     <div class="form-group">
                                         <select class="form-control" id="vladanje-vrsta-select" onchange="prilagodiPoljaVladanja()">
-                                            <option value="Напомена">Напомена на часу</option><option value="Укор одељењског старешине">Укор одељењског старешине</option><option value="Укор дирекора">Укор директора</option>
+                                            <option value="Напомена">Напомена на часу</option><option value="Укор одељењског старешине">Укор одељењског старешине</option><option value="Укор директора">Укор директора</option>
                                         </select>
                                     </div>
                                     <div class="form-group"><textarea id="vladanje-tekst-input" class="form-control"></textarea></div>
@@ -334,6 +364,11 @@
                     <h2 class="trans-node" data-cyr="Унос новог часа" data-lat="Unos novog časa">Унос и отварање новог часа</h2>
                     <div class="form-card">
                         <div class="form-group"><textarea id="lekcija-naziv" class="form-control" placeholder="Наставна јединица..."></textarea></div>
+                        <div class="form-group">
+                            <select class="form-control" id="lekcija-rbr">
+                                <option value="1">1. час</option><option value="2">2. час</option><option value="3">3. час</option>
+                            </select>
+                        </div>
                         <button class="btn btn-primary trans-node" data-cyr="Започни час" data-lat="Započni čas" onclick="zapocniAktivniCas()">Започни час 🚀</button>
                     </div>
                 </div>
@@ -391,14 +426,44 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modal-ocena-upis">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Унесите нову оцену / Активност</span>
+                <span style="cursor:pointer; font-size: 24px;" onclick="zatvoriModal('modal-ocena-upis')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label style="font-weight:bold;">Врста уноса:</label>
+                    <select class="form-control" id="nova-ocena-vrsta-input" onchange="promenaVrsteOceneModala()">
+                        <option value="Оцена">Бројчана оцена (1-5)</option>
+                        <option value="Активност">Активност на часу (+ / - / симбол)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-weight:bold;">Вредност / Оцена:</label>
+                    <input type="text" class="form-control" id="nova-ocena-vrednost" value="5">
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-weight:bold;">Категорија провере / Опис активности:</label>
+                    <input type="text" class="form-control" id="nova-ocena-kategorija" value="Усмена провера">
+                </div>
+                <div class="form-group" style="margin-top: 12px; margin-bottom: 20px;">
+                    <label style="font-weight:bold;">Датум уноса:</label>
+                    <input type="date" id="nova-ocena-datum-input" class="form-control">
+                </div>
+                <button class="btn btn-success" style="width:100%; justify-content:center; padding: 10px;" onclick="sacuvajOcenuĐakuUBazu()">Сачувај у дневник</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = window.location.origin;
         let regPredmeti = [], odeljenjaLista = [], sviUcenici = [], sviCasovi = [], listaNastavnika = [];
         let odabraniUcenikId = null;
         let aktivanCasPodaci = null, lokalniIzostanciNaCasu = {}; 
-        let trenutnoPismo = 'cyr'; // Podrazumevano ćirilica
+        let trenutnoPismo = 'cyr';
 
-        // REČNIK ZA PREVOĐENJE INTERFEJSA (ĆIRILICA / LATINICA)
         const recnikPisma = {
             login_title: { cyr: '<i class="fa-solid fa-graduation-cap"></i> еСДневник Про', lat: '<i class="fa-solid fa-graduation-cap"></i> eSDnevnik Pro' },
             login_sub: { cyr: 'Пријава на систем за наставнике и админе', lat: 'Prijava na sistem za nastavnike i admina' },
@@ -415,14 +480,19 @@
             if(document.getElementById('vladanje-datum-input')) document.getElementById('vladanje-datum-input').value = danas;
             if(document.getElementById('nova-ocena-datum-input')) document.getElementById('nova-ocena-datum-input').value = danas;
             await osvežiSvePodatkeSaServera();
+
+            window.addEventListener('click', function(e) {
+                if (!e.target.closest('.user-panel')) {
+                    let dropdown = document.getElementById('dropdown-logout-box');
+                    if(dropdown) dropdown.style.display = 'none';
+                }
+            });
         };
 
-        // FUNKCIJA ZA PREBACIVANJE PISMA (ĆIRILICA <> LATINICA)
         function promeniPismoSitema(event) {
             if(event) event.stopPropagation();
             trenutnoPismo = (trenutnoPismo === 'cyr') ? 'lat' : 'cyr';
             
-            // 1. Prevod statičkih elemenata u dropdown-u i login formi
             document.getElementById('login-glavni-naslov').innerHTML = recnikPisma.login_title[trenutnoPismo];
             document.getElementById('login-podnaslov').innerText = recnikPisma.login_sub[trenutnoPismo];
             document.getElementById('login-lbl-user').innerText = recnikPisma.lbl_user[trenutnoPismo];
@@ -432,10 +502,9 @@
             document.getElementById('btn-txt-lozinka').innerText = trenutnoPismo === 'cyr' ? 'Промени лозинку' : 'Promeni lozinku';
             document.getElementById('btn-txt-izlaz').innerText = trenutnoPismo === 'cyr' ? 'Изађи из дневника' : 'Izađi iz dnevnika';
             
-            let ulogaNode = document.querySelector('.id-role-trans');
+            let ulogaNode = document.querySelector('.class-role-trans');
             if(ulogaNode) ulogaNode.innerText = ulogaNode.getAttribute('data-' + trenutnoPismo);
 
-            // 2. Prevod svih tagova sa klasom .trans-node
             document.querySelectorAll('.trans-node').forEach(node => {
                 let prevod = node.getAttribute('data-' + trenutnoPismo);
                 if(prevod) node.innerText = prevod;
@@ -446,22 +515,18 @@
             ucitajUcenikeUMrezu();
         }
 
-        // FUNKCIJA KOJA MENJA LOZINKU I ŠALJE JE NA MONGODB
         async function promeniLozinkuKorisnika(event) {
             if(event) event.stopPropagation();
-            let trenutniUser = "admin"; // Fabrički ili ulogovani nalog
-            
             let novaLozinka = prompt(trenutnoPismo === 'cyr' ? "Унесите нову системску лозинку:" : "Unesite novu sistemsku lozinku:");
             if(!novaLozinka) return;
 
             let r = await fetch('/api/nastavnici/promena-lozinke', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: trenutniUser, novaLozinka: novaLozinka })
+                body: JSON.stringify({ username: "admin", novaLozinka })
             });
 
             if(r.ok) {
-                let data = await r.json();
                 alert(trenutnoPismo === 'cyr' ? "Лозинка је успешно сачувана у бази!" : "Lozinka je uspešno sačuvana u bazi!");
                 await osvežiSvePodatkeSaServera();
             }
@@ -498,7 +563,7 @@
                     sviUcenici = podaci.ucenici || [];
                     sviCasovi = podaci.casovi || [];
                     listaNastavnika = podaci.nastavnici || [];
-                    regPredmeti = podaci.predmeti && podaci.predmeti.length > 0 ? podaci.predmeti : [{ id: "ENG", naziv: "Енглески језик (1. страни језик)" }];
+                    regPredmeti = podaci.predmeti && podaci.predmeti.length > 0 ? podaci.predmeti : [{ id: "ENG", naziv: "Енглески језик (1. страни jezik)" }];
                     odeljenjaLista = podaci.odeljenja && podaci.odeljenja.length > 0 ? podaci.odeljenja.map(x => x.naziv) : ["IV-3"];
                 }
             } catch(e) { console.error(e); }
@@ -591,9 +656,54 @@
             document.getElementById('dosije-ucenik-ime').innerText = u.ime;
             let tp = document.getElementById('global-predmet').value;
             
-            let filtrirani = (u.ocene || []).filter(x => x.predmet === tp);
+            let trenches = document.getElementById('global-odeljenje').value;
+            let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === trenches);
+            let trenutniIndex = filtriraniOdeljenje.findIndex(x => (x._id === id || x.id == id));
+
+            let lStrelica = document.getElementById('dosije-arrow-prev');
+            let dStrelica = document.getElementById('dosije-arrow-next');
+
+            if(lStrelica && dStrelica) {
+                lStrelica.style.visibility = (trenutniIndex === 0) ? 'hidden' : 'visible';
+                dStrelica.style.visibility = (trenutniIndex === filtriraniOdeljenje.length - 1) ? 'hidden' : 'visible';
+            }
+
+            for(let i=1; i<=12; i++) {
+                let celija = document.getElementById('m-' + i); if(celija) celija.innerHTML = "";
+            }
+
+            let zbir = 0; let brojOcenaZaProsek = 0;
+            let fOcene = (u.ocene || []).filter(x => x.predmet === tp);
             let oListaHTML = document.getElementById('lista-svih-ocena-ucenika');
-            oListaHTML.innerHTML = filtrirani.map(o => `<li class="history-item">${o.vrednost} - ${o.vrsta} (${o.datum}) <button class="btn btn-danger btn-xs" onclick="obrisiOcenuUBazi('${u._id||u.id}', ${o.id})">X</button></li>`).join('');
+            oListaHTML.innerHTML = fOcene.length === 0 ? "<li>Нема оцена.</li>" : "";
+
+            fOcene.forEach(o => {
+                let klasaKruga = o.tip === 'Активност' ? 'grade-circle activity-mark' : 'grade-circle';
+                if(o.tip !== 'Активност') { zbir += Number(o.vrednost); brojOcenaZaProsek++; }
+
+                let mesec = 9;
+                if(o.datum) {
+                    if(o.datum.includes('-')) mesec = parseInt(o.datum.split('-')[1]);
+                    else if(o.datum.includes('.')) mesec = parseInt(o.datum.split('.')[1]);
+                }
+                let celija = document.getElementById('m-' + mesec);
+                if(celija) celija.innerHTML += `<span class="${klasaKruga}" title="${o.vrsta} (${o.datum})">${o.vrednost}</span>`;
+
+                oListaHTML.innerHTML += `
+                    <li class="history-item">
+                        <span>[<strong>${o.tip || 'Оцена'}</strong>] Вредност: <strong>${o.vrednost}</strong> - ${o.vrsta} (${o.datum})</span>
+                        <div>
+                            <button class="btn btn-secondary btn-xs" onclick="izmeniOcenuUBazi('${u._id || u.id}', ${o.id})">Исправи</button>
+                            <button class="btn btn-danger btn-xs" onclick="obrisiOcenuUBazi('${u._id || u.id}', ${o.id})">Обриши</button>
+                        </div>
+                    </li>`;
+            });
+
+            document.getElementById('dosije-ucenik-prosek').innerText = `Просек: ${brojOcenaZaProsek > 0 ? (zbir / brojOcenaZaProsek).toFixed(2) : "-"}`;
+            let ocVladanja = u.ocena_vladanja || "5";
+            let tekstoviVladanja = {"5":"Примерно (5)","4":"Врло добро (4)","3":"Добар (3)","2":"Довољно (2)","1":"Незадовољавајуће (1)"};
+            document.getElementById('dosije-vladanje-prosek').innerText = `Владање: ${tekstoviVladanja[ocVladanja] || ocVladanja}`;
+            document.getElementById('zakljucno-vladanje-select').value = ocVladanja;
             switchPage('stranica-dosije');
         }
 
@@ -611,9 +721,14 @@
             if(rand) prikažiDosijeUčenika(rand._id || rand.id);
         }
 
+        async function izmeniOcenuUBazi(uId, oId) {
+            let u = sviUcenici.find(x => (x._id === uId || x.id == uId)); let o = u.ocene.find(x => x.id === oId);
+            let nV = prompt("Измените вредност:", o.vrednost); let nK = prompt("Измените опис:", o.vrsta); let nD = prompt("Измените датум:", o.datum);
+            if(nV !== null) o.vrednost = nV; if(nK !== null) o.vrsta = nK; if(nD !== null) o.datum = nD; await AzurirajUcenikaNaServeru(u);
+        }
+
         async function obrisiOcenuUBazi(uId, oId) {
-            let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
-            u.ocene = u.ocene.filter(x => x.id !== oId); await AzurirajUcenikaNaServeru(u);
+            if(confirm("Обрисати?")) { let u = sviUcenici.find(x => (x._id === uId || x.id == uId)); u.ocene = u.ocene.filter(x => x.id !== oId); await AzurirajUcenikaNaServeru(u); }
         }
 
         async function dodajVladanjeUcenikuUBazu() {
@@ -630,11 +745,59 @@
             u.ocena_vladanja = document.getElementById('zakljucno-vladanje-select').value; await AzurirajUcenikaNaServeru(u);
         }
 
+        /* VRAĆENE SVE AMINISTRATIVNE I TIMELINE FUNKCIJE KOJE SU FALILE */
         function renderujCasoveTimeline() {
             let lista = document.getElementById('lista-odrzanih-casova-timeline'); if(!lista) return;
             let sortirani = [...sviCasovi].sort((a,b) => Number(a.rbr) - Number(b.rbr));
-            lista.innerHTML = sortirani.map(c => `<div class="timeline-item">${c.rbr}. час - ${c.lekcija}</div>`).join('');
+            lista.innerHTML = sortirani.map(c => `<div class="timeline-item" style="padding: 10px; border-bottom: 1px solid var(--es-border); font-size:14px;"><strong>${c.rbr}. час</strong> - ${c.lekcija} (${c.predmetId})</div>`).join('');
         }
+
+        function IscrtajAdminTabele() {
+            let tPred = document.getElementById('tabela-admin-predmeti');
+            let tOdelj = document.getElementById('tabela-admin-odeljenja');
+            let tNast = document.getElementById('tabela-admin-nastavnici-lista');
+            
+            if(tPred) tPred.innerHTML = regPredmeti.map((p) => `<tr><td><strong>${p.id}</strong></td><td>${p.naziv}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetSistem('${p.id}')">Обриши</button></td></tr>`).join('');
+            if(tOdelj) tOdelj.innerHTML = odeljenjaLista.map((o) => `<tr><td><strong>${o}</strong></td><td>Активан разред</td><td><button class="btn btn-danger btn-xs" onclick="obrisiOdeljenjeSistem('${o}')">Обриши</button></td></tr>`).join('');
+            
+            if(document.getElementById('admin-nastavnik-odeljenja-checks')) document.getElementById('admin-nastavnik-odeljenja-checks').innerHTML = odeljenjaLista.map(o => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-od" value="${o}"> ${o}</label>`).join('');
+            if(document.getElementById('admin-nastavnik-predmeti-checks')) document.getElementById('admin-nastavnik-predmeti-checks').innerHTML = regPredmeti.map(p => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-pr" value="${p.naziv}"> ${p.id}</label>`).join('');
+            if(tNast) tNast.innerHTML = listaNastavnika.map(n => `<tr><td><strong>${n.ime}</strong><br><small>${n.uloga}</small></td><td><code>${n.username}</code></td><td><button class="btn btn-danger btn-xs" onclick="obrisiNastavnikaSistem('${n._id || n.id}')">Обриши</button></td></tr>`).join('');
+        }
+
+        async function obrisiPredmetSistem(id) { if(confirm("Обрисати предмет?")) { await fetch(`${API_URL}/api/predmeti/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
+        async function obrisiOdeljenjeSistem(naziv) { if(confirm("Обрисати одељење?")) { await fetch(`${API_URL}/api/odeljenja/${naziv}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
+
+        async function dodajNoviPredmetSistem() { 
+            let n = document.getElementById('admin-novi-predmet-input').value; if(!n) return; 
+            let sifra = n.substring(0,3).toUpperCase() + Math.floor(Math.random()*90+10); 
+            await fetch(`${API_URL}/api/predmeti`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: sifra, naziv: n }) });
+            document.getElementById('admin-novi-predmet-input').value = ""; await osvežiSvePodatkeSaServera();
+        }
+        
+        async function dodajNovoOdeljenjeSistem() { 
+            let o = document.getElementById('admin-novo-odeljenje-input').value; if(!o) return; 
+            await fetch(`${API_URL}/api/odeljenja`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ naziv: o }) });
+            document.getElementById('admin-novo-odeljenje-input').value = ""; await osvežiSvePodatkeSaServera();
+        }
+
+        async function dodajUcenikaIzAdminPanela() {
+            let ime = document.getElementById('admin-ucenik-ime-input').value; let odeljenje = document.getElementById('global-odeljenje').value; if(!ime) return;
+            await fetch(`${API_URL}/api/ucenici`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ime, odeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[], ocena_vladanja:"5" }) });
+            document.getElementById('admin-ucenik-ime-input').value = ""; await osvežiSvePodatkeSaServera(); switchPage('stranica-imenik');
+        }
+
+        async function dodajNastavnikaSistem() {
+            let ime = document.getElementById('admin-nastavnik-ime').value; let uloga = document.getElementById('admin-nastavnik-uloga').value;
+            let username = document.getElementById('admin-nastavnik-user').value; let password = document.getElementById('admin-nastavnik-pass').value;
+            if(!ime || !username || !password) { alert("Попуните поља!"); return; }
+            let odeljenja = Array.from(document.querySelectorAll('input[name="adm-nast-od"]:checked')).map(cb => cb.value);
+            let predmeti = Array.from(document.querySelectorAll('input[name="adm-nast-pr"]:checked')).map(cb => cb.value);
+            await fetch(`${API_URL}/api/nastavnici`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ime, uloga, username, password, odeljenja, predmeti }) });
+            document.getElementById('admin-nastavnik-ime').value = ""; document.getElementById('admin-nastavnik-user').value = ""; document.getElementById('admin-nastavnik-pass').value = "";
+            await osvežiSvePodatkeSaServera(); alert("Успешно!");
+        }
+        async function obrisiNastavnikaSistem(id) { if(confirm("Обрисати?")) { await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
 
         async function AzurirajUcenikaNaServeru(u) {
             await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) });
@@ -675,7 +838,6 @@
         function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
         function promenaFiltera() { ucitajUcenikeUMrezu(); }
         function osveziDosijeAkoJeOtvoren() { if(odabraniUcenikId) prikažiDosijeUčenika(odabraniUcenikId); }
-        function snimiSveZakljucne() { alert("Сачувано!"); }
     </script>
 </body>
 </html>
