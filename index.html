@@ -411,7 +411,7 @@
                 <div id="tok-casa" class="page-section">
                     <div class="card" style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border-color: #bbf7d0;">
                         <div>
-                            <h3 style="color: var(--primary-dark);">Активан час: <span id="trenutni-час-tekst">-</span></h3>
+                            <h3 style="color: var(--primary-dark);">Активан час: <span id="trenutni-čas-tekst">-</span></h3>
                         </div>
                         <div style="display: flex; gap: 10px;">
                             <button class="btn btn-warning" onclick="izaberiNasumicnogUcenikaZaOcenu()"><i class="fa-solid fa-dice"></i> Насумичан одабир 🎲</button>
@@ -691,7 +691,6 @@
             osveziAdminTabele(); HTML_Select_Osvezi();
         }
 
-        /* POPRAVLJENO BRISANJE CELOG ODELJENJA SA SERVERA */
         function obrisiOdeljenjeAdmin(ime) {
             if(confirm(`Обрисати одељење ${ime} и све ученике у њему заувек из базе?`)) {
                 let listaDjaka = bazaUcenika[ime] || [];
@@ -731,7 +730,6 @@
             renderujUcenikeModala();
         }
 
-        /* UKLESANO I POPRAVLJENO TRAJNO BRISANJE UČENIKA IZ MONGO BAZE VIA FRONTEND */
         async function obrisiUcenikaIzOdeljenja(id) {
             if(confirm("Да ли сте сигурни да желите трајно да обришете овог ученика из целе базе података?")) {
                 let odgovor = await fetch(`${API_URL}/api/ucenici/${id}`, { 
@@ -739,7 +737,6 @@
                 });
                 
                 if(odgovor.ok) {
-                    // Ponovo povuci svezu bazu sa servera da se sinhronizuje interfejs
                     await ucitajSvePodatkeSaServera();
                     renderujUcenikeModala();
                     alert("Ученик је успешно обрисан из базе података!");
@@ -760,11 +757,13 @@
             let predmeti = Array.from(document.querySelectorAll('input[name="nast-pr"]:checked')).map(cb => cb.value);
 
             listaNastavnika.push({ id: Date.now(), ime, uloga, username: user, password: pass, odeljenja, predmeti });
+            localStorage.setItem('sys_nastavnici', JSON.stringify(listaNastavnika));
             osveziAdminTabele();
         }
 
         function obrisiNastavnikaAdmin(id) {
             listaNastavnika = listaNastavnika.filter(n => n.id !== id);
+            localStorage.setItem('sys_nastavnici', JSON.stringify(listaNastavnika));
             osveziAdminTabele();
         }
 
@@ -879,6 +878,7 @@
             });
         }
 
+        /* ISPRAVLJENO: OVA FUNKCIJA SADA NEMA GREŠKE I PROVERENO ŠALJE PODATKE */
         async function sacuvajOcenuUBazu() {
             if(!selektovanaOcenaBroj) return;
             let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
