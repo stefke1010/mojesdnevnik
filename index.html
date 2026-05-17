@@ -67,7 +67,7 @@
         /* BOČNI MENI */
         .sidebar { width: 240px; background-color: white; border-right: 1px solid var(--es-border); display: flex; flex-direction: column; height: 100%; float: left; }
         .logo-area { padding: 20px; background-color: var(--es-dark-blue); color: white; font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        .logo-area span { font-size: 11px; display: block; color: #a5c2dc; font-weight: normal; margin-top: 2px; }
+        .logo-area span { font-size: 11px; block; color: #a5c2dc; font-weight: normal; margin-top: 2px; }
         .nav-menu { list-style: none; padding-top: 15px; flex: 1; overflow-y: auto; }
         .nav-item { padding: 14px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; color: #506171; font-weight: 500; transition: all 0.2s; }
         .nav-item:hover, .nav-item.active { background-color: #eef5fa; color: var(--es-light-blue); border-left: 4px solid var(--es-light-blue); }
@@ -75,7 +75,7 @@
 
         .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; }
 
-        /* TOP HEADER RAZVUČEN */
+        /* HEADER */
         .header { 
             background: linear-gradient(90deg, #0e2a44 0%, #1c5484 60%, #2c7cb4 100%); 
             color: white; 
@@ -133,6 +133,14 @@
             border-radius: 50% !important; background: #eef2f5; display: flex !important; align-items: center !important; justify-content: center !important; 
             color: #7f91a0; font-size: 42px; border: 2px solid var(--es-border) !important; margin-bottom: 15px !important; flex-shrink: 0 !important;
         }
+        
+        /* NOVO: KONTROLE ZA PRELISTAVANJE I RANDOM IZNENAĐENJE */
+        .nav-arrows-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; width: 100%; }
+        .arrow-nav-btn { width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--es-border); background: white; color: var(--es-blue); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .arrow-nav-btn:hover { background: #eef5fa; color: var(--es-light-blue); border-color: var(--es-light-blue); }
+        .random-nav-btn { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--es-border); background: #f0f2f9; color: var(--es-purple-text); font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
+        .random-nav-btn:hover { background: var(--es-purple-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
         .badge-prosek { background: #fef2f2; color: var(--es-red); border: 1px solid #fee2e2; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 13px; display: inline-block; margin-top: 10px; width: 100%; text-align: center; }
         
         .tabs-header { display: flex; border-bottom: 2px solid #edf2f7; margin-bottom: 20px; gap: 15px; }
@@ -196,15 +204,14 @@
         .timeline-item { display: flex; align-items: center; border: 1px solid var(--es-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; background: #fafbfc; justify-content: space-between; }
         .num-badge { width: 45px; height: 45px; background: #edf2f7; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--es-blue); font-size: 18px; margin-right: 15px; }
 
-        /* --- KONAČAN I TOTALNI FIKS ZA POP-UP MODAL (FIKS ZA SLIKU 3) --- */
         .modal-overlay { 
             position: fixed !important; 
             top: 0 !important; 
             left: 0 !important; 
             width: 100vw !important; 
             height: 100vh !important; 
-            background: rgba(0, 0, 0, 0.5) !important; /* Zamračivanje celog ekrana u pozadini */
-            display: none; /* Inicijalno sakriven, pali se na flex preko JS-a */
+            background: rgba(0, 0, 0, 0.5) !important; 
+            display: none; 
             align-items: center !important; 
             justify-content: center !important; 
             z-index: 100000 !important; 
@@ -232,10 +239,7 @@
             align-items: center !important;
         }
 
-        .modal-body {
-            padding: 25px !important;
-            background: white !important;
-        }
+        .modal-body { padding: 25px !important; background: white !important; }
     </style>
 </head>
 <body>
@@ -259,7 +263,7 @@
 
     <div id="glavni-interfejs-aplikacije">
         
-        <div class="sidebar">
+        <div class="sidebar" style="float: left;">
             <div class="logo-area">
                 <i class="fa-solid fa-book-open"></i>
                 <div>
@@ -314,6 +318,13 @@
                     
                     <div class="profile-container">
                         <div class="profile-left">
+                            
+                            <div class="nav-arrows-container">
+                                <button class="arrow-nav-btn" id="dosije-arrow-prev" onclick="navigacijaUcenika(-1)" title="Претходни ученик"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="random-nav-btn" onclick="odaberiNasumicnogUcenika()" title="Прозови на срећу 🎲"><i class="fa-solid fa-dice"></i> Ђак</button>
+                                <button class="arrow-nav-btn" id="dosije-arrow-next" onclick="navigacijaUcenika(1)" title="Следећи ученик"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+
                             <div class="card-avatar"><i class="fa-solid fa-user-graduate"></i></div>
                             <h3 id="dosije-ucenik-ime" style="color:var(--es-dark-blue); margin-bottom: 5px;">Ђак</h3>
                             <p style="font-size:13px; color:#718096;">Редован ученик</p>
@@ -417,7 +428,7 @@
                 </div>
 
                 <div id="stranica-upis" class="page-section">
-                    <h2 style="color: var(--es-dark-blue); margin-bottom: 20px;"><i class="fa-solid fa-pen-fancy"></i> Унос i отварање новог часа</h2>
+                    <h2 style="color: var(--es-dark-blue); margin-bottom: 20px;"><i class="fa-solid fa-pen-fancy"></i> Унос и отварање новог часа</h2>
                     <div class="form-card">
                         <div class="form-group">
                             <label>Наставна јединица / Тема часа (Текст може ићи у више редова):</label>
@@ -538,7 +549,7 @@
                                             <div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-success" onclick="dodajNastavnikaSistem()"><i class="fa-solid fa-user-plus"></i> Сачувај и активирај профил наставника</button>
+                                    <button class="btn btn-success" onclick="dodajNastavnikaSistem()"><i class="fa-solid fa-user-plus"></i> Сачувај i активирај профил наставника</button>
                                 </div>
                                 <br>
                                 <table class="es-table">
@@ -819,6 +830,21 @@
             document.getElementById('dosije-ucenik-ime').innerText = u.ime;
             let tp = document.getElementById('global-predmet').value;
             
+            // NOVO: Pametno sakrivanje i prikazivanje strelica levo/desno na osnovu trenutnog odeljenja
+            let trenches = document.getElementById('global-odeljenje').value;
+            let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === trenches);
+            let trenutniIndex = filtriraniOdeljenje.findIndex(x => (x._id === id || x.id == id));
+
+            let lStrelica = document.getElementById('dosije-arrow-prev');
+            let dStrelica = document.getElementById('dosije-arrow-next');
+
+            if(lStrelica && dStrelica) {
+                // Ako je prvi u nizu, sakrij levu strelicu
+                lStrelica.style.visibility = (trenutniIndex === 0) ? 'hidden' : 'visible';
+                // Ako je poslednji u nizu, sakrij desnu strelicu
+                dStrelica.style.visibility = (trenutniIndex === filtriraniOdeljenje.length - 1) ? 'hidden' : 'visible';
+            }
+
             for(let i=1; i<=12; i++) {
                 let celija = document.getElementById('m-' + i); if(celija) celija.innerHTML = "";
             }
@@ -896,6 +922,36 @@
                 });
             }
             switchPage('stranica-dosije');
+        }
+
+        /* NOVO: FUNKCIJA ZA PRELISTAVANJE ĐAKA LEVO ILI DESNO */
+        function navigacijaUcenika(smer) {
+            let trenches = document.getElementById('global-odeljenje').value;
+            let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === trenches);
+            let trenutniIndex = filtriraniOdeljenje.findIndex(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+
+            let noviIndex = trenutniIndex + smer;
+            if (noviIndex >= 0 && noviIndex < filtriraniOdeljenje.length) {
+                let sledeciUcenik = filtriraniOdeljenje[noviIndex];
+                prikažiDosijeUčenika(sledeciUcenik._id || sledeciUcenik.id);
+            }
+        }
+
+        /* NOVO: FUNKCIJA ZA ODABIR NASUMIČNOG UČENIKA IZ ODELJENJA (DICE PROZIVKA) */
+        function odaberiNasumicnogUcenika() {
+            let trenches = document.getElementById('global-odeljenje').value;
+            let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === trenches);
+            
+            if (filtriraniOdeljenje.length <= 1) {
+                alert("Нема довољно других ученика у овом одељењу за насумичан одабир!");
+                return;
+            }
+
+            let ostaliUcenici = filtriraniOdeljenje.filter(x => x._id !== odabraniUcenikId && x.id != odabraniUcenikId);
+            let nasumicanIndex = Math.floor(Math.random() * ostaliUcenici.length);
+            let izabraniUcenik = ostaliUcenici[nasumicanIndex];
+
+            prikažiDosijeUčenika(izabraniUcenik._id || izabraniUcenik.id);
         }
 
         function osveziDosijeAkoJeOtvoren() {
