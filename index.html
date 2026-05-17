@@ -404,7 +404,7 @@
                                 </select>
                             </div>
                         </div>
-                        <button class="btn btn-primary" id="btn-pokreni-cas" onclick="zapocniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденciju</button>
+                        <button class="btn btn-primary" id="btn-pokreni-cas" onclick="zapocniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију</button>
                     </div>
                 </div>
 
@@ -1041,7 +1041,7 @@
 
         function osveziPadajuceMenijeKategorija() {
             let vo = document.getElementById('vrsta-ocene-select'); if(vo) vo.innerHTML = katOcene.map(x => `<option>${x}</option>`).join('');
-            let vv = document.getElementById('vladanje-vrsta-select'); if(vv) vv.innerHTML = katVladanje.map(x => `<option value="${x}">${x}</option>`).join('');
+            let vv = document.getElementById('vladanje-vrfa-select') || document.getElementById('vladanje-vrsta-select'); if(vv) vv.innerHTML = katVladanje.map(x => `<option value="${x}">${x}</option>`).join('');
             let av = document.getElementById('aktivnost-vrsta-select'); if(av) av.innerHTML = katAktivnosti.map(x => `<option value="${x}">${x}</option>`).join('');
         }
 
@@ -1051,8 +1051,24 @@
             document.getElementById(tabName).classList.add('active'); evt.currentTarget.classList.add('active'); 
         }
         
+        function izaberiNasumicnogUcenikaZaOcenu() {
+            let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
+            let prisutniUcenici = ucenici.filter(u => { return !(u.izostanci || []).some(iz => iz.lekcija === aktivanČas.lekcija); });
+            if (prisutniUcenici.length === 0) { alert("Нема присутних ученика на часу!"); return; }
+            let nasumicanIndeks = Math.floor(Math.random() * prisutniUcenici.length);
+            let izabraniUcenik = prisutniUcenici[nasumicanIndeks];
+            alert(`🎲 Насумично је изабран ученик: ${izabraniUcenik.ime}`);
+            otvoriProzorZaOcenu(izabraniUcenik._id || izabraniUcenik.id);
+        }
+
         function proveriPravoIliOtvoriAdmin() {
             switchPage('admin-panel-section');
+        }
+
+        function odjaviSeSaSistema() {
+            ulogovaniKorisnik = null;
+            document.getElementById('stranica-login-sistema').style.display = 'flex';
+            document.getElementById('glavni-interfejs-aplikacije').style.display = 'none';
         }
 
         function zatvoriModal(id) { document.getElementById(id).style.display = 'none'; }
