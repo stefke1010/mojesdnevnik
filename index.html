@@ -411,7 +411,7 @@
                 <div id="tok-casa" class="page-section">
                     <div class="card" style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border-color: #bbf7d0;">
                         <div>
-                            <h3 style="color: var(--primary-dark);">Активан час: <span id="trenutni-čas-tekst">-</span></h3>
+                            <h3 style="color: var(--primary-dark);">Активан час: <span id="trenutni-час-tekst">-</span></h3>
                         </div>
                         <div style="display: flex; gap: 10px;">
                             <button class="btn btn-warning" onclick="izaberiNasumicnogUcenikaZaOcenu()"><i class="fa-solid fa-dice"></i> Насумичан одабир 🎲</button>
@@ -691,9 +691,11 @@
             osveziAdminTabele(); HTML_Select_Osvezi();
         }
 
+        /* POPRAVLJENO BRISANJE CELOG ODELJENJA SA SERVERA */
         function obrisiOdeljenjeAdmin(ime) {
-            if(confirm(`Обрисати одељење ${ime} заувек?`)) {
-                (bazaUcenika[ime] || []).forEach(async u => {
+            if(confirm(`Обрисати одељење ${ime} и све ученике у њему заувек из базе?`)) {
+                let listaDjaka = bazaUcenika[ime] || [];
+                listaDjaka.forEach(async u => {
                     await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'DELETE' });
                 });
                 delete bazaUcenika[ime];
@@ -729,11 +731,21 @@
             renderujUcenikeModala();
         }
 
+        /* UKLESANO I POPRAVLJENO TRAJNO BRISANJE UČENIKA IZ MONGO BAZE VIA FRONTEND */
         async function obrisiUcenikaIzOdeljenja(id) {
-            if(confirm("Обрисати ученика заувек?")) {
-                await fetch(`${API_URL}/api/ucenici/${id}`, { method: 'DELETE' });
-                await ucitajSvePodatkeSaServera();
-                renderujUcenikeModala();
+            if(confirm("Да ли сте сигурни да желите трајно да обришете овог ученика из целе базе података?")) {
+                let odgovor = await fetch(`${API_URL}/api/ucenici/${id}`, { 
+                    method: 'DELETE' 
+                });
+                
+                if(odgovor.ok) {
+                    // Ponovo povuci svezu bazu sa servera da se sinhronizuje interfejs
+                    await ucitajSvePodatkeSaServera();
+                    renderujUcenikeModala();
+                    alert("Ученик је успешно обрисан из базе података!");
+                } else {
+                    alert("Грешка при брисању ученика са сервера!");
+                }
             }
         }
 
@@ -826,7 +838,7 @@
                 datum: new Date().toISOString().split('T')[0] 
             };
             
-            document.getElementById('trenutni-čas-tekst').innerText = rbr + ". час - " + lekcija;
+            document.getElementById('trenutni-час-текст').innerText = rbr + ". час - " + lekcija;
             switchPage('tok-casa'); 
             renderujUcenikeZaCas();
         }
@@ -867,14 +879,13 @@
             });
         }
 
-        /* ISPRAVLJENO: zatvoriModal JE SADA TAČNO NAPISAN I NE BLOKIRA KLIK */
         async function sacuvajOcenuUBazu() {
             if(!selektovanaOcenaBroj) return;
             let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
             if(!u.ocene) u.ocene = [];
             u.ocene.push({ id: Date.now(), vrednost: selektovanaOcenaBroj, vrsta: document.getElementById('vrsta-ocene-select').value, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS') });
             
-            zatvoriModal('ocena-modal'); // <- POPRAVLJENA SLOVNA GREŠKA OVDE
+            zatvoriModal('ocena-modal');
             await posaljiUcenikaNaServer(u);
             if(document.getElementById('profil-modal').style.display === 'flex') { osveziIstorijuDosijea(u); }
         }
