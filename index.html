@@ -45,11 +45,10 @@
         .header { 
             background: linear-gradient(90deg, #102a45 0%, #1a3b5c 40%, #2c7a9b 75%, #4faedb 100%); 
             color: white; 
-            padding: 12px 25px; 
+            padding: 8px 25px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            font-size: 14px; 
             box-shadow: 0 3px 6px rgba(0,0,0,0.15); 
         }
         .school-info { display: flex; gap: 25px; align-items: center; }
@@ -59,7 +58,14 @@
         .header-select:hover { background: rgba(255, 255, 255, 0.25); }
         .header-select option { background: white; color: #333; font-weight: normal; }
         
-        .user-profile { display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); }
+        /* IZMENJEN DESNI ĆOŠAK PO UZORU NA SLIKU */
+        .user-profile-es { display: flex; align-items: center; gap: 15px; }
+        .user-info-text-es { text-align: right; color: white; }
+        .user-role-es { font-size: 11px; text-transform: uppercase; color: #cbd5e1; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .user-name-es { font-size: 15px; font-weight: bold; color: white; }
+        .user-avatar-wrapper-es { position: relative; width: 45px; height: 45px; }
+        .user-avatar-es { width: 100%; height: 100%; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.8); color: var(--primary-blue); font-size: 20px; }
+        .user-badge-es { position: absolute; top: -4px; right: -4px; background: var(--danger-red); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; border: 1px solid white; }
 
         .content-area { padding: 25px; flex: 1; overflow-y: auto; }
         .page-section { display: none; }
@@ -195,10 +201,16 @@
                     </div>
                 </div>
                 
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="user-profile">
-                        <i class="fa-solid fa-user-tie" style="color:white; margin-right:5px;"></i>
-                        <span id="nastavnik-ime-prikaz">-</span>
+                <div class="user-profile-es">
+                    <div class="user-info-text-es">
+                        <div class="user-role-es" id="nastavnik-uloga-prikaz">ШКОЛСКИ КООРДИНАТОР</div>
+                        <div class="user-name-es" id="nastavnik-ime-prikaz">Школски Координатор1</div>
+                    </div>
+                    <div class="user-avatar-wrapper-es">
+                        <div class="user-avatar-es">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="user-badge-es">52</div>
                     </div>
                 </div>
             </div>
@@ -307,7 +319,7 @@
                                                 <th>Предавач</th>
                                                 <th>Подаци</th>
                                                 <th>Додељени рад (Одељења/Предмети)</th>
-                                                <th style="width:80px;">Акција</th>
+                                                <th style="width:80px;">Акcija</th>
                                             </tr>
                                         </thead>
                                         <tbody id="ad-tabela-nastavnika"></tbody>
@@ -544,11 +556,11 @@
             if(kalendar) kalendar.value = danas;
 
             regPredmeti = JSON.parse(localStorage.getItem('sys_predmeti')) || [
-                { id: "Srpski", naziv: "Српски језик и књижевност" },
+                { id: "Srpski", naziv: "Српски језик i књижевност" },
                 { id: "Matematika", naziv: "Математика" }
             ];
             listaNastavnika = JSON.parse(localStorage.getItem('sys_nastavnici')) || [
-                { id: 101, ime: "Администратор Система", uloga: "Admin", username: "admin", password: "admin123", odeljenja: [], predmeti: [] }
+                { id: 101, ime: "Школски Координатор1", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin123", odeljenja: [], predmeti: [] }
             ];
 
             try {
@@ -572,7 +584,6 @@
 
             } catch (err) {
                 console.error("Kritična greška sa bazom:", err);
-                alert("Систем ради у локалном/fallback режиму!");
                 katOcene = ["Усмена провера", "Писмени задатак", "Активност"];
                 katVladanje = ["Недисциплина", "Ометање наставе", "Заборављен прибор"];
                 katAktivnosti = ["Рад на часу", "Залагање", "Домаћи задатак"];
@@ -677,9 +688,10 @@
                 <tr><td>${u.ime}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiUcenikaIzOdeljenja('${u._id || u.id}')">&times;</button></td></tr>`).join('');
         }
 
+        /* POPRAVLJENO: SADA SE DODATI UCENIK ODMAH UPISUJE DIREKTNO U MONGODB BAZU */
         async function dodajUcenikaUDejenjeIzAdmina() {
             let ime = document.getElementById('ad-novi-u-ime').value; if(!ime) return;
-            let noviUcen = { ime, odeljenje: selektovanoAdminOdeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[] };
+            let noviUcen = { ime: ime, odeljenje: selektovanoAdminOdeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[] };
             
             let r = await fetch(`${API_URL}/api/ucenici`, {
                 method: 'POST',
@@ -694,7 +706,7 @@
         }
 
         async function obrisiUcenikaIzOdeljenja(id) {
-            if(confirm("Обрисати ученика?")) {
+            if(confirm("Обрисати ученика заувек?")) {
                 await fetch(`${API_URL}/api/ucenici/${id}`, { method: 'DELETE' });
                 bazaUcenika[selektovanoAdminOdeljenje] = bazaUcenika[selektovanoAdminOdeljenje].filter(u => (u._id || u.id) !== id);
                 renderujUcenikeModala(); osveziAdminTabele();
@@ -757,13 +769,17 @@
                 ulogovaniKorisnik = nadjen;
                 document.getElementById('stranica-login-sistema').style.display = 'none';
                 document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+                
+                // AZURIRANJE ES DIZAJNA TRAKE PRI LOGINU
                 document.getElementById('nastavnik-ime-prikaz').innerText = nadjen.ime;
+                document.getElementById('nastavnik-uloga-prikaz').innerText = nadjen.uloga.toUpperCase();
+                
                 HTML_Select_Osvezi(); promenaFiltera();
             } else { alert('Нетачни подаци!'); }
         }
 
         function proveriPravoIliOtvoriAdmin() {
-            if(ulogovaniKorisnik && ulogovaniKorisnik.uloga === "Admin") switchPage('admin-panel-section');
+            if(ulogovaniKorisnik && (ulogovaniKorisnik.uloga === "Admin" || ulogovaniKorisnik.uloga === "ШКОЛСКИ КООРДИНАТОР")) switchPage('admin-panel-section');
             else alert("Немате права!");
         }
 
@@ -786,7 +802,6 @@
             switchPage('tok-casa'); renderujUcenikeZaCas();
         }
 
-        // ISPRAVLJENO DA PROSLEĐUJE PROMENLJIVE KAO STRING
         function renderujUcenikeZaCas() {
             let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
             let k = document.getElementById('ucenici-kontejner'); k.innerHTML = "";
@@ -807,7 +822,6 @@
             });
         }
 
-        // ISPRAVLJENO ZA MONGODB STRING _ID
         function otvoriProzorZaOcenu(id) {
             odabraniUcenikId = id;
             let u = bazaUcenika[aktivanČas.odeljenje].find(x => x._id === id);
@@ -830,7 +844,7 @@
             u.ocene.push({ id: Date.now(), vrednost: selektovanaOcenaBroj, vrsta: document.getElementById('vrsta-ocene-select').value, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS') });
             
             let uspeh = await posaljiUcenikaNaServer(u);
-            if(uspeh) { zatvoriModal('ocena-modal'); osveziIstorijuDosijea(u); alert('Оцена је сачувана у бази!'); }
+            if(uspeh) { zatvoriModal('ocena-modal'); osveziIstorijuDosijea(u); }
         }
 
         async function ZabeleziIzostanakUcenika(id) {
@@ -847,7 +861,6 @@
             await posaljiUcenikaNaServer(u);
         }
 
-        // ISPRAVLJENO ZA MONGODB STRING _ID
         function otvoriDosijeUcenika(id) {
             odabraniUcenikId = id;
             let u = bazaUcenika[document.getElementById('global-odeljenje').value].find(x => x._id === id);
@@ -986,6 +999,7 @@
             }
         }
 
+        /* POPRAVLJENO: SADA SE DODATE KATEGORIJE ODMAH UPISUJU U MONGODB PREKO BACKEND-A */
         async function dodajSistemskuKategoriju(tip) {
             if(tip === 'ocene') { let v = document.getElementById('admin-nova-kat-ocena').value; if(v) { katOcene.push(v); document.getElementById('admin-nova-kat-ocena').value = ""; } } 
             else if(tip === 'vladanje') { let v = document.getElementById('admin-nova-kat-vladanje').value; if(v) { katVladanje.push(v); document.getElementById('admin-nova-kat-vladanje').value = ""; } } 
@@ -1014,7 +1028,6 @@
 
         function otvoriTab(evt, tabName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tabName).classList.add('active'); evt.currentTarget.classList.add('active'); }
         
-        // ISPRAVLJENO DA BIRA SAMO PRISUTNE ĐAKE I ODMAH OTVARA PROZOR ZA OCENU
         function izaberiNasumicnogUcenikaZaOcenu() {
             let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
             let prisutniUcenici = ucenici.filter(u => {
