@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>еСДневник Про - Администрација и Евиденција</title>
+    <title>еСДневник Про - Администрација i Евиденција</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -25,7 +25,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         body { background-color: var(--es-bg); color: var(--es-text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* POTPUNO CENTRIRAN I STABILAN LOGIN EKRAN */
+        /* CENTRIRAN LOGIN EKRAN */
         .full-login-overlay { 
             position: fixed; 
             top: 0; 
@@ -43,7 +43,7 @@
             background: white; 
             padding: 40px; 
             border-radius: 12px; 
-            width: 90%;
+            width: 90%; 
             max-width: 420px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
             text-align: center; 
@@ -64,7 +64,7 @@
 
         #glavni-interfejs-aplikacije { display: none; width: 100%; height: 100%; }
 
-        /* BOČNI MENI */
+        /* BOČНИ МЕНI */
         .sidebar { width: 240px; background-color: white; border-right: 1px solid var(--es-border); display: flex; flex-direction: column; height: 100%; }
         .logo-area { padding: 20px; background-color: var(--es-dark-blue); color: white; font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
         .logo-area span { font-size: 11px; display: block; color: #a5c2dc; font-weight: normal; margin-top: 2px; }
@@ -75,7 +75,7 @@
 
         .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; }
 
-        /* TOP HEADER RAZVUČEN */
+        /* HEADER */
         .header { 
             background: linear-gradient(90deg, #0e2a44 0%, #1c5484 60%, #2c7cb4 100%); 
             color: white; 
@@ -141,11 +141,11 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* TABELA OCENA ПО МЕСЕЦИМА */
+        /* TABELA OCENA PO MESECIMA */
         .meseci-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: center; table-layout: fixed; }
         .meseci-table th, .meseci-table td { border: 1px solid var(--es-border); padding: 12px 4px; font-size: 14px; min-height: 50px; }
         .meseci-table th { background-color: #f8fafc; color: #4a5568; font-weight: bold; }
-        .grade-circle { inline-flex; width: 26px; height: 26px; background-color: #4caf50; color: white; border-radius: 4px; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; margin: 2px; position: relative; cursor: pointer; }
+        .grade-circle { display: inline-flex; width: 26px; height: 26px; background-color: #4caf50; color: white; border-radius: 4px; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; margin: 2px; position: relative; cursor: pointer; }
         .grade-circle.activity-mark { background-color: #9c27b0; }
 
         /* LISTE U DOSIJEU */
@@ -195,11 +195,6 @@
         .timeline-box { background: white; border: 1px solid var(--es-border); border-radius: 8px; padding: 20px; margin-top: 15px; }
         .timeline-item { display: flex; align-items: center; border: 1px solid var(--es-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; background: #fafbfc; justify-content: space-between; }
         .num-badge { width: 45px; height: 45px; background: #edf2f7; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--es-blue); font-size: 18px; margin-right: 15px; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 10000; }
-        .modal-box { background: white; border-radius: 8px; width: 500px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .modal-header { background: var(--es-dark-blue); color: white; padding: 15px 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 20px; }
     </style>
 </head>
 <body>
@@ -319,7 +314,7 @@
                                 
                                 <button class="btn btn-primary" onclick="otvoriProzorZaOcenjivanje()"><i class="fa-solid fa-star"></i> Упиши нову оцену / Активност</button>
                                 <br><br>
-                                <h4>Историја и измена појединачних оцена и активности:</h4>
+                                <h4>Историја i измена појединачних оцена и активности:</h4>
                                 <ul class="history-list" id="lista-svih-ocena-ucenika"></ul>
                             </div>
 
@@ -354,7 +349,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Текст записа:</label>
-                                        <textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите..."></textarea>
+                                        <textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље забелешке..."></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Датум уноса:</label>
@@ -459,7 +454,7 @@
                             </div>
 
                             <div id="pane-ucenici" class="admin-pane">
-                                <h3>Упис ученика у систему</h3><br>
+                                <h3>Упис ученика у систем</h3><br>
                                 <div class="form-group">
                                     <label>Име и презиме ђака:</label>
                                     <input type="text" id="admin-ucenik-ime-input" class="form-control" placeholder="Марко Марковић">
@@ -601,6 +596,7 @@
             OsveziSelectMenijeIPanele();
         }
 
+        /* USKLAĐENO REŠENJE: ISTO IME FUNKCIJE SVUDA (renderujCasoveTimeline) */
         function OsveziSelectMenijeIPanele() {
             let oSel = document.getElementById('global-odeljenje');
             let pSel = document.getElementById('global-predmet');
@@ -615,7 +611,7 @@
             if(staraPredmetVal && regPredmeti.some(x => x.naziv === staraPredmetVal)) pSel.value = staraPredmetVal;
 
             ucitajUcenikeUMrezu();
-            renderujCasoveUTimeline();
+            renderujCasoveTimeline(); // Fiksirano ime bez baga
             IscrtajAdminTabele();
         }
 
@@ -892,7 +888,7 @@
             let cas = document.getElementById('vladanje-cas-input').value; let pr = document.getElementById('global-predmet').value;
             if(!tekst) return; if(!u.vladanje_lista) u.vladanje_lista = [];
             let noviZapis = { id: Date.now(), vrsta, tekst, datum }; if(vrsta === 'Напомена') { noviZapis.predmet = pr; noviZapis.cas = cas; }
-            u.vladanje_lista.push(noviZapis); document.getElementById('vladanje-tekst-input').value = ""; await AzurirajUcenikaNaServeru(u);
+            u.vladanje_lista.push({ ...noviZapis }); document.getElementById('vladanje-tekst-input').value = ""; await AzurirajUcenikaNaServeru(u);
         }
         async function izmeniVladanjeUBazi(uId, index) {
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId)); let v = u.vladanje_lista[index];
@@ -938,7 +934,7 @@
             await osvežiSvePodatkeSaServera(); alert("Успешно!");
         }
         async function obrisiNastavnikaSistem(id) { if(confirm("Обрисати?")) { await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
-        function dodajNoviPredmetSistem() { let n = document.getElementById('admin-novi-predmet-input').value; if(!n) return; let sifra = n.substring(0,3).toUpperCase() + Math.floor(Math.random()*90+10); regPredmeti.push({ id: sifra, naziv: n }); document.getElementById('admin-novi-predmet-input').value = ""; OsveziSelectMenijeIPanele(); }
+        function dodajNoviPredmetSistem() { let n = document.getElementById('admin-novi-predmet-input').value; if(!n) return; let sifra = n.substring(0,3).toUpperCase() + Math.floor(Math.random()*90+10); regPredmeti.push({ id: sifra, navbar: n, naziv: n }); document.getElementById('admin-novi-predmet-input').value = ""; OsveziSelectMenijeIPanele(); }
         function dodajNovoOdeljenjeSistem() { let o = document.getElementById('admin-novo-odeljenje-input').value; if(!o) return; if(!odeljenjaLista.includes(o)) odeljenjaLista.push(o); document.getElementById('admin-novo-odeljenje-input').value = ""; OsveziSelectMenijeIPanele(); }
         async function dodajUcenikaIzAdminPanela() {
             let ime = document.getElementById('admin-ucenik-ime-input').value; let odeljenje = document.getElementById('global-odeljenje').value; if(!ime) return;
@@ -955,12 +951,33 @@
             zatvoriModal('modal-ocena-upis'); await AzurirajUcenikaNaServeru(u);
         }
 
+        /* USKLAĐENO IME FUNKCIJE KRAJ (Isto kao gore u OsveziSelectMenijeIPanele) */
+        function renderujCasoveTimeline() {
+            let lista = document.getElementById('lista-odrzanih-casova-timeline'); if(!lista) return; lista.innerHTML = "";
+            if(sviCasovi.length === 0) { lista.innerHTML = `<div style="color:#718096; padding:15px; text-align:center;">Нема часова.</div>`; return; }
+            sviCasovi.forEach(c => {
+                lista.innerHTML += `
+                    <div class="timeline-item">
+                        <div style="display:flex; align-items:center;">
+                            <div class="num-badge">${c.rbr}.</div>
+                            <div>
+                                <strong style="color:var(--es-dark-blue); font-size:15px;">${c.predmetId} (${c.odeljenje})</strong> - <span style="font-size:12px; color:#718096;">${c.tip} (Датум: ${c.datum})</span>
+                                <p style="font-size:14px; margin-top:4px; color:#4a5568; white-space:pre-wrap;">${c.lekcija}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary btn-xs" onclick="izmeniCasUBazu('${c._id || c.id}', '${c.lekcija}')">Исправи</button>
+                            <button class="btn btn-danger btn-xs" onclick="obrisiCasUBazu('${c._id || c.id}')">Обриши</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
         async function AzurirajUcenikaNaServeru(u) {
             await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) });
             await osvežiSvePodatkeSaServera(); osveziDosijeAkoJeOtvoren();
         }
 
-        /* POTPUNO SIGURAN I POPRAVLJEN LOGIN - PROPUŠTA ODMAH */
         function izvrsiPrijavuNaSistem() {
             document.getElementById('stranica-login-sistema').style.display = 'none';
             document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
