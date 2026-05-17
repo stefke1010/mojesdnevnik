@@ -23,11 +23,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         body { background-color: var(--bg-light); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
 
-        /* LOGIN EKRAN (PREKO CELOG EKRANA) */
+        /* LOGIN EKRAN */
         .full-login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a3b5c 0%, #2c7a9b 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; }
         .login-box { background: white; padding: 40px; border-radius: 10px; width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
 
-        /* GLAVNA APLIKACIJA - SAKRIVENA NA STARTU */
         #glavni-interfejs-aplikacije { display: none; width: 100%; height: 100%; }
 
         /* BOČNI MENI */
@@ -40,10 +39,9 @@
         .nav-admin { border-top: 1px solid #e2e8f0; background: #fff7ed; color: #c2410c; }
         .nav-admin:hover, .nav-admin.active { background: #ffedd5; color: #ea580c; border-left-color: #ea580c; }
 
-        /* GLAVNI KONTEJNER */
         .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; }
 
-        /* GORNJA TRAKA */
+        /* HEADER */
         .header { 
             background: linear-gradient(90deg, #102a45 0%, #1a3b5c 40%, #2c7a9b 75%, #4faedb 100%); 
             color: white; 
@@ -63,19 +61,16 @@
         
         .user-profile { display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); }
 
-        /* RADNI PROSTOR */
         .content-area { padding: 25px; flex: 1; overflow-y: auto; }
         .page-section { display: none; }
         .page-section.active { display: block; }
 
-        /* KARTICE I FORME */
         .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #444; font-size: 14px; }
         .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-        /* DUGMIĆI */
         .btn { padding: 9px 18px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 14px; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-primary { background-color: var(--light-blue); color: white; }
         .btn-success { background-color: var(--success-green); color: white; }
@@ -83,7 +78,6 @@
         .btn-secondary { background: #e2e8f0; color: #333; }
         .btn-xs { padding: 4px 8px; font-size: 12px; border-radius: 3px; }
 
-        /* MREŽA UČENIKA */
         .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 15px; }
         .student-card { background: white; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; position: relative; }
         .student-card.absent { border: 2px solid var(--danger-red); background-color: #fdf3f3; }
@@ -92,7 +86,6 @@
 
         .student-avatar { width: 70px; height: 70px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; background: #e2e8f0; cursor: pointer; }
         .student-name { font-weight: 500; font-size: 15px; margin-bottom: 5px; color: var(--primary-dark); }
-        .student-cards-grades { font-size: 13px; color: #555; margin-bottom: 12px; min-height: 18px; font-weight: bold; }
         .student-actions { display: flex; justify-content: center; gap: 5px; }
 
         /* MODALI */
@@ -102,7 +95,6 @@
         .modal-close { cursor: pointer; font-size: 20px; }
         .modal-body { padding: 20px; max-height: 80vh; overflow-y: auto; }
 
-        /* ADMIN PANEL LAYOUT */
         .admin-grid { display: grid; grid-template-columns: 280px 1fr; gap: 20px; margin-top: 15px; }
         .admin-sidebar-box { background: white; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .admin-menu-item { padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: 500; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
@@ -125,349 +117,4 @@
         .tab-content { display: none; max-height: 300px; overflow-y: auto; }
         .tab-content.active { display: block; }
         .history-list { list-style: none; }
-        .history-item { padding: 10px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    </style>
-</head>
-<body>
-
-    <div id="stranica-login-sistema" class="full-login-overlay">
-        <div class="login-box">
-            <h2 style="color: var(--primary-dark); margin-bottom: 5px;"><i class="fa-solid fa-graduation-cap"></i> еСДневник Про</h2>
-            <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">Пријава на систем за наставнике и админе</p>
-            
-            <div class="form-group" style="text-align: left;">
-                <label>Корисничко име:</label>
-                <input type="text" id="sys-auth-user" class="form-control" placeholder="Унесите корисничко име">
-            </div>
-            <div class="form-group" style="text-align: left; margin-bottom: 20px;">
-                <label>Лозинка:</label>
-                <input type="password" id="sys-auth-pass" class="form-control" placeholder="Унесите лозинку">
-            </div>
-            <button class="btn btn-success" style="width:100%; justify-content:center; padding:12px;" onclick="izvrsiPrijavuNaSistem()">Пријави се на систем 🔓</button>
-        </div>
-    </div>
-
-    <div id="glavni-interfejs-aplikacije">
-        
-        <div class="sidebar" style="float: left;">
-            <div class="logo-area">
-                <div>
-                    <i class="fa-solid fa-graduation-cap"></i> <span style="font-size:16px;">еСДневник Про</span>
-                    <span class="school-title-sidebar" id="sidebar-skola-naziv">-</span>
-                </div>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item active" id="menu-upis" onclick="switchPage('upis-casa')">
-                    <i class="fa-solid fa-plus-circle"></i>  Упис новог часа
-                </li>
-                <li class="nav-item" id="menu-tok" onclick="switchPage('tok-casa')">
-                    <i class="fa-solid fa-clock"></i> Ток часа / Евиденција
-                </li>
-                <li class="nav-item" id="menu-izvestaji" onclick="switchPage('izvestaji')">
-                    <i class="fa-solid fa-book-open"></i> Одржани часови
-                </li>
-                <li class="nav-item nav-admin" id="menu-admin" onclick="proveriPravoIliOtvoriAdmin()">
-                    <i class="fa-solid fa-gears"></i> Администрација 🔐
-                </li>
-                <li class="nav-item" style="border-top:1px solid #eee; margin-top:auto; color:var(--danger-red);" onclick="odjaviSeSaSistema()">
-                    <i class="fa-solid fa-right-from-bracket"></i> Одјави се ❌
-                </li>
-            </ul>
-        </div>
-
-        <div class="main-container">
-            
-            <div class="header">
-                <div class="school-info">
-                    <div class="info-block">
-                        <span>Одељење</span>
-                        <select class="header-select" id="global-odeljenje" onchange="promenaFiltera()"></select>
-                    </div>
-                    <div class="info-block">
-                        <span>Предмет</span>
-                        <select class="header-select" id="global-predmet" onchange="promenaFiltera()"></select>
-                    </div>
-                </div>
-                
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="user-profile">
-                        <i class="fa-solid fa-user-tie" style="color:white; margin-right:5px;"></i>
-                        <span id="nastavnik-ime-prikaz">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-area">
-
-                <div id="admin-panel-section" class="page-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;">
-                        <h2 style="color: #c2410c;"><i class="fa-solid fa-shield-halved"></i> Контролна табла администратора</h2>
-                    </div>
-                    
-                    <div class="admin-grid">
-                        <div class="admin-sidebar-box">
-                            <div class="admin-menu-item active" id="ad-m-skola" onclick="switchAdminTab('skola')"><i class="fa-solid fa-school"></i> Подешавање школе</div>
-                            <div class="admin-menu-item" id="ad-m-nastavnici" onclick="switchAdminTab('nastavnici')"><i class="fa-solid fa-chalkboard-user"></i> Наставни кадар (Налози)</div>
-                            <div class="admin-menu-item" id="ad-m-predmeti" onclick="switchAdminTab('predmeti')"><i class="fa-solid fa-book"></i> Регистар Предмета</div>
-                            <div class="admin-menu-item" id="ad-m-odeljenja" onclick="switchAdminTab('odeljenja')"><i class="fa-solid fa-users-rectangle"></i> Одељења и ученици</div>
-                        </div>
-                        
-                        <div class="admin-content-box">
-                            
-                            <div id="ad-tab-skola" class="admin-tab-content" style="display:block;">
-                                <div class="card">
-                                    <h3>Основне информације установе</h3><br>
-                                    <div class="form-group">
-                                        <label>Назив школе / установе:</label>
-                                        <input type="text" id="admin-skola-naziv-input" class="form-control">
-                                    </div>
-                                    <button class="btn btn-success" onclick="sacuvajNazivSkoleAdmin()"><i class="fa-solid fa-save"></i> Сачувај назив установе</button>
-                                </div>
-
-                                <div class="card">
-                                    <h3><i class="fa-solid fa-sliders"></i> Додавање врста и категорија за цео систем</h3><br>
-                                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
-                                        <div>
-                                            <label style="font-weight:bold; font-size:13px;">Категорије Оцена:</label>
-                                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                                <input type="text" id="admin-nova-kat-ocena" class="form-control" placeholder="нпр. Квиз">
-                                                <button class="btn btn-success" onclick="dodajSistemskuKategoriju('ocene')">+</button>
-                                            </div>
-                                            <ul id="admin-lista-kat-ocene" style="margin-top:10px; font-size:12px; padding-left:15px;"></ul>
-                                        </div>
-                                        <div>
-                                            <label style="font-weight:bold; font-size:13px;">Категорије Владања:</label>
-                                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                                <input type="text" id="admin-nova-kat-vladanje" class="form-control" placeholder="нпр. Ред дежурства">
-                                                <button class="btn btn-success" onclick="dodajSistemskuKategoriju('vladanje')">+</button>
-                                            </div>
-                                            <ul id="admin-lista-kat-vladanje" style="margin-top:10px; font-size:12px; padding-left:15px;"></ul>
-                                        </div>
-                                        <div>
-                                            <label style="font-weight:bold; font-size:13px;">Категорије Активности:</label>
-                                            <div style="display:flex; gap:5px; margin-top:5px;">
-                                                <input type="text" id="admin-nova-kat-aktivnost" class="form-control" placeholder="нпр. Домаћи рад">
-                                                <button class="btn btn-success" onclick="dodajSistemskuKategoriju('aktivnosti')">+</button>
-                                            </div>
-                                            <ul id="admin-lista-kat-aktivnosti" style="margin-top:10px; font-size:12px; padding-left:15px;"></ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="ad-tab-nastavnici" class="admin-tab-content" style="display:none;">
-                                <div class="card">
-                                    <h3>Креирај нови налог за наставnika / администратора</h3><br>
-                                    <div class="grid-2">
-                                        <div class="form-group">
-                                            <label>Име и презиме *</label>
-                                            <input type="text" id="ad-nast-ime" class="form-control" placeholder="Петар Петровић">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Улога у системе</label>
-                                            <select id="ad-nast-uloga" class="form-control">
-                                                <option value="Nastavnik">Предавач / Наставник</option>
-                                                <option value="Admin">Администратор (Има сва права)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="grid-2" style="background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px dashed #cbd5e1; margin-bottom: 15px;">
-                                        <div class="form-group">
-                                            <label style="color:#2c7a9b;"><i class="fa-solid fa-user"></i> Корисничко име (Username) *</label>
-                                            <input type="text" id="ad-nast-username" class="form-control" placeholder="npr. petar123">
-                                        </div>
-                                        <div class="form-group">
-                                            <label style="color:#2c7a9b;"><i class="fa-solid fa-key"></i> Лозинка (Password) *</label>
-                                            <input type="text" id="ad-nast-password" class="form-control" placeholder="Унесите сигурну лозинку">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Дозвољена Одељења:</label>
-                                        <div class="checkbox-container" id="ad-nast-odeljenja-checks"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Дозвољени Предмети:</label>
-                                        <div class="checkbox-container" id="ad-nast-predmeti-checks"></div>
-                                    </div>
-                                    <button class="btn btn-primary" onclick="dodajNovogNastavnikaAdmin()"><i class="fa-solid fa-user-plus"></i> Сачувај и креирај налог</button>
-                                </div>
-
-                                <div class="card">
-                                    <h3>Листа запослених, налози и овлашћења</h3>
-                                    <table class="es-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Име / Улога</th>
-                                                <th>Кориснички подаци</th>
-                                                <th>Приступ</th>
-                                                <th style="width:80px;">Брисање</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="ad-tabela-nastavnika"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div id="ad-tab-predmeti" class="admin-tab-content" style="display:none;">
-                                <div class="card">
-                                    <h3>Унос новог предмета</h3><br>
-                                    <div class="form-group" style="display:flex; gap:10px;">
-                                        <input type="text" id="ad-novi-predmet-naziv" class="form-control" placeholder="Упишите назив новог предмета">
-                                        <button class="btn btn-success" onclick="dodajNoviPredmetAdmin()">Додај</button>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <h3>Постојећи предмети</h3>
-                                    <table class="es-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Шифра (ID)</th>
-                                                <th>Назив предмета</th>
-                                                <th style="width:80px;">Акција</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="ad-tabela-predmeta"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div id="ad-tab-odeljenja" class="admin-tab-content" style="display:none;">
-                                <div class="card">
-                                    <h3>Формирање новог одељења</h3><br>
-                                    <div class="form-group" style="display:flex; gap:10px;">
-                                        <input type="text" id="ad-novo-odeljenje-ime" class="form-control" placeholder="нпр. VII-4">
-                                        <button class="btn btn-success" onclick="dodajNovoOdeljenjeAdmin()">Кредирај одељење</button>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <h3>Списак активних одељења</h3>
-                                    <table class="es-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Назив одељења</th>
-                                                <th>Број ученика</th>
-                                                <th>Акције</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="ad-tabela-odeljenja"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div id="upis-casa" class="page-section active">
-                    <h2 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fa-solid fa-pen-fancy"></i> Отварање новог часа</h2>
-                    <div class="card" style="max-width: 750px;">
-                        <div class="form-group">
-                            <label>Наставна јединица (Назив наставне теме) *</label>
-                            <input type="text" id="lekcija-input" class="form-control" placeholder="Упишите назив лекције...">
-                        </div>
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label>Тип часа</label>
-                                <select class="form-control" id="tip-casa">
-                                    <option>Обрада новог градива</option>
-                                    <option>Утврђивање</option>
-                                    <option>Систематизација</option>
-                                    <option>Писмена провера</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Редни број часа</label>
-                                <select class="form-control" id="redni-broj-casa">
-                                    <option value="0">0. час</option>
-                                    <option value="1">1. час</option>
-                                    <option value="2">2. час</option>
-                                    <option value="3">3. час</option>
-                                    <option value="4">4. час</option>
-                                    <option value="5">5. час</option>
-                                    <option value="6">6. час</option>
-                                    <option value="7">7. час</option>
-                                    <option value="8">8. час</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="zapocniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију</button>
-                    </div>
-                </div>
-
-                <div id="tok-casa" class="page-section">
-                    <div class="card" style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border-color: #bbf7d0;">
-                        <div>
-                            <h3 style="color: var(--primary-dark);">Активан час: <span id="trenutni-čas-tekst">-</span></h3>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn btn-warning" onclick="izaberiNasumicnogUcenikaZaOcenu()"><i class="fa-solid fa-dice"></i> Насумичан одабир 🎲</button>
-                            <button class="btn btn-success" onclick="zavrsiCasKomplet()"><i class="fa-solid fa-square-check"></i> Заврши час</button>
-                        </div>
-                    </div>
-                    <div class="students-grid" id="ucenici-kontejner"></div>
-                </div>
-
-                <div id="izvestaji" class="page-section">
-                    <h2 style="margin-bottom: 15px; color: var(--primary-dark);">Евиденција одржаних часова</h2>
-                    <div class="card">
-                        <table class="es-table">
-                            <thead>
-                                <tr>
-                                    <th>Бр. часа</th>
-                                    <th>Наставна јединица</th>
-                                    <th>Тип часа</th>
-                                    <th style="width:160px;">Акције</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-casova-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="modal-overlay" id="admin-ucenici-modal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>Ученици: <span id="ad-u-odeljenje-naslov"></span></span>
-                <span class="modal-close" onclick="zatvoriModal('admin-ucenici-modal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="form-group" style="display:flex; gap:10px;">
-                    <input type="text" id="ad-novi-u-ime" class="form-control" placeholder="Име и презиме...">
-                    <button class="btn btn-success" onclick="dodajUcenikaUDejenjeIzAdmina()">Додај</button>
-                </div>
-                <table class="es-table">
-                    <thead><tr><th>Име и презиме</th><th style="width:70px;">Уклони</th></tr></thead>
-                    <tbody id="ad-tabela-ucenika-lista"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="ocena-modal">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span>Упис оцене - <span id="ocena-u-ime"></span></span>
-                <span class="modal-close" onclick="zatvoriModal('ocena-modal')">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="grade-selector">
-                    <button class="grade-btn" onclick="selektujBrojOcene(1)">1</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(2)">2</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(3)">3</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(4)">4</button>
-                    <button class="grade-btn" onclick="selektujBrojOcene(5)">5</button>
-                </div>
-                <div class="form-group">
-                    <label>Врста оцене</label>
-                    <select class="form-control" id="vrsta-ocene-select">
-                        <option>Усмена провера</option><option>Писмени задатак</option><option>Активност</option>
-                    </select>
-                </div>
-                <button class="btn btn-success" style="width:100%; justify-content:center;" onclick="sacuvajOcenuUBazu()">Сачувај</button>
-            </div>
-        </div>
+        .history-item { padding: 10px; border-bottom
