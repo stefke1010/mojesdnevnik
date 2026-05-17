@@ -429,7 +429,7 @@
                     </div>
 
                     <div class="es-timeline-container">
-                        <div class="es-timeline-day-title" id="es-dan-naslov">Изаберите датум изнад</div>
+                        <div class="es-timeline-day-title" id="es-dan-naslov">Изаберите датум изnad</div>
                         <div id="es-timeline-lista-casova"></div>
                     </div>
                 </div>
@@ -878,7 +878,7 @@
             });
         }
 
-        /* ISPRAVLJENO: OVA FUNKCIJA SADA NEMA GREŠKE I PROVERENO ŠALJE PODATKE */
+        /* ISPRAVLJENO: OVA FUNKCIJA SADA KORISTI ISPRAVAN zatvoriModal I SVE RADI GLATKO */
         async function sacuvajOcenuUBazu() {
             if(!selektovanaOcenaBroj) return;
             let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
