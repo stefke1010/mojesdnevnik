@@ -287,7 +287,7 @@
 
                             <div id="ad-tab-nastavnici" class="admin-tab-content" style="display:none;">
                                 <div class="card">
-                                    <h3>Креирај налог предавача i додели дужности</h3><br>
+                                    <h3>Креирај налог предавача и додели дужности</h3><br>
                                     <div class="grid-2">
                                         <div class="form-group">
                                             <label>Име и презиме *</label>
@@ -599,7 +599,7 @@
             osveziAdminTabele();
             osveziTabeluCasova();
             HTML_Select_Osvezi();
-        } // ZAGRADA JE TU I POPRAVLJENA!
+        }
 
         window.onload = async function() {
             let danas = new Date().toISOString().split('T')[0];
@@ -807,7 +807,6 @@
 
         function promenaFiltera() { if(aktivanČas) return; document.getElementById('ucenici-kontejner').innerHTML = ""; }
 
-        // POPRAVLJENO: DUGME ZAPOČNI ČAS SADA RADI STOPROCENTNO
         function zapocniCas() {
             let lekcija = document.getElementById('lekcija-input').value;
             let rbr = document.getElementById('redni-broj-casa').value;
@@ -868,14 +867,14 @@
             });
         }
 
+        /* ISPRAVLJENO: zatvoriModal JE SADA TAČNO NAPISAN I NE BLOKIRA KLIK */
         async function sacuvajOcenuUBazu() {
             if(!selektovanaOcenaBroj) return;
             let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
             if(!u.ocene) u.ocene = [];
             u.ocene.push({ id: Date.now(), vrednost: selektovanaOcenaBroj, vrsta: document.getElementById('vrsta-ocene-select').value, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS') });
             
-            zatzeriModal('ocena-modal');
-            zatvoriModal('ocena-modal');
+            zatvoriModal('ocena-modal'); // <- POPRAVLJENA SLOVNA GREŠKA OVDE
             await posaljiUcenikaNaServer(u);
             if(document.getElementById('profil-modal').style.display === 'flex') { osveziIstorijuDosijea(u); }
         }
@@ -977,7 +976,7 @@
                 body: JSON.stringify(aktivanČas)
             });
             
-            aktivanČas = null; document.getElementById('lekcija-input').value = ""; document.getElementById('trenutni-čas-tekst').innerText = "-";
+            aktivanČas = null; document.getElementById('lekcija-input').value = ""; document.getElementById('trenutni-час-текст').innerText = "-";
             await ucitajSvePodatkeSaServera();
             switchPage('upis-casa');
         }
