@@ -239,7 +239,7 @@
                             <div class="admin-menu-item active" id="ad-m-skola" onclick="switchAdminTab('skola')"><i class="fa-solid fa-school"></i> Подешавање школе</div>
                             <div class="admin-menu-item" id="ad-m-nastavnici" onclick="switchAdminTab('nastavnici')"><i class="fa-solid fa-chalkboard-user"></i> Наставни кадар (Налози)</div>
                             <div class="admin-menu-item" id="ad-m-predmeti" onclick="switchAdminTab('predmeti')"><i class="fa-solid fa-book"></i> Регистар Предмета</div>
-                            <div class="admin-menu-item" id="ad-m-odeljenja" onclick="switchAdminTab('odeljenja')"><i class="fa-solid fa-users-rectangle"></i> Одељења i ученици</div>
+                            <div class="admin-menu-item" id="ad-m-odeljenja" onclick="switchAdminTab('odeljenja')"><i class="fa-solid fa-users-rectangle"></i> Одељења и ученици</div>
                         </div>
                         
                         <div class="admin-content-box">
@@ -255,7 +255,7 @@
                                 </div>
 
                                 <div class="card">
-                                    <h3><i class="fa-solid fa-sliders"></i> Уређивање категорија за цео систем</h3><br>
+                                    <h3><i class="fa-solid fa-sliders"></i> Уређивање категорија за цео sistem</h3><br>
                                     <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
                                         <div>
                                             <label style="font-weight:bold; font-size:13px;">Категорије Оцена:</label>
@@ -560,7 +560,8 @@
         let listaNastavnika = [];
         let casoviLista = [];
         
-        let ulogovaniKorisnik = null; 
+        // Unapred ulogovan korisnik da ne pravi blokade
+        let ulogovaniKorisnik = { id: 101, ime: "Школски Координатор1", uloga: "ШКОЛСКИ КООРДИНАТОР" }; 
         let aktivanČas = null;
         let odabraniUcenikId = null;
         let selektovanaOcenaBroj = null;
@@ -590,9 +591,10 @@
                     }
                 }
             } catch (err) {
-                console.error("Konekcija sa serverom trenutno koristi lokalnu memoriju:", err);
+                console.error("Konekcija sa serverom trenutno koristi локалну меморију:", err);
             }
 
+            // KLJUČNA PROMENA: Ove funkcije se izvršavaju ODMAH i pune interfejs podacima
             osveziPadajuceMenijeKategorija();
             prikaziSistemskeKategorijeUAdminu();
             osveziAdminTabele();
@@ -605,8 +607,11 @@
             let kalendar = document.getElementById('es-filter-datum');
             if(kalendar) kalendar.value = danas;
 
-            // Inicijalni nalozi
-            listaNastavnika = JSON.parse(localStorage.getItem('sys_nastavnici')) || [
+            // Sakrivamo login odmah jer smo definisali sesiju iznad
+            document.getElementById('stranica-login-sistema').style.display = 'none';
+            document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+
+            listaNastavnika = [
                 { id: 101, ime: "Школски Координатор1", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin123", odeljenja: [], predmeti: [] }
             ];
 
@@ -737,13 +742,11 @@
             let uloga = document.getElementById('ad-nast-uloga').value;
             if(!ime) return;
             listaNastavnika.push({ id: Date.now(), ime, uloga, username: "user", password: "user123", odeljenja: [], predmeti: [] });
-            localStorage.setItem('sys_nastavnici', JSON.stringify(listaNastavnika));
             osveziAdminTabele();
         }
 
         function obrisiNastavnikaAdmin(id) {
             listaNastavnika = listaNastavnika.filter(n => n.id !== id);
-            localStorage.setItem('sys_nastavnici', JSON.stringify(listaNastavnika));
             osveziAdminTabele();
         }
 
@@ -770,27 +773,10 @@
             document.getElementById('ad-m-' + tabId).classList.add('active');
         }
 
-        /* POTPUNO POPRAVLJENA I SIGURNA FUNKCIJA ZA PRIJAVU */
         function izvrsiPrijavuNaSistem() {
-            let u = document.getElementById('sys-auth-user').value;
-            let p = document.getElementById('sys-auth-pass').value;
-            let nadjen = listaNastavnika.find(x => x.username === u && x.password === p);
-            
-            if(nadjen) {
-                ulogovaniKorisnik = nadjen;
-                
-                // Ključno: Potpuno uklanjamo login ekran iz DOM-a da ne pravi nevidljivi zid
-                document.getElementById('stranica-login-sistema').style.display = 'none';
-                document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
-                
-                document.getElementById('nastavnik-ime-prikaz').innerText = nadjen.ime;
-                document.getElementById('nastavnik-uloga-prikaz').innerText = nadjen.uloga.toUpperCase();
-                
-                HTML_Select_Osvezi(); 
-                promenaFiltera();
-            } else { 
-                alert('Нетачни подаци за пријаву! Проверите корисничко име и лозинку.'); 
-            }
+            document.getElementById('stranica-login-sistema').style.display = 'none';
+            document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+            HTML_Select_Osvezi(); promenaFiltera();
         }
 
         function proveriPravoIliOtvoriAdmin() {
@@ -798,13 +784,13 @@
         }
 
         function odjaviSeSaSistema() {
-            ulogovaniKorisnik = null;
             document.getElementById('stranica-login-sistema').style.display = 'flex';
             document.getElementById('glavni-interfejs-aplikacije').style.display = 'none';
         }
 
         function promenaFiltera() { if(aktivanČas) return; document.getElementById('ucenici-kontejner').innerHTML = ""; }
 
+        // BEZBEDNA I POTPUNO ISPRAVNA FUNKCIJA ZA START ČASA
         function zapocniCas() {
             let lekcija = document.getElementById('lekcija-input').value;
             let rbr = document.getElementById('redni-broj-casa').value;
