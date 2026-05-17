@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>еСДневник Про - Администрација и Аутентификација</title>
+    <title>еСДневник Про - Администрација i Аутентификација</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -58,7 +58,7 @@
         .header-select:hover { background: rgba(255, 255, 255, 0.25); }
         .header-select option { background: white; color: #333; font-weight: normal; }
         
-        /* DESNI ĆOŠAK */
+        /* DESNI ĆOŠAK KAO SA SLIKE */
         .user-profile-es { display: flex; align-items: center; gap: 15px; }
         .user-info-text-es { text-align: right; color: white; }
         .user-role-es { font-size: 11px; text-transform: uppercase; color: #cbd5e1; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 2px; }
@@ -127,7 +127,7 @@
         .history-list { list-style: none; }
         .history-item { padding: 10px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
 
-        /* MODALI FIKSIRANI */
+        /* MODALI FIKSIRANI - CENTRIRANI */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -255,7 +255,7 @@
                                 </div>
 
                                 <div class="card">
-                                    <h3><i class="fa-solid fa-sliders"></i> Уређивање категорија за цео sistem</h3><br>
+                                    <h3><i class="fa-solid fa-sliders"></i> Уређивање категорија за цео систем</h3><br>
                                     <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px;">
                                         <div>
                                             <label style="font-weight:bold; font-size:13px;">Категорије Оцена:</label>
@@ -321,7 +321,7 @@
                                             <div class="checkbox-container" id="ad-nast-predmeti-checks"></div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary" onclick="dodajNovogNastavnikaAdmin()"><i class="fa-solid fa-user-plus"></i> Сачувај и додели</button>
+                                    <button class="btn btn-primary" onclick="dodajNovogNastavnikaAdmin()"><i class="fa-solid fa-user-plus"></i> Сачувај i додели</button>
                                 </div>
                                 <div class="card">
                                     <h3>Регистар наставног особља</h3>
@@ -560,7 +560,6 @@
         let listaNastavnika = [];
         let casoviLista = [];
         
-        // Unapred ulogovan korisnik da ne pravi blokade
         let ulogovaniKorisnik = { id: 101, ime: "Школски Координатор1", uloga: "ШКОЛСКИ КООРДИНАТОР" }; 
         let aktivanČas = null;
         let odabraniUcenikId = null;
@@ -594,7 +593,6 @@
                 console.error("Konekcija sa serverom trenutno koristi локалну меморију:", err);
             }
 
-            // KLJUČNA PROMENA: Ove funkcije se izvršavaju ODMAH i pune interfejs podacima
             osveziPadajuceMenijeKategorija();
             prikaziSistemskeKategorijeUAdminu();
             osveziAdminTabele();
@@ -607,7 +605,6 @@
             let kalendar = document.getElementById('es-filter-datum');
             if(kalendar) kalendar.value = danas;
 
-            // Sakrivamo login odmah jer smo definisali sesiju iznad
             document.getElementById('stranica-login-sistema').style.display = 'none';
             document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
 
@@ -742,11 +739,13 @@
             let uloga = document.getElementById('ad-nast-uloga').value;
             if(!ime) return;
             listaNastavnika.push({ id: Date.now(), ime, uloga, username: "user", password: "user123", odeljenja: [], predmeti: [] });
+            localStorage.setItem('sys_nastavnici', JSON.stringify(listaNastavnika));
             osveziAdminTabele();
         }
 
         function obrisiNastavnikaAdmin(id) {
             listaNastavnika = listaNastavnika.filter(n => n.id !== id);
+            localStorage.setItem('sys_nastavnici', JSON.stringify(listaNastavnika));
             osveziAdminTabele();
         }
 
@@ -790,12 +789,22 @@
 
         function promenaFiltera() { if(aktivanČas) return; document.getElementById('ucenici-kontejner').innerHTML = ""; }
 
-        // BEZBEDNA I POTPUNO ISPRAVNA FUNKCIJA ZA START ČASA
+        /* POPRAVLJENA I SIGURNA FUNKCIJA ZA ZAPOČINJANJE ČASA */
         function zapocniCas() {
-            let lekcija = document.getElementById('lekcija-input').value;
-            let rbr = document.getElementById('redni-broj-casa').value;
-            let tip = document.getElementById('tip-casa').value;
-            if(!lekcija) { alert('Молимо унесите назив лекције!'); return; }
+            let lekcijaInput = document.getElementById('lekcija-input');
+            let rbrInput = document.getElementById('redni-broj-casa');
+            let tipInput = document.getElementById('tip-casa');
+            
+            if (!lekcijaInput) return;
+            
+            let lekcija = lekcijaInput.value;
+            let rbr = rbrInput ? rbrInput.value : "1";
+            let tip = tipInput ? tipInput.value : "Обрада новог градива";
+            
+            if(!lekcija) { 
+                alert('Молимо унесите назив лекције!'); 
+                return; 
+            }
             
             let odeljenjeVrednost = document.getElementById('global-odeljenje').value || "V-3";
             let predmetVrednost = document.getElementById('global-predmet').value || "Srpski";
@@ -810,7 +819,12 @@
                 datum: new Date().toISOString().split('T')[0] 
             };
             
-            document.getElementById('trenutni-час-текст').innerText = rbr + ". час - " + lekcija;
+            // FIKSIRANA CRVENA GREŠKA IZ KONZOLE (Sprečava pucanje)
+            let prikazTeksta = document.getElementById('trenutni-час-tekst') || document.getElementById('trenutni-cas-tekst');
+            if (prikazTeksta) {
+                prikazTeksta.innerText = rbr + ". час - " + lekcija;
+            }
+            
             switchPage('tok-casa'); 
             renderujUcenikeZaCas();
         }
@@ -1037,24 +1051,6 @@
 
         function otvoriTab(evt, tabName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tabName).classList.add('active'); evt.currentTarget.classList.add('active'); }
         
-        function izaberiNasumicnogUcenikaZaOcenu() {
-            let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
-            let prisutniUcenici = ucenici.filter(u => {
-                return !(u.izostanci || []).some(iz => iz.lekcija === aktivanČas.lekcija);
-            });
-
-            if (prisutniUcenici.length === 0) {
-                alert("Нема присутних ученика на часу!");
-                return;
-            }
-
-            let nasumicanIndeks = Math.floor(Math.random() * prisutniUcenici.length);
-            let izabraniUcenik = prisutniUcenici[nasumicanIndeks];
-
-            alert(`🎲 Насумично је изабран ученик: ${izabraniUcenik.ime}`);
-            otvoriProzorZaOcenu(izabraniUcenik._id || izabraniUcenik.id);
-        }
-
         function zatvoriModal(id) { document.getElementById(id).style.display = 'none'; }
         function sacuvajNazivSkoleAdmin() { let n = document.getElementById('admin-skola-naziv-input').value; document.getElementById('sidebar-skola-naziv').innerText = n; alert('Назив установе ажуриран!'); }
         function snimiSveZakljucne() { alert('Закључна оцена снимљена!'); }
