@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -8,91 +7,91 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
 
-// Povezivanje na MongoDB preko ekološke varijable sa Rendera
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-    console.error("KRITIČNA GREŠKA: MONGO_URI nije podešen u Environment Variables na Renderu!");
-}
-
+// Povezivanje sa MongoDB (Zameni link tvojim MongoDB Atlas linkom ako radiš deploy na Render)
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ednevnik';
 mongoose.connect(MONGO_URI)
-    .then(() => console.log("Uspešno povezan na trajnu MongoDB bazu!"))
-    .catch(err => console.error("Greška sa bazom:", err));
+  .then(() => console.log('✅ Povezan sa MongoDB bazoм!'))
+  .catch(err => console.error('❌ Greška sa bazom:', err));
 
-// Kreiranje šeme za bazu podataka
-const DnevnikSchema = new mongoose.Schema({
-    kljuc: { type: String, default: "glavna_baza", unique: true },
-    predmeti: Array,
-    ucenici: Object,
-    nastavnici: Array,
-    casovi: Array,
-    skola_naziv: String
+// --- MONGODB ŠEME ---
+
+// Šema za sistemske kategorije
+const KatSchema = new mongoose.Schema({
+    ocene: { type: [String], default: ["Усмена провера", "Писмени задатак", "Активност"] },
+    vladanje: { type: [String], default: ["Недисциплина", "Ометање наставе", "Заборављен прибор"] },
+    aktivnosti: { type: [String], default: ["Рад на часу", "Залагање", "Домаћи задатак"] }
 });
+const Kategorije = mongoose.model('Kategorije', KatSchema);
 
-const DnevnikModel = mongoose.model('DnevnikPodaci', DnevnikSchema);
+// Šema za održane časove
+const CasSchema = new mongoose.Schema({
+    lekcija: String,
+    rbr: String,
+    tip: String,
+    odeljenje: String,
+    predmetId: String,
+    datum: String
+});
+const Cas = mongoose.model('Cas', CasSchema);
 
-// Početni podaci ako je baza potpuno prazna na prvom pokretanju
-const inicijalniPodaci = {
-    predmeti: [
-        { id: "Srpski", naziv: "Српски језик" },
-        { id: "Matematika", naziv: "Математика" },
-        { id: "Engleski", naziv: "Енглески језик" }
-    ],
-    ucenici: {
-        "V-3": [
-            { id: 1, ime: "Марко Јовановић", izostanci:[], aktivnosti:[] },
-            { id: 2, ime: "Јелена Крстић", izostanci:[], aktivnosti:[] }
-        ]
-    },
-    nastavnici: [
-        { id: 101, ime: "Стефан Михајловић", uloga: "Admin", username: "admin", password: "admin123", odeljenja: [], predmeti: [] },
-        { id: 102, ime: "Милена Антић", uloga: "Nastavnik", username: "milena", password: "nastavnik123", odeljenja: ["V-3"], predmeti: ["Engleski"] }
-    ],
-    casovi: [],
-    skola_naziv: "ОШ „Доситеј Обрадовић“"
-};
+// Šema za učenike
+const UcenikSchema = new mongoose.Schema({
+    ime: String,
+    odeljenje: String,
+    ocene: [{ vrednost: Number, vrsta: String, predmet: String, datum: String }],
+    izostanci: [{ lekcija: String, predmet: String, datum: String, status: String, beleska: String }],
+    vladanje_lista: [{ tip: String, vrsta: String, tekst: String, datum: String }],
+    aktivnosti: [{ znak: String, vrsta: String, tekst: String, datum: String }]
+});
+const Ucenik = mongoose.model('Ucenik', UcenikSchema);
 
-// RUTA 1: Povlačenje podataka iz baze
+// --- API RUTE (ENDPOINTS) ---
+
+// Inicijalno povlačenje svih podataka pri paljenju bilo kog browsera
 app.get('/api/podaci', async (req, res) => {
     try {
-        let podaci = await DnevnikModel.findOne({ kljuc: "glavna_baza" });
-        if (!podaci) {
-            podaci = new DnevnikModel(inicijalniPodaci);
-            await podaci.save();
-        }
-        res.json(podaci);
-    } catch (err) {
-        res.status(500).json({ greska: err.message });
-    }
+        let kat = await Kategorije.findOne();
+        if(!kat) kat = await Kategorije.create({});
+        const ucenici = await Ucenik.find();
+        const casovi = await Cas.find();
+        res.json({ kat, ucenici, casovi });
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// RUTA 2: Čuvanje svih izmena u bazu
-app.post('/api/sacuvaj', async (req, res) => {
+// Čuvanje naziva kategorija iz administracije
+app.post('/api/kategorije', async (req, res) => {
     try {
-        await DnevnikModel.findOneAndUpdate(
-            { kljuc: "glavna_baza" },
-            { 
-                predmeti: req.body.predmeti,
-                ucenici: req.body.ucenici,
-                nastavnici: req.body.nastavnici,
-                casovi: req.body.casovi,
-                skola_naziv: req.body.skola_naziv
-            },
-            { upsert: true }
-        );
-        res.json({ status: "uspesno", poruka: "Podaci trajno sačuvani u MongoDB!" });
-    } catch (err) {
-        res.status(500).json({ greska: err.message });
-    }
+        let kat = await Kategorije.findOne();
+        if(!kat) kat = new Kategorije();
+        kat.ocene = req.body.ocene;
+        kat.vladanje = req.body.vladanje;
+        kat.aktivnosti = req.body.aktivnosti;
+        await kat.save();
+        res.json(kat);
+    } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
-// Rešenje za Express 5+ bez rutera i zvezdica: hvata sve preostale zahteve i šalje index.html
-app.use((req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Časovi: Upis, Izmena, Brisanje
+app.post('/api/casovi', async (req, res) => {
+    try { const nov = await Cas.create(req.body); res.status(210).json(nov); } catch (err) { res.status(400).json(err); }
+});
+app.put('/api/casovi/:id', async (req, res) => {
+    try { const azur = await Cas.findByIdAndUpdate(req.params.id, req.body, { new: true }); res.json(azur); } catch (err) { res.status(400).json(err); }
+});
+app.delete('/api/casovi/:id', async (req, res) => {
+    try { await Cas.findByIdAndDelete(req.params.id); res.json({ m: "Obrisano" }); } catch (err) { res.status(400).json(err); }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server uspešno pokrenut na portu ${PORT}`);
+// Učenici: Upis, Izmena (ocene, vladanje, izostanci, aktivnosti), Brisanje
+app.post('/api/ucenici', async (req, res) => {
+    try { const nov = await Ucenik.create(req.body); res.status(201).json(nov); } catch (err) { res.status(400).json(err); }
 });
+app.put('/api/ucenici/:id', async (req, res) => {
+    try { const azur = await Ucenik.findByIdAndUpdate(req.params.id, req.body, { new: true }); res.json(azur); } catch (err) { res.status(400).json(err); }
+});
+app.delete('/api/ucenici/:id', async (req, res) => {
+    try { await Ucenik.findByIdAndDelete(req.params.id); res.json({ m: "Obrisano" }); } catch (err) { res.status(400).json(err); }
+});
+
+app.listen(PORT, () => console.log(`🚀 Server radi na portu ${PORT}`));
