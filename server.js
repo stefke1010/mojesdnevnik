@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Povezivanje sa MongoDB bazom (Zadržava tvoj link na Renderu)
+// Povezivanje sa MongoDB bazom
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ednevnik';
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Uspešno povezan sa MongoDB bazom!'))
@@ -31,7 +31,7 @@ const NastavnikSchema = new mongoose.Schema({
     ime: String,
     uloga: String,
     username: String,
-    password: String,
+    password: { type: String, default: "admin123" }, // Lozinka koja se menja i čuva
     odeljenja: [String],
     predmeti: [String]
 });
@@ -96,6 +96,24 @@ app.get('/api/podaci', async (req, res) => {
     }
 });
 
+// NOVA RUTA: Promena lozinke za admina ili nastavnika u bazi
+app.post('/api/nastavnici/promena-lozinke', async (req, res) => {
+    try {
+        const { username, novaLozinka } = req.body;
+        // Ako menjaš fabričkog admina koji još nema profil u nizu, kreiraćemo ga automatski
+        let korisnik = await Nastavnik.findOne({ username: username });
+        if (!korisnik && username === 'admin') {
+            korisnik = new Nastavnik({ ime: "Стефан Михајловић", uloga: "Администратор", username: "admin" });
+        }
+        if (korisnik) {
+            korisnik.password = novaLozinka;
+            await korisnik.save();
+            return res.json({ success: true, message: "Лозинка је успешно сачувана у бази!" });
+        }
+        res.status(444).json({ success: false, message: "Корисник није пронађен!" });
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
 // Predmeti
 app.post('/api/predmeti', async (req, res) => {
     try { const nov = await Predmet.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
@@ -112,7 +130,7 @@ app.delete('/api/odeljenja/:naziv', async (req, res) => {
     try { await Odeljenje.deleteOne({ naziv: req.params.naziv }); res.json({ message: "Obrisano" }); } catch (err) { res.status(400).json(err); }
 });
 
-// Nastavnici
+// Nastavnici generalno
 app.post('/api/nastavnici', async (req, res) => {
     try { const nov = await Nastavnik.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
 });
@@ -142,4 +160,4 @@ app.delete('/api/ucenici/:id', async (req, res) => {
     try { await Ucenik.findByIdAndDelete(req.params.id); res.json({ message: "Obrisano" }); } catch (err) { res.status(400).json(err); }
 });
 
-app.listen(PORT, () => console.log(`🚀 Moćni server radi cakum-pakum na portu ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server radi na portu ${PORT}`));
