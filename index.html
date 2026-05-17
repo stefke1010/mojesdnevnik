@@ -404,7 +404,7 @@
                                 </select>
                             </div>
                         </div>
-                        <button class="btn btn-primary" id="btn-pokreni-cas" onclick="zapocniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију</button>
+                        <button class="btn btn-primary" id="btn-pokreni-cas" onclick="zapocniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденciju</button>
                     </div>
                 </div>
 
@@ -552,7 +552,6 @@
             { id: "Matematika", naziv: "Математика" }
         ];
         
-        // FIKS 400: Izbacujemo brojeve iz simulacije da Mongoose nikada više ne puca na startu
         let bazaUcenika = {}; 
         let listaNastavnika = [];
         let casoviLista = [];
@@ -603,7 +602,6 @@
                 console.error("Konekcija sa serverom trenutno koristi локалну меморију:", err);
             }
 
-            // Obezbeđujemo privremeno odeljenje samo ako je baza skroz prazna
             if(Object.keys(bazaUcenika).length === 0) {
                 bazaUcenika = { "V-3": [] };
             }
@@ -873,6 +871,7 @@
             let u = bazaUcenika[aktivanČas.odeljenje].find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
             if(!u.ocene) u.ocene = [];
             u.ocene.push({ id: Date.now(), vrednost: selektovanaOcenaBroj, vrsta: document.getElementById('vrsta-ocene-select').value, predmet: aktivanČas.predmetId, datum: new Date().toLocaleDateString('sr-RS') });
+            
             zatvoriModal('ocena-modal');
             await posaljiUcenikaNaServer(u);
             if(document.getElementById('profil-modal').style.display === 'flex') { osveziIstorijuDosijea(u); }
@@ -963,7 +962,6 @@
         async function obrisiAktivnost(uId, aId) { let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId)); u.aktivnosti = u.aktivnosti.filter(x => x.id !== aId); await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); }
         async function izmeniAktivnost(uId, aId) { let od = document.getElementById('global-odeljenje').value; let u = bazaUcenika[od].find(x => (x._id === uId || x.id == uId)); let a = u.aktivnosti.find(x => x.id === aId); let nT = prompt("Измени опис:", a.tekst); if(nT) { a.tekst = nT; await posaljiUcenikaNaServer(u); osveziIstorijuDosijea(u); } }
 
-        /* FIKS PRI KRAJU ČASA: Više nema null (setting innerText) greške */
         async function zavrsiCasKomplet() {
             if(!aktivanČas) return;
             await fetch(`${API_URL}/api/casovi`, {
@@ -1053,14 +1051,8 @@
             document.getElementById(tabName).classList.add('active'); evt.currentTarget.classList.add('active'); 
         }
         
-        function izaberiNasumicnogUcenikaZaOcenu() {
-            let ucenici = bazaUcenika[aktivanČas.odeljenje] || [];
-            let prisutniUcenici = ucenici.filter(u => { return !(u.izostanci || []).some(iz => iz.lekcija === aktivanČas.lekcija); });
-            if (prisutniUcenici.length === 0) { alert("Нема присутних ученика на часу!"); return; }
-            let nasumicanIndeks = Math.floor(Math.random() * prisutniUcenici.length);
-            let izabraniUcenik = prisutniUcenici[nasumicanIndeks];
-            alert(`🎲 Насумично је изабран ученик: ${izabraniUcenik.ime}`);
-            otvoriProzorZaOcenu(izabraniUcenik._id || izabraniUcenik.id);
+        function proveriPravoIliOtvoriAdmin() {
+            switchPage('admin-panel-section');
         }
 
         function zatvoriModal(id) { document.getElementById(id).style.display = 'none'; }
