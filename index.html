@@ -216,6 +216,7 @@
         .matrix-grade-btn { width: 45px; height: 45px; border-radius: 6px; border: 2px solid var(--es-border); background: white; font-size: 18px; font-weight: bold; color: var(--es-dark-blue); cursor: pointer; transition: all 0.15s; }
         .matrix-grade-btn:hover, .matrix-grade-btn.selected-m-grade { background: var(--es-blue); color: white; border-color: var(--es-dark-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
 
+        /* MODAL OVERLAY UKOPAN SA DISPLAY NONE */
         .modal-overlay { 
             position: fixed !important; 
             top: 0 !important; 
@@ -292,7 +293,7 @@
                     
                     <div class="logout-dropdown" id="dropdown-logout-box">
                         <button class="logout-dropdown-item" onclick="promeniPismoSitema(event)"><i class="fa-solid fa-language"></i> <span id="btn-txt-pismo">Промени писмо (Lat)</span></button>
-                        <button class="logout-dropdown-item" onclick="promeniLozikrKorisnika(event)" id="btn-promena-loza-lnk"><i class="fa-solid fa-key"></i> <span id="btn-txt-lozinka">Промени лозинку</span></button>
+                        <button class="logout-dropdown-item" onclick="promeniLozinkuKorisnika(event)" id="btn-promena-loza-lnk"><i class="fa-solid fa-key"></i> <span id="btn-txt-lozinka">Промени лозинку</span></button>
                         <button class="logout-dropdown-item danger-btn" onclick="izvrsiOdjavuSaSistema(event)"><i class="fa-solid fa-right-from-bracket"></i> <span id="btn-txt-izlaz">Изађи из дневника</span></button>
                     </div>
                 </div>
@@ -355,7 +356,7 @@
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију 🚀</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију</button>
                         </div>
 
                     </div>
@@ -461,7 +462,7 @@
                                         <div class="form-group" style="margin:0;">
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
-                                                <option value="Напомена">Владање на часу</option>
+                                                <option value="Напомена">Напомена о владању</option>
                                                 <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
                                             </select>
                                         </div>
@@ -474,8 +475,9 @@
                                                 <option value="Укор одељенског већа">Укор одељенског већа</option>
                                                 <option value="Укор директора">Укор директора</option>
                                                 <option value="Укор наставничког већа">Укор наставничког већа</option>
+                                                <option value="Појачан васпитно-дисциплински рад">Појачан васпитно-дисциплински рад</option>
+                                                <option value="Опомена наставничког већа">Опомена наставничког већа</option>
                                                 <option value="Опомена одељенског већа">Опомена одељенског већа</option>
-                                                <option value="Појачан васпитни рад">Појачан васпитни рад</option>
                                             </select>
                                         </div>
                                     </div>
@@ -541,7 +543,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Системска улога:</label>
-                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељењски старешина</option><option>Администратор</option></select>
+                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељенски старешина</option><option>Администратор</option></select>
                                 </div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
@@ -619,7 +621,6 @@
             renderujUpisaneCasoveZaIzabraniDan();
         }
 
-        /* POPRAVLJENO: SADA PROMENJENA LOZINKA ADMINISTRATORA LETI DIREKTNO U MONGO I BRZO JE PREPOZNAJE */
         async function promeniLozinkuKorisnika(event) {
             if(event) event.stopPropagation();
             let novaLozinka = prompt("Унесите нову системску лозинку:");
@@ -1014,12 +1015,11 @@
             }
         }
 
-        /* POPRAVLJENO: PRIJAVA OD SADA PRVO PROVERAVA PROMENJENU ŠIFRU NA BAZI PRE NEGO ŠTO DOPUSTI ULAZ */
+        /* POPRAVLJENO: PRIJAVA OD SADA TRAŽI PODATKE DIREKTNO IZ BAZE */
         async function izvrsiPrijavuNaSistem() {
             let user = document.getElementById('sys-auth-user').value;
             let pass = document.getElementById('sys-auth-pass').value;
             
-            // Provera promenjenog administratorskog profila iz baze podataka
             let pronadjeniNastavnik = listaNastavnika.find(x => x.username === user && x.password === pass);
             
             if (pronadjeniNastavnik) {
@@ -1030,7 +1030,6 @@
                 };
                 uspesnoUlogovanUInterfejs();
             } else if (user === 'admin' && pass === 'admin123') {
-                // Fabrički bekap ako baza još uvek nema upisan nalog za admina
                 trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" };
                 uspesnoUlogovanUInterfejs();
             } else { 
@@ -1049,6 +1048,18 @@
         function switchPage(pageId) { document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active')); let t = document.getElementById(pageId); if(t) t.classList.add('active'); }
         function prebaciAdminTab(pId, bId) { document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active')); document.getElementById(pId).classList.add('active'); document.getElementById(bId).classList.add('active'); }
         function otvoriLokalniTab(e, tName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tName).classList.add('active'); e.currentTarget.classList.add('active'); }
+        
+        /* VRAĆENE I UKOPANE INSTRUKCIJE KOJE SU FALILE ZA REDIREKCIJU I OTVARANJE POPUP-a */
+        function IscrtajAdminTabele() {
+            let tPred = document.getElementById('tabela-admin-predmeti'); let tOdelj = document.getElementById('tabela-admin-odeljenja'); let tNast = document.getElementById('tabela-admin-nastavnici-lista');
+            if(tPred) tPred.innerHTML = regPredmeti.map((p) => `<tr><td><strong>${p.id}</strong></td><td>${p.naziv}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetSistem('${p.id}')">Обриши</button></td></tr>`).join('');
+            if(tOdelj) tOdelj.innerHTML = odeljenjaLista.map((o) => `<tr><td><strong>${o}</strong></td><td>Активан</td><td><button class="btn btn-danger btn-xs" onclick="obrisiOdeljenjeSistem('${o}')">Обриши</button></td></tr>`).join('');
+            if(document.getElementById('admin-nastavnik-odeljenja-checks')) document.getElementById('admin-nastavnik-odeljenja-checks').innerHTML = odeljenjaLista.map(o => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-od" value="${o}"> ${o}</label>`).join('');
+            if(document.getElementById('admin-nastavnik-predmeti-checks')) document.getElementById('admin-nastavnik-predmeti-checks').innerHTML = regPredmeti.map(p => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-pr" value="${p.naziv}"> ${p.id}</label>`).join('');
+            if(tNast) tNast.innerHTML = listaNastavnika.map(n => `<tr><td><strong>${n.ime}</strong><br><small>${n.uloga}</small></td><td><code>${n.username}</code></td><td><button class="btn btn-danger btn-xs" onclick="obrisiNastavnikaSistem('${n._id || n.id}')">Обриши</button></td></tr>`).join('');
+        }
+        function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
+        function zatvoriModal(id) { document.getElementById(id).style.setProperty('display', 'none', 'important'); }
     </script>
 </body>
 </html>
