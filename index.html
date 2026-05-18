@@ -462,7 +462,7 @@
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Напомена о владању</option>
-                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
+                                                <option value="Васпитна мера">Васпитно-дисциплинска мера ⚠️</option>
                                             </select>
                                         </div>
                                         
@@ -470,8 +470,8 @@
                                             <label>Изаберите васпитну меру:</label>
                                             <select class="form-control" id="vladanje-sluzbena-mera-select">
                                                 <option value="Опомена одељењског старешине">Опомена одељењског старешине</option>
-                                                <option value="Укор одељенског старешине">Укор одељенског старешине</option>
-                                                <option value="Укор одељенског већа">Укор одељенског већа</option>
+                                                <option value="Укор одељењског старешине">Укор одељењског старешине</option>
+                                                <option value="Укор одељењског већа">Укор одељењског већа</option>
                                                 <option value="Укор директора">Укор директора</option>
                                                 <option value="Укор наставничког већа">Укор наставничког већа</option>
                                             </select>
@@ -496,7 +496,7 @@
                                         <select class="form-control" id="vladanje-posledica-select">
                                             <option value="Нема последице">Нема последице</option>
                                             <option value="Остале последице">Остале последице</option>
-                                            <option value="Друштвено-користан рад">Друштвено-користан рад</option>
+                                            <option value="Друштвено-користан рад">Друштвено-користан рад 🛠️</option>
                                         </select>
                                     </div>
 
@@ -592,6 +592,7 @@
         let odabraniDanKalendara = new Date().getDate(); 
         let privremenaSelektovanaOcenaModala = "5"; 
 
+        let trenchesOl = "";
         let trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" };
 
         window.onload = async function() {
@@ -652,19 +653,13 @@
         }
 
         function promenaVrsteVladanjaMera() {
-            let vr = document.getElementById('vladanje-vrsummary-select') ? document.getElementById('vladanje-vrsummary-select').value : document.getElementById('vladanje-vrsta-select').value;
+            let vr = document.getElementById('vladanje-vrsta-select').value;
             let jeMera = (vr === 'Васпитана мера' || vr === 'Васпитна мера');
             
             document.getElementById('blok-izbor-mera').style.display = jeMera ? 'block' : 'none';
             document.getElementById('blok-posledice-mera').style.display = jeMera ? 'block' : 'none';
             document.getElementById('vladanje-detalji-napomene-blok').style.display = jeMera ? 'none' : 'flex';
         }
-
-        document.addEventListener('change', function(e) {
-            if(e.target && e.target.id === 'vladanje-vrsta-select') {
-                promenaVrsteVladanjaMera();
-            }
-        });
 
         function postaviVrednostMatriceOcena(ocena) {
             privremenaSelektovanaOcenaModala = ocena;
@@ -1050,7 +1045,6 @@
         function prebaciAdminTab(pId, bId) { document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active')); document.getElementById(pId).classList.add('active'); document.getElementById(bId).classList.add('active'); }
         function otvoriLokalniTab(e, tName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tName).classList.add('active'); e.currentTarget.classList.add('active'); }
         
-        /* VRAĆENE SVETLE SVE KONTROLE KOJE SU FALILE ZA ADMINISTRACIJU I MODALE */
         function IscrtajAdminTabele() {
             let tPred = document.getElementById('tabela-admin-predmeti'); let tOdelj = document.getElementById('tabela-admin-odeljenja'); let tNast = document.getElementById('tabela-admin-nastavnici-lista');
             if(tPred) tPred.innerHTML = regPredmeti.map((p) => `<tr><td><strong>${p.id}</strong></td><td>${p.naziv}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetSistem('${p.id}')">Обриши</button></td></tr>`).join('');
@@ -1058,6 +1052,12 @@
             if(document.getElementById('admin-nastavnik-odeljenja-checks')) document.getElementById('admin-nastavnik-odeljenja-checks').innerHTML = odeljenjaLista.map(o => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-od" value="${o}"> ${o}</label>`).join('');
             if(document.getElementById('admin-nastavnik-predmeti-checks')) document.getElementById('admin-nastavnik-predmeti-checks').innerHTML = regPredmeti.map(p => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-pr" value="${p.naziv}"> ${p.id}</label>`).join('');
             if(tNast) tNast.innerHTML = listaNastavnika.map(n => `<tr><td><strong>${n.ime}</strong><br><small>${n.uloga}</small></td><td><code>${n.username}</code></td><td><button class="btn btn-danger btn-xs" onclick="obrisiNastavnikaSistem('${n._id || n.id}')">Обриши</button></td></tr>`).join('');
+        }
+
+        /* VRAĆENA FUNKCIJA KOJA JE FALILA I PRAVILA PROBLEM U DOSIJEU ĐAKA KROZ POPUP */
+        async function AzurirajUcenikaNaServeru(u) {
+            await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) });
+            await osvežiSvePodatkeSaServera(); prikažiDosijeUčenika(odabraniUcenikId);
         }
 
         async function obrisiPredmetSistem(id) { if(confirm("Обрисати предмет?")) { await fetch(`${API_URL}/api/predmeti/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
