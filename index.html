@@ -216,7 +216,6 @@
         .matrix-grade-btn { width: 45px; height: 45px; border-radius: 6px; border: 2px solid var(--es-border); background: white; font-size: 18px; font-weight: bold; color: var(--es-dark-blue); cursor: pointer; transition: all 0.15s; }
         .matrix-grade-btn:hover, .matrix-grade-btn.selected-m-grade { background: var(--es-blue); color: white; border-color: var(--es-dark-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
 
-        /* MODAL OVERLAY UKOPAN SA DISPLAY NONE */
         .modal-overlay { 
             position: fixed !important; 
             top: 0 !important; 
@@ -356,7 +355,7 @@
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију 🚀</button>
                         </div>
 
                     </div>
@@ -470,14 +469,11 @@
                                         <div class="form-group" id="blok-izbor-mera" style="margin:0; display:none;">
                                             <label>Изаберите васпитну меру:</label>
                                             <select class="form-control" id="vladanje-sluzbena-mera-select">
-                                                <option value="Опомена одељенског старешине">Опомена одељенског старешине</option>
+                                                <option value="Опомена одељењског старешине">Опомена одељењског старешине</option>
                                                 <option value="Укор одељенског старешине">Укор одељенског старешине</option>
                                                 <option value="Укор одељенског већа">Укор одељенског већа</option>
                                                 <option value="Укор директора">Укор директора</option>
                                                 <option value="Укор наставничког већа">Укор наставничког већа</option>
-                                                <option value="Појачан васпитно-дисциплински рад">Појачан васпитно-дисциплински рад</option>
-                                                <option value="Опомена наставничког већа">Опомена наставничког већа</option>
-                                                <option value="Опомена одељенског већа">Опомена одељенског већа</option>
                                             </select>
                                         </div>
                                     </div>
@@ -519,7 +515,7 @@
                             <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
                             <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
                             <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
-                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
+                            <button class="btn btn-danger admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
@@ -543,7 +539,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Системска улога:</label>
-                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељенски старешина</option><option>Администратор</option></select>
+                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељењски старешина</option><option>Администратор</option></select>
                                 </div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
@@ -656,13 +652,19 @@
         }
 
         function promenaVrsteVladanjaMera() {
-            let vr = document.getElementById('vladanje-vrsta-select').value;
+            let vr = document.getElementById('vladanje-vrsummary-select') ? document.getElementById('vladanje-vrsummary-select').value : document.getElementById('vladanje-vrsta-select').value;
             let jeMera = (vr === 'Васпитана мера' || vr === 'Васпитна мера');
             
             document.getElementById('blok-izbor-mera').style.display = jeMera ? 'block' : 'none';
             document.getElementById('blok-posledice-mera').style.display = jeMera ? 'block' : 'none';
             document.getElementById('vladanje-detalji-napomene-blok').style.display = jeMera ? 'none' : 'flex';
         }
+
+        document.addEventListener('change', function(e) {
+            if(e.target && e.target.id === 'vladanje-vrsta-select') {
+                promenaVrsteVladanjaMera();
+            }
+        });
 
         function postaviVrednostMatriceOcena(ocena) {
             privremenaSelektovanaOcenaModala = ocena;
@@ -1015,7 +1017,6 @@
             }
         }
 
-        /* POPRAVLJENO: PRIJAVA OD SADA TRAŽI PODATKE DIREKTNO IZ BAZE */
         async function izvrsiPrijavuNaSistem() {
             let user = document.getElementById('sys-auth-user').value;
             let pass = document.getElementById('sys-auth-pass').value;
@@ -1049,7 +1050,7 @@
         function prebaciAdminTab(pId, bId) { document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active')); document.getElementById(pId).classList.add('active'); document.getElementById(bId).classList.add('active'); }
         function otvoriLokalniTab(e, tName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tName).classList.add('active'); e.currentTarget.classList.add('active'); }
         
-        /* VRAĆENE I UKOPANE INSTRUKCIJE KOJE SU FALILE ZA REDIREKCIJU I OTVARANJE POPUP-a */
+        /* VRAĆENE SVETLE SVE KONTROLE KOJE SU FALILE ZA ADMINISTRACIJU I MODALE */
         function IscrtajAdminTabele() {
             let tPred = document.getElementById('tabela-admin-predmeti'); let tOdelj = document.getElementById('tabela-admin-odeljenja'); let tNast = document.getElementById('tabela-admin-nastavnici-lista');
             if(tPred) tPred.innerHTML = regPredmeti.map((p) => `<tr><td><strong>${p.id}</strong></td><td>${p.naziv}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetSistem('${p.id}')">Обриши</button></td></tr>`).join('');
@@ -1058,6 +1059,16 @@
             if(document.getElementById('admin-nastavnik-predmeti-checks')) document.getElementById('admin-nastavnik-predmeti-checks').innerHTML = regPredmeti.map(p => `<label class="checkbox-item"><input type="checkbox" name="adm-nast-pr" value="${p.naziv}"> ${p.id}</label>`).join('');
             if(tNast) tNast.innerHTML = listaNastavnika.map(n => `<tr><td><strong>${n.ime}</strong><br><small>${n.uloga}</small></td><td><code>${n.username}</code></td><td><button class="btn btn-danger btn-xs" onclick="obrisiNastavnikaSistem('${n._id || n.id}')">Обриши</button></td></tr>`).join('');
         }
+
+        async function obrisiPredmetSistem(id) { if(confirm("Обрисати предмет?")) { await fetch(`${API_URL}/api/predmeti/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
+        async function obrisiOdeljenjeSistem(naziv) { if(confirm("Обрисати одељење?")) { await fetch(`${API_URL}/api/odeljenja/${naziv}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
+        async function dodajNoviPredmetSistem() { let n = document.getElementById('admin-novi-predmet-input').value; if(!n) return; let sifra = n.substring(0,3).toUpperCase() + Math.floor(Math.random()*90+10); await fetch(`${API_URL}/api/predmeti`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: sifra, naziv: n }) }); document.getElementById('admin-novi-predmet-input').value = ""; await osvežiSvePodatkeSaServera(); }
+        async function dodajNovoOdeljenjeSistem() { let o = document.getElementById('admin-novo-odeljenje-input').value; if(!o) return; await fetch(`${API_URL}/api/odeljenja`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ naziv: o }) }); document.getElementById('admin-novo-odeljenje-input').value = ""; await osvežiSvePodatkeSaServera(); }
+        async function dodajUcenikaIzAdminPanela() { let ime = document.getElementById('admin-ucenik-ime-input').value; let odeljenje = document.getElementById('global-odeljenje').value; if(!ime) return; await fetch(`${API_URL}/api/ucenici`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ime, odeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[], ocena_vladanja:"5" }) }); document.getElementById('admin-ucenik-ime-input').value = ""; await osvežiSvePodatkeSaServera(); switchPage('stranica-lista-imenik'); }
+        async function dodajNastavnikaSistem() { let ime = document.getElementById('admin-nastavnik-ime').value; let uloga = document.getElementById('admin-nastavnik-uloga').value; let username = document.getElementById('admin-nastavnik-user').value; let password = document.getElementById('admin-nastavnik-pass').value; if(!ime || !username || !password) { alert("Попуните поља!"); return; } let odeljenja = Array.from(document.querySelectorAll('input[name="adm-nast-od"]:checked')).map(cb => cb.value); let predmeti = Array.from(document.querySelectorAll('input[name="adm-nast-pr"]:checked')).map(cb => cb.value); await fetch(`${API_URL}/api/nastavnici`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ime, uloga, username, password, odeljenja, predmeti }) }); document.getElementById('admin-nastavnik-ime').value = ""; document.getElementById('admin-nastavnik-user').value = ""; document.getElementById('admin-nastavnik-pass').value = ""; await osvežiSvePodatkeSaServera(); alert("Успешно!"); }
+        async function obrisiNastavnikaSistem(id) { if(confirm("Обрисати наставника?")) { await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
+        async function AzurirajUcenikaNaServeruBezDosijea(u) { await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }); await osvežiSvePodatkeSaServera(); }
+
         function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
         function zatvoriModal(id) { document.getElementById(id).style.setProperty('display', 'none', 'important'); }
     </script>
