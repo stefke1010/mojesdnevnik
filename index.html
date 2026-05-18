@@ -93,7 +93,7 @@
         .calendar-cell:hover { background: #eef5fa; border-color: var(--es-light-blue); color: var(--es-light-blue); }
         .calendar-cell.active-day { background: var(--es-blue) !important; color: white !important; border-color: var(--es-dark-blue) !important; font-weight: bold; box-shadow: 0 2px 6px rgba(28,84,132,0.3); }
 
-        /* NOVO: PREGLED UPISANIH ČASOVA NA ISTOM TABU ISPOD KALENDARA */
+        /* PREGLED UPISANIH ČASOVA NA ISTOM TABU ISPOD KALENDARA */
         .upisani-casovi-danas-box { background: white; border-radius: 8px; border: 1px solid var(--es-border); padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
 
         /* FORMA UPIS DESNO */
@@ -145,7 +145,7 @@
         .student-profile-card:hover { border-color: var(--es-light-blue); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         /* ADMIN I DOSIJE LAYOUT */
-        .profile-layout-grid { display: grid; grid-template-columns: 260px 1fr; gap: 25px; background: white; border-radius: 8px; border: 1px solid var(--es-border); padding: 25px; }
+        .profile-container { display: grid; grid-template-columns: 260px 1fr; gap: 25px; background: white; border-radius: 8px; border: 1px solid var(--es-border); padding: 25px; }
         .profile-sidebar-left { text-align: center; border-right: 1px solid var(--es-border); padding-right: 25px; }
         .profile-sidebar-left .big-avatar { width: 100px; height: 100px; background: #eef2f5; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 42px; color: #7f91a0; border: 1px solid var(--es-border); }
         
@@ -196,7 +196,7 @@
                     </div>
                     <div class="sel-block" style="margin-left: 15px;">
                         <span class="trans-node" data-cyr="Предмет" data-lat="Predmet">Предмет</span>
-                        <select class="es-select" id="global-predmet" onchange="osveziDosijeAkoJeOtvoren()"></select>
+                        <select class="es-select" id="global-predmet" onchange="promenaFiltera()"></select>
                     </div>
                 </div>
                 
@@ -241,10 +241,10 @@
                                 <h4 style="color: var(--es-dark-blue); margin-bottom: 12px;"><i class="fa-solid fa-folder-open"></i> <span id="lbl-upisani-naslov">Уписани часови за одабрани дан:</span></h4>
                                 <table class="es-table" style="margin-top: 0;">
                                     <thead>
-                                        <tr><th style="width: 80px;">Час</th><th>Наставна једиnica / Лекција</th><th>Предмет</th><th style="width: 100px;">Акције</th></tr>
+                                        <tr><th style="width: 80px;">Час</th><th>Наставна јединица / Лекција</th><th>Предмет</th><th style="width: 100px;">Акције</th></tr>
                                     </thead>
                                     <tbody id="tabela-upisanih-casova-za-izabrani-dan">
-                                        <tr><td colspan="4" style="color: #718096;">Одаберите датум на календарu за приказ часова.</td></tr>
+                                        <tr><td colspan="4" style="color: #718096;">Одаберите датум на календару за приказ часова.</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -353,7 +353,7 @@
                             </div>
                             <div id="pane-nastavnici" class="admin-pane">
                                 <h3>Креирање корисничких профила за наставнике</h3><br>
-                                <div class="form-group"><label>Име и презиме наставnika:</label><input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић"></div>
+                                <div class="form-group"><label>Име и презиме наставника:</label><input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић"></div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
                                     <div class="form-group"><label>Username:</label><input type="text" id="admin-nastavnik-user" class="form-control" placeholder="korisnik"></div>
                                     <div class="form-group"><label>Password:</label><input type="text" id="admin-nastavnik-pass" class="form-control" placeholder="sifra123"></div>
@@ -422,7 +422,7 @@
             login_sub: { cyr: 'Пријава на систем за наставнике и админе', lat: 'Prijava na sistem za nastavnike i admina' },
             lbl_user: { cyr: 'Корисничко име:', lat: 'Korisničko ime:' },
             lbl_pass: { cyr: 'Лозинка:', lat: 'Lozinka:' },
-            login_btn: { cyr: 'Пријави се на систем 🔓', lat: 'Prijavi se na sistem 🔓' },
+            login_btn: { cyr: 'Пријави се на систем 🔓', lat: 'Prijava na sistem za nastavnike i admina 🔓' },
             txt_pismo: { cyr: '<i class="fa-solid fa-language"></i> Промени писмо (Lat)', lat: '<i class="fa-solid fa-language"></i> Promeni pismo (Ćir)' },
             txt_lozinka: { cyr: '<i class="fa-solid fa-key"></i> Промени лозинку', lat: '<i class="fa-solid fa-key"></i> Promeni lozinku' },
             txt_izlaz: { cyr: '<i class="fa-solid fa-right-from-bracket"></i> Изађи из дневника', lat: '<i class="fa-solid fa-right-from-bracket"></i> Izađi iz dnevnika' }
@@ -466,6 +466,7 @@
             let dropdown = document.getElementById('dropdown-logout-box');
             if(dropdown) dropdown.style.display = 'none';
             ucitajUcenikeUMrezu();
+            renderujUpisaneCasoveZaIzabraniDan();
         }
 
         async function promeniLozinkuKorisnika(event) {
@@ -515,8 +516,6 @@
             if(aktivnaCelija) aktivnaCelija.classList.add('active-day');
             
             document.getElementById('upis-prikaz-datuma').value = `${dan}. мај 2026. године`;
-            
-            // NOVO: Okidanje prikaza upisanih časova ispod kalendara čim se klikne datum
             renderujUpisaneCasoveZaIzabraniDan();
         }
 
@@ -551,7 +550,28 @@
             }
         }
 
-        /* NOVO: FUNKCIJA KOJA DETALJNO ISCRTAVA I SORTIRA UPISANE ČASOVE NA ISTOM TABU ISPOD KALENDARA */
+        function OsveziSelectMenijeIPanele() {
+            let oSel = document.getElementById('global-odeljenje');
+            let pSel = document.getElementById('global-predmet');
+            if(!oSel || !pSel) return;
+            
+            let staroO = oSel.value; let staroP = pSel.value;
+            oSel.innerHTML = odeljenjaLista.map(o => `<option value="${o}">${o}</option>`).join('');
+            pSel.innerHTML = regPredmeti.map(p => `<option value="${p.naziv}">${p.naziv}</option>`).join('');
+            
+            if(staroO && odeljenjaLista.includes(staroO)) oSel.value = staroO;
+            if(staroP && regPredmeti.some(x => x.naziv === staroP)) pSel.value = staroP;
+
+            ucitajUcenikeUMrezu();
+            IscrtajAdminTabele();
+        }
+
+        function promenaFiltera() {
+            ucitajUcenikeUMrezu();
+            prikaziPrethodnuNastavnuJedinicu();
+            renderujUpisaneCasoveZaIzabraniDan();
+        }
+
         function renderujUpisaneCasoveZaIzabraniDan() {
             let listaBox = document.getElementById('tabela-upisanih-casova-za-izabrani-dan');
             if(!listaBox) return;
@@ -568,7 +588,6 @@
                 return;
             }
             
-// SORTIRANJE ČASOVA PO BROJU (OD MANJEG KA VEĆEM) I UPIS U TABELU ISPOD KALENDARA
             let sortirani = [...filtrirani].sort((a, b) => Number(a.rbr) - Number(b.rbr));
             
             listaBox.innerHTML = sortirani.map(c => `
@@ -607,7 +626,9 @@
 
         function ucitajUcenikeUMrezu() {
             let trenches = document.getElementById('global-odeljenje').value;
-            document.getElementById('imenik-trenutno-odjenje').innerText = trenches;
+            let targetBlock = document.getElementById('imenik-trenutno-odjenje');
+            if(targetBlock) targetBlock.innerText = trenches;
+
             let kontejner = document.getElementById('mreza-ucenika-imenik');
             if(!kontejner) return; kontejner.innerHTML = "";
             let filtrirani = sviUcenici.filter(u => u.odeljenje === trenches);
@@ -725,6 +746,7 @@
                 u.vladanje_lista.push({ id: Date.now(), vrsta: 'Напомена', tekst: napomena, datum: `2026-05-${odabraniDanKalendara}`, predmet: aktivanCasPodaci.predmetId, cas: aktivanCasPodaci.rbr });
                 await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) });
                 alert("Напомена успешно уписана!");
+                await osvežiSvePodatkeSaServera();
             }
         }
 
@@ -884,8 +906,6 @@
         }
         async function obrisiNastavnikaSistem(id) { if(confirm("Обрисати налог овог наставника?")) { await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
 
-        function renderujCasoveTimeline() {} // Isključen stari hronološki timeline radi nove tabele
-        
         async function izvrsiPrijavuNaSistem() {
             let user = document.getElementById('sys-auth-user').value;
             let pass = document.getElementById('sys-auth-pass').value;
@@ -900,13 +920,23 @@
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             let t = document.getElementById(pageId); if(t) t.classList.add('active');
         }
+
         function prebaciAdminTab(pId, bId) {
             document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
             document.getElementById(bId).classList.add('active');
         }
+        
+        function otvoriLokalniTab(e, tName) {
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active'));
+            document.getElementById(tName).classList.add('active');
+            e.currentTarget.classList.add('active');
+        }
+
         function zatvoriModal(id) { document.getElementById(id).style.setProperty('display', 'none', 'important'); }
+        function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
     </script>
 </body>
 </html>
