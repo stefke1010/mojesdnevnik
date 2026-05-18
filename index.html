@@ -202,6 +202,20 @@
         .profile-sidebar-left { text-align: center; border-right: 1px solid var(--es-border); padding-right: 25px; }
         .profile-sidebar-left .big-avatar { width: 100px; height: 100px; background: #eef2f5; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 42px; color: #7f91a0; border: 1px solid var(--es-border); }
         
+        .tabs-header { display: flex; border-bottom: 2px solid #edf2f7; margin-bottom: 20px; gap: 15px; }
+        .tab-link { padding: 10px 5px; cursor: pointer; color: #718096; font-weight: 500; border-bottom: 2px solid transparent; }
+        .tab-link.active { color: var(--es-light-blue); border-bottom-color: var(--es-light-blue); font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .meseci-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: center; table-layout: fixed; }
+        .meseci-table th, .meseci-table td { border: 1px solid var(--es-border); padding: 12px 4px; font-size: 14px; min-height: 50px; }
+        .meseci-table th { background-color: #f8fafc; color: #4a5568; font-weight: bold; }
+        .grade-circle { display: inline-flex; width: 26px; height: 26px; background-color: #4caf50; color: white; border-radius: 4px; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; margin: 2px; position: relative; cursor: pointer; }
+        .grade-circle.activity-mark { background-color: #9c27b0; }
+        
+        .vladanje-traka-es { background: white; border: 1px solid var(--es-border); border-left: 5px solid #cbd5e1; border-radius: 4px; padding: 15px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+
         .es-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
         .es-table th, .es-table td { padding: 12px; border: 1px solid var(--es-border); text-align: left; }
         .es-table th { background: #f8fafc; color: #4a5568; font-weight: bold; }
@@ -211,8 +225,8 @@
 
     <div id="stranica-login-sistema" class="full-login-overlay">
         <div class="login-box">
-            <h2 id="login-glavni-naslov"><i class="fa-solid fa-graduation-cap"></i>мој есдневник</h2>
-            <p id="login-podnaslov">Пријава на дневник за наставнике</p>
+            <h2 id="login-glavni-naslov"><i class="fa-solid fa-graduation-cap"></i> еСДневник Про</h2>
+            <p id="login-podnaslov">Пријава на систем за наставнике i админе</p>
             <div class="form-group" style="text-align: left;">
                 <label id="login-lbl-user">Корисничко име:</label>
                 <input type="text" id="sys-auth-user" class="form-control" value="admin">
@@ -221,7 +235,7 @@
                 <label id="login-lbl-pass">Лозинка:</label>
                 <input type="password" id="sys-auth-pass" class="form-control" value="admin123">
             </div>
-            <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријавa</button>
+            <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријави се на систем 🔓</button>
         </div>
     </div>
 
@@ -230,12 +244,12 @@
         <div class="sidebar">
             <div class="logo-area">
                 <i class="fa-solid fa-graduation-cap"></i>
-                <div><p>мој есдневник</p></div>
+                <div><p>еСДневник Про</p></div>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник рада</li>
-                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
-                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација </li>
+                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик одељења</li>
+                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација 🔐</li>
             </ul>
         </div>
 
@@ -255,7 +269,7 @@
                 
                 <div class="user-panel" onclick="toggleLogoutDropdown(event)">
                     <div class="user-text">
-                        <p class="user-role class-role-trans" data-cyr="Директор" data-lat="Direktor">Директор</p>
+                        <p class="user-role class-role-trans" data-cyr="ШКОЛСКИ КООРДИНАТОР" data-lat="ŠKOLSKI KOORDINATOR">ШКОЛСКИ КООРДИНАТОР</p>
                         <p class="user-name" id="prikazano-ime-nastavnika-header">Стефан Михајловић <i class="fa-solid fa-chevron-down" id="arrow-logout-icon"></i></p>
                     </div>
                     <div class="user-avatar"><i class="fa-solid fa-user-shield"></i></div>
@@ -305,7 +319,7 @@
 
                         <div class="side-form-box">
                             <div class="prethodna-lekcija-box">
-                                <strong>Претходна наставна јединица:</strong>
+                                <strong>📋 Претходна наставна јединица:</strong>
                                 <p id="txt-prethodna-lekcija" style="margin-top: 4px; color: #4a5568; font-style: italic;">Нема података.</p>
                             </div>
 
@@ -325,7 +339,7 @@
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију 🚀</button>
                         </div>
 
                     </div>
@@ -356,7 +370,7 @@
 
                 <div id="stranica-lista-imenik" class="page-section">
                     <h2 style="color: var(--es-dark-blue); margin-bottom: 5px;"><i class="fa-solid fa-users"></i> Именик</h2>
-                    <p style="color: #a0aec0; font-size: 13px; margin-bottom: 10px;">Разредно одељење</p>
+                    <p style="color: #a0aec0; font-size: 13px; margin-bottom: 10px;">Разредно одељење <span id="imenik-trenutno-odjenje">-</span></p>
                     <div class="imenik-grid" id="mreza-ucenika-imenik"></div>
                 </div>
 
@@ -364,6 +378,11 @@
                     <button class="btn btn-secondary" style="margin-bottom:20px; width: auto;" onclick="switchPage('stranica-lista-imenik')">← Назад у именик</button>
                     <div class="profile-container">
                         <div class="profile-sidebar-left">
+                            <div class="nav-arrows-container">
+                                <button class="arrow-nav-btn" id="dosije-arrow-prev" onclick="navigacijaUcenika(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="random-nav-btn" onclick="odaberiNasumicnogUcenika()"><i class="fa-solid fa-dice"></i> <span class="trans-node" data-cyr="Ђак" data-lat="Đak">Ђак</span></button>
+                                <button class="arrow-nav-btn" id="dosije-arrow-next" onclick="navigacijaUcenika(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
                             <div class="big-avatar"><i class="fa-solid fa-user-graduate"></i></div>
                             <h3 id="dosije-ucenik-ime" style="color:var(--es-dark-blue);">Ђак</h3>
                             <div class="badge-prosek" id="dosije-ucenik-prosek" style="margin-top: 15px;">Просек: -</div>
@@ -371,14 +390,28 @@
                         </div>
                         <div class="profile-right">
                             <div class="tabs-header">
-                                <div class="tab-link active">Оцене и Историја уноса</div>
+                                <div class="tab-link active" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Оцене</div>
+                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-izostanci')">Изостанци</div>
+                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-vladanje')">Владање</div>
                             </div>
+                            
                             <div id="tab-dosije-ocene" class="tab-content active">
                                 <table class="meseci-table">
                                     <thead><tr><th>IX</th><th>X</th><th>XI</th><th>XII</th><th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th><th>VI</th></tr></thead>
                                     <tbody><tr><td id="m-9"></td><td id="m-10"></td><td id="m-11"></td><td id="m-12"></td><td id="m-1"></td><td id="m-2"></td><td id="m-3"></td><td id="m-4"></td><td id="m-5"></td><td id="m-6"></td></tr></tbody>
                                 </table>
+                                <h4 style="font-size: 14px; margin-top: 15px; margin-bottom: 10px; color: var(--es-dark-blue);">Историја уноса из предмета:</h4>
                                 <ul class="history-list" id="lista-svih-ocena-ucenika"></ul>
+                            </div>
+
+                            <div id="tab-dosije-izostanci" class="tab-content">
+                                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--es-dark-blue);">Евиденција изостанака:</h4>
+                                <ul class="history-list" id="lista-izostanaka-kontejner"></ul>
+                            </div>
+
+                            <div id="tab-dosije-vladanje" class="tab-content">
+                                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--es-dark-blue);">Забелешке и напомене о владању:</h4>
+                                <ul class="history-list" id="lista-vladanja-kontejner"></ul>
                             </div>
                         </div>
                     </div>
@@ -390,7 +423,7 @@
                             <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
                             <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
                             <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
-                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Креирање профила</button>
+                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
@@ -414,13 +447,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Системска улога:</label>
-                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељенски старешина</option><option>Директор</option></select>
+                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељењски старешина</option><option>Администратор</option></select>
                                 </div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
                                     <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
                                 </div>
-                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај и активирај профил</button>
+                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај и активирај профил наставника 👤</button>
                                 <br><br>
                                 <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
                             </div>
@@ -428,6 +461,37 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-ocena-upis">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span>Унесите нову оцену / Активност</span>
+                <span style="cursor:pointer; font-size: 24px;" onclick="zatvoriModal('modal-ocena-upis')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label style="font-weight:bold;">Врста уноса:</label>
+                    <select class="form-control" id="nova-ocena-vrsta-input" onchange="promenaVrsteOceneModala()">
+                        <option value="Оцена">Бројчана оцена (1-5)</option>
+                        <option value="Активност">Активност на часу (+ / - / симбол)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-weight:bold;">Вредност / Оцена:</label>
+                    <input type="text" class="form-control" id="nova-ocena-vrednost" value="5">
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-weight:bold;">Категорија провере / Опис активности:</label>
+                    <input type="text" class="form-control" id="nova-ocena-kategorija" value="Усмена провера">
+                </div>
+                <div class="form-group" style="margin-top: 12px; margin-bottom: 20px;">
+                    <label style="font-weight:bold;">Датум уноса:</label>
+                    <input type="date" id="nova-ocena-datum-input" class="form-control">
+                </div>
+                <button class="btn btn-success" style="width:100%; justify-content:center; padding: 10px;" onclick="sacuvajOcenuĐakuUBazu()">Сачувај у дневник</button>
             </div>
         </div>
     </div>
@@ -443,14 +507,14 @@
         let trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" };
 
         const recnikPisma = {
-            login_title: { cyr: '<i class="fa-solid fa-graduation-cap"></i> мој есдневник', lat: '<i class="fa-solid fa-graduation-cap"></i> moj esdnevnik' },
+            login_title: { cyr: '<i class="fa-solid fa-graduation-cap"></i> еСДневник Про', lat: '<i class="fa-solid fa-graduation-cap"></i> eSDnevnik Pro' },
             login_sub: { cyr: 'Пријава на систем за наставнике и админе', lat: 'Prijava na sistem za nastavnike i admina' },
             lbl_user: { cyr: 'Корисничко име:', lat: 'Korisničko ime:' },
             lbl_pass: { cyr: 'Лозинка:', lat: 'Lozinka:' },
-            login_btn: { cyr: 'Пријавa', lat: 'Prijava' },
+            login_btn: { cyr: 'Пријави се на систем 🔓', lat: 'Prijavi se na sistem 🔓' },
             txt_pismo: { cyr: '<i class="fa-solid fa-language"></i> Промени писмо (Lat)', lat: '<i class="fa-solid fa-language"></i> Promeni pismo (Ćir)' },
             txt_lozinka: { cyr: '<i class="fa-solid fa-key"></i> Промени лозинку', lat: '<i class="fa-solid fa-key"></i> Promeni lozinku' },
-            txt_izlaz: { cyr: '<i class="fa-solid fa-right-from-bracket"></i> Изађи из dnevnika', lat: '<i class="fa-solid fa-right-from-bracket"></i> Izađi iz dnevnika' }
+            txt_izlaz: { cyr: '<i class="fa-solid fa-right-from-bracket"></i> Изађи из дневника', lat: '<i class="fa-solid fa-right-from-bracket"></i> Izađi iz dnevnika' }
         };
 
         window.onload = async function() {
@@ -723,7 +787,7 @@
                             <button class="smart-icon-btn btn-mark" onclick="brziUpisOcene('${uId}')" title="Упиши оцену">5</button>
                             <button class="smart-icon-btn btn-note" onclick="brziUpisNapomene('${uId}')" title="Упиши напомену владиња"><i class="fa-solid fa-message"></i></button>
                             <button class="smart-icon-btn btn-act" onclick="brziUpisAktivnosti('${uId}')" title="Упиши активност"><i class="fa-solid fa-face-smile"></i></button>
-                            <button class="smart-icon-btn btn-abs-x" id="abs-x-${uId}" onclick="okiniOdsustvoUcenika('${uId}')" title="Означи одсуство">Одсутан/на</button>
+                            <button class="smart-icon-btn btn-abs-x" id="abs-x-${uId}" onclick="okiniOdsustvoUcenika('${uId}')" title="Означи одсуство">❌</button>
                         </div>
                     </div>`;
             });
@@ -809,7 +873,7 @@
                 }
             }
             
-            alert("Час је успешно завршен!");
+            alert("Час је успешно затворен, сви подаци су сачувани у бази!");
             document.getElementById('lekcija-naziv').value = "";
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
@@ -817,6 +881,7 @@
             switchPage('stranica-pocetna');
         }
 
+        /* VRACENA KOMPLETNA INTEGRALNA DETALJNA LOGIKA PROFILA - SA MESECIMA, IZOSTANCIMA I VLADANJEM DIREKTNO IZ BAZE */
         function prikažiDosijeUčenika(id) {
             odabraniUcenikId = id;
             let u = sviUcenici.find(x => (x._id === id || x.id == id)); if(!u) return;
@@ -835,20 +900,23 @@
                 dStrelica.style.visibility = (trenutniIndex === filtriraniOdeljenje.length - 1) ? 'hidden' : 'visible';
             }
 
+            // Očisti sve ćelije meseci pre iscrtavanja novih
             for(let i=1; i<=12; i++) {
                 let celija = document.getElementById('m-' + i); if(celija) celija.innerHTML = "";
             }
 
             let zbir = 0; let brojOcenaZaProsek = 0;
             let fOcene = (u.ocene || []).filter(x => x.predmet === tp);
+            
+            // 1. ISCRTAVANJE TABE OCENA I RAZVRSTAVANJE PO MESECIMA (IX, X, XI...)
             let oListaHTML = document.getElementById('lista-svih-ocena-ucenika');
-            oListaHTML.innerHTML = fOcene.length === 0 ? "<li>Нема оцена.</li>" : "";
+            oListaHTML.innerHTML = fOcene.length === 0 ? "<li>Нема унетих оцена из овог предмета.</li>" : "";
 
             fOcene.forEach(o => {
                 let klasaKruga = o.tip === 'Активност' ? 'grade-circle activity-mark' : 'grade-circle';
                 if(o.tip !== 'Активност') { zbir += Number(o.vrednost); brojOcenaZaProsek++; }
 
-                let mesec = 9;
+                let mesec = 9; // Default septembar
                 if(o.datum) {
                     if(o.datum.includes('-')) mesec = parseInt(o.datum.split('-')[1]);
                     else if(o.datum.includes('.')) mesec = parseInt(o.datum.split('.')[1]);
@@ -865,6 +933,37 @@
             });
 
             document.getElementById('dosije-ucenik-prosek').innerText = `Просек: ${brojOcenaZaProsek > 0 ? (zbir / brojOcenaZaProsek).toFixed(2) : "-"}`;
+
+            // 2. ISPIS IZOSTANAKA ĐAKA U NJEGOVOM TABU
+            let izostanciKontejner = document.getElementById('lista-izostanaka-kontejner');
+            if(izostanciKontejner) {
+                let fIzostanci = u.izostanci || [];
+                izostanciKontejner.innerHTML = fIzostanci.length === 0 ? "<li>Ученик нема забележених изостанака.</li>" : "";
+                fIzostanci.forEach(iz => {
+                    izostanciKontejner.innerHTML += `
+                        <li class="history-item" style="margin-bottom: 5px;">
+                            <span>Датум: <strong>${iz.datum}</strong> | Предмет: <strong>${iz.predmet}</strong> | Статус: <span style="color:var(--es-red); font-weight:bold;">${iz.status}</span></span>
+                        </li>`;
+                });
+            }
+
+            // 3. ISPIS BELEŽAKA O VLADANJU U NJEGOVOM TABU
+            let vladanjeKontejner = document.getElementById('lista-vladanja-kontejner');
+            if(vladanjeKontejner) {
+                let fVladanje = u.vladanje_lista || [];
+                vladanjeKontejner.innerHTML = fVladanje.length === 0 ? "<li>Ученик нема напомена о владању.</li>" : "";
+                fVladanje.forEach(v => {
+                    vladanjeKontejner.innerHTML += `
+                        <li class="vladanje-traka-es" style="background:#f8fafc; border:1px solid var(--es-border); border-left:4px solid var(--es-blue); padding:10px; border-radius:4px; margin-bottom:5px; list-style:none;">
+                            <div>
+                                <span style="font-size:12px; color:#718096;">Датум записи: ${v.datum}</span>
+                                <p style="font-size:14px; font-weight:bold; margin-top:2px;">${v.vrsta} ${v.cas ? `- ${v.cas}. час` : ''}</p>
+                                <p style="font-size:14px; color:#4a5568; margin-top:4px; font-style:italic;">"${v.tekst}"</p>
+                            </div>
+                        </li>`;
+                });
+            }
+
             switchPage('stranica-dosije');
         }
 
@@ -938,38 +1037,24 @@
         }
         async function obrisiNastavnikaSistem(id) { if(confirm("Обрисати налог овог наставника?")) { await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
 
-        /* NOVO: DYNAMIC LOGGING PROVERA - PROLAZI KROZ CELU BAZU NASTAVNIKA */
         async function izvrsiPrijavuNaSistem() {
             let user = document.getElementById('sys-auth-user').value;
             let pass = document.getElementById('sys-auth-pass').value;
-            
-            // 1. Provera glavnog administrativnog naloga
             if(user === 'admin' && pass === 'admin123') {
                 trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" };
                 uspesnoUlogovanUInterfejs();
                 return;
             }
-            
-            // 2. Provera nastavničkih profila napravljenih u bazi podataka
             let pronadjeniNastavnik = listaNastavnika.find(x => x.username === user && x.password === pass);
             if(pronadjeniNastavnik) {
-                trenutnoUlogovaniKorisnik = { 
-                    ime: pronadjeniNastavnik.ime, 
-                    uloga: pronadjeniNastavnik.uloga.toUpperCase(), 
-                    username: pronadjeniNastavnik.username 
-                };
+                trenutnoUlogovaniKorisnik = { ime: pronadjeniNastavnik.ime, uloga: pronadjeniNastavnik.uloga.toUpperCase(), username: pronadjeniNastavnik.username };
                 uspesnoUlogovanUInterfejs();
-            } else { 
-                alert("Грешка при пријави! Корисничко име или лозинка нису тачни."); 
-            }
+            } else { alert("Грешка при пријави!"); }
         }
 
         function uspesnoUlogovanUInterfejs() {
-            // Promeni natpise u headeru na osnovu ulogovanog profila
             document.getElementById('prikazano-ime-nastavnika-header').innerHTML = `${trenutnoUlogovaniKorisnik.ime} <i class="fa-solid fa-chevron-down" id="arrow-logout-icon"></i>`;
             document.querySelector('.class-role-trans').innerText = trenutnoUlogovaniKorisnik.uloga;
-            
-            // Sakrij login, otvori dnevnik
             document.getElementById('stranica-login-sistema').style.setProperty('display', 'none', 'important');
             document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
             OsveziSelectMenijeIPanele();
