@@ -211,8 +211,8 @@
 
     <div id="stranica-login-sistema" class="full-login-overlay">
         <div class="login-box">
-            <h2 id="login-glavni-naslov"><i class="fa-solid fa-graduation-cap"></i> еСДневник Про</h2>
-            <p id="login-podnaslov">Пријава на систем за наставнике и админе</p>
+            <h2 id="login-glavni-naslov"><i class="fa-solid fa-graduation-cap"></i>мој есдневник</h2>
+            <p id="login-podnaslov">Пријава на дневник за наставнике</p>
             <div class="form-group" style="text-align: left;">
                 <label id="login-lbl-user">Корисничко име:</label>
                 <input type="text" id="sys-auth-user" class="form-control" value="admin">
@@ -221,7 +221,7 @@
                 <label id="login-lbl-pass">Лозинка:</label>
                 <input type="password" id="sys-auth-pass" class="form-control" value="admin123">
             </div>
-            <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријави се на систем 🔓</button>
+            <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријавa</button>
         </div>
     </div>
 
@@ -230,12 +230,12 @@
         <div class="sidebar">
             <div class="logo-area">
                 <i class="fa-solid fa-graduation-cap"></i>
-                <div><p>еСДневник Про</p></div>
+                <div><p>мој есдневник</p></div>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник рада</li>
-                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик одељења</li>
-                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација 🔐</li>
+                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
+                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација </li>
             </ul>
         </div>
 
@@ -255,7 +255,7 @@
                 
                 <div class="user-panel" onclick="toggleLogoutDropdown(event)">
                     <div class="user-text">
-                        <p class="user-role class-role-trans" data-cyr="ШКОЛСКИ КООРДИНАТОР" data-lat="ŠKOLSKI KOORDINATOR">ШКОЛСКИ КООРДИНАТОР</p>
+                        <p class="user-role class-role-trans" data-cyr="Директор" data-lat="Direktor">Директор</p>
                         <p class="user-name" id="prikazano-ime-nastavnika-header">Стефан Михајловић <i class="fa-solid fa-chevron-down" id="arrow-logout-icon"></i></p>
                     </div>
                     <div class="user-avatar"><i class="fa-solid fa-user-shield"></i></div>
@@ -305,7 +305,7 @@
 
                         <div class="side-form-box">
                             <div class="prethodna-lekcija-box">
-                                <strong>📋 Претходна наставна јединица:</strong>
+                                <strong>Претходна наставна јединица:</strong>
                                 <p id="txt-prethodna-lekcija" style="margin-top: 4px; color: #4a5568; font-style: italic;">Нема података.</p>
                             </div>
 
@@ -325,7 +325,7 @@
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију 🚀</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час</button>
                         </div>
 
                     </div>
@@ -390,7 +390,7 @@
                             <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
                             <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
                             <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
-                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
+                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Креирање профила</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
@@ -414,13 +414,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Системска улога:</label>
-                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељењски старешина</option><option>Администратор</option></select>
+                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељенски старешина</option><option>Директор</option></select>
                                 </div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
                                     <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
                                 </div>
-                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај и активирај профил наставника 👤</button>
+                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај и активирај профил</button>
                                 <br><br>
                                 <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
                             </div>
@@ -443,11 +443,11 @@
         let trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" };
 
         const recnikPisma = {
-            login_title: { cyr: '<i class="fa-solid fa-graduation-cap"></i> еСДневник Про', lat: '<i class="fa-solid fa-graduation-cap"></i> eSDnevnik Pro' },
+            login_title: { cyr: '<i class="fa-solid fa-graduation-cap"></i> мој есдневник', lat: '<i class="fa-solid fa-graduation-cap"></i> moj esdnevnik' },
             login_sub: { cyr: 'Пријава на систем за наставнике и админе', lat: 'Prijava na sistem za nastavnike i admina' },
             lbl_user: { cyr: 'Корисничко име:', lat: 'Korisničko ime:' },
             lbl_pass: { cyr: 'Лозинка:', lat: 'Lozinka:' },
-            login_btn: { cyr: 'Пријави се на систем 🔓', lat: 'Prijavi se na sistem 🔓' },
+            login_btn: { cyr: 'Пријавa', lat: 'Prijava' },
             txt_pismo: { cyr: '<i class="fa-solid fa-language"></i> Промени писмо (Lat)', lat: '<i class="fa-solid fa-language"></i> Promeni pismo (Ćir)' },
             txt_lozinka: { cyr: '<i class="fa-solid fa-key"></i> Промени лозинку', lat: '<i class="fa-solid fa-key"></i> Promeni lozinku' },
             txt_izlaz: { cyr: '<i class="fa-solid fa-right-from-bracket"></i> Изађи из dnevnika', lat: '<i class="fa-solid fa-right-from-bracket"></i> Izađi iz dnevnika' }
@@ -723,7 +723,7 @@
                             <button class="smart-icon-btn btn-mark" onclick="brziUpisOcene('${uId}')" title="Упиши оцену">5</button>
                             <button class="smart-icon-btn btn-note" onclick="brziUpisNapomene('${uId}')" title="Упиши напомену владиња"><i class="fa-solid fa-message"></i></button>
                             <button class="smart-icon-btn btn-act" onclick="brziUpisAktivnosti('${uId}')" title="Упиши активност"><i class="fa-solid fa-face-smile"></i></button>
-                            <button class="smart-icon-btn btn-abs-x" id="abs-x-${uId}" onclick="okiniOdsustvoUcenika('${uId}')" title="Означи одсуство">❌</button>
+                            <button class="smart-icon-btn btn-abs-x" id="abs-x-${uId}" onclick="okiniOdsustvoUcenika('${uId}')" title="Означи одсуство">Одсутан/на</button>
                         </div>
                     </div>`;
             });
@@ -809,7 +809,7 @@
                 }
             }
             
-            alert("Час је успешно затворен, сви подаци су сачувани у бази!");
+            alert("Час је успешно завршен!");
             document.getElementById('lekcija-naziv').value = "";
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
