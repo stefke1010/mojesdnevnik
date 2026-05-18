@@ -449,18 +449,19 @@
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Напомена о владању</option>
-                                                <option value="Васпитна мера">Васпитно-дисциплинска мера ⚠️</option>
+                                                <option value="Васпитна мера">Васпитно-дисциплинска мерa</option>
                                             </select>
                                         </div>
                                         
                                         <div class="form-group" id="blok-izbor-mera" style="margin:0; display:none;">
                                             <label>Изаберите васпитну меру:</label>
                                             <select class="form-control" id="vladanje-sluzbena-mera-select">
-                                                <option value="Опомена одељењског старешине">Опомена одељењског старешине</option>
-                                                <option value="Укор одељењског старешине">Укор одељењског старешине</option>
-                                                <option value="Укор одељењског већа">Укор одељењског већа</option>
+                                                <option value="Опомена одељењског старешине">Опомена одељенског старешине</option>
+                                                <option value="Укор одељенског старешине">Укор одељењског старешине</option>
+                                                <option value="Укор одељенског већа">Укор одељењског већа</option>
                                                 <option value="Укор директора">Укор директора</option>
                                                 <option value="Укор наставничког већа">Укор наставничког већа</option>
+                                                <option value="Појачан васпитно дисциплински рад">Појачан васпитно дисциплински рад</option>
                                             </select>
                                         </div>
                                     </div>
@@ -483,12 +484,12 @@
                                         <select class="form-control" id="vladanje-posledica-select">
                                             <option value="Нема последице">Нема последице</option>
                                             <option value="Остале последице">Остале последице</option>
-                                            <option value="Друштвено-користан рад">Друштвено-користан рад 🛠️</option>
+                                            <option value="Друштвено-користан рад">Друштвено-користан рад</option>
                                         </select>
                                     </div>
 
-                                    <div class="form-group"><label>Текст образложења белешке:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
-                                    <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Додај у картон</button>
+                                    <div class="form-group"><label>Белешка</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
+                                    <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i>Сачувај</button>
                                 </div>
                                 <ul class="history-list" id="lista-vladanja-kontejner" style="padding:0;"></ul>
                             </div>
@@ -502,7 +503,7 @@
                             <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
                             <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
                             <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
-                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
+                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
