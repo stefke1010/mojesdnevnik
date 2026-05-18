@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>еСДневник Про - Дневnik Рада</title>
+    <title>еСДневник Про - Дневник Рада</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -212,7 +212,7 @@
         .meseci-table th, .meseci-table td { border: 1px solid var(--es-border); padding: 12px 4px; font-size: 14px; min-height: 50px; }
         .meseci-table th { background-color: #f8fafc; color: #4a5568; font-weight: bold; }
         
-        /* NOVI PODESIVI DIZAJN ISTORIJE SA LEVIM LINIJAMA U BOJI */
+        /* LEVE LINIJE U BOJI (VERNA REPLIKA) */
         .history-item { background: white; border: 1px solid var(--es-border); border-left: 5px solid #cbd5e1; padding: 15px 20px; border-radius: 4px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.01); }
         .history-item.line-green { border-left-color: var(--es-green); }
         .history-item.line-purple { border-left-color: #9c27b0; }
@@ -424,7 +424,7 @@
                                     </div>
                                     <div class="sel-block" style="flex:1;">
                                         <span>Опис активности:</span>
-                                        <input type="text" id="aktivnost-opis-input" class="form-control" placeholder="нпр. Одговор на часу...">
+                                        <input type="text" id="aktivnost-opis-input" class="form-control" placeholder="Унесите опис провере активности...">
                                     </div>
                                     <button class="btn btn-success" style="width:auto; margin-top:16px;" onclick="dodajAktivnostIzTaba()"><i class="fa-solid fa-plus"></i> Додај активност</button>
                                 </div>
@@ -455,16 +455,42 @@
                                                 <option value="Васпитна мера">Васпитно-дисциплинска мера ⚠️</option>
                                             </select>
                                         </div>
-                                        <div class="form-group" id="blok-posledice-mera" style="margin:0; display:none;">
-                                            <label>Одаберите последицу мере:</label>
-                                            <select class="form-control" id="vladanje-posledica-select">
-                                                <option value="Нема последице">Нема последице</option>
-                                                <option value="Остале последице">Остале последице</option>
-                                                <option value="Друштвено-користан рад">Друштвено-користан рад 🛠️</option>
+                                        
+                                        <div class="form-group" id="blok-izbor-mera" style="margin:0; display:none;">
+                                            <label>Изаберите васпитну меру:</label>
+                                            <select class="form-control" id="vladanje-sluzbena-mera-select">
+                                                <option value="Опомена одељењског старешине">Опомена одељењског старешине</option>
+                                                <option value="Укор одељењског старешине">Укор одељењског старешине</option>
+                                                <option value="Укор одељењског већа">Укор одељењског већа</option>
+                                                <option value="Укор директора">Укор директора</option>
+                                                <option value="Укор наставничког већа">Укор наставничког већа</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group"><label>Текст белешке:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Унесите детаље..."></textarea></div>
+
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:12px;" id="vladanje-detalji-napomene-blok">
+                                        <div class="form-group" style="margin:0;">
+                                            <label>Предмет (Аутоматски):</label>
+                                            <input type="text" id="vladanje-prikaz-predmeta" class="form-control" readonly style="background:#edf2f7; font-weight:bold;">
+                                        </div>
+                                        <div class="form-group" style="margin:0;">
+                                            <label>Редни број часа:</label>
+                                            <select class="form-control" id="vladanje-cas-select">
+                                                <option value="0">0. час</option><option value="1">1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="blok-posledice-mera" style="display:none;">
+                                        <label>Одаберите последицу мере:</label>
+                                        <select class="form-control" id="vladanje-posledica-select">
+                                            <option value="Нема последице">Нема последице</option>
+                                            <option value="Остале последице">Остале последице</option>
+                                            <option value="Друштвено-користан рад">Друштвено-користан рад 🛠️</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group"><label>Текст образложења белешке:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
                                     <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Додај у картон</button>
                                 </div>
                                 <ul class="history-list" id="lista-vladanja-kontejner" style="padding:0;"></ul>
@@ -552,7 +578,6 @@
         let trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" };
 
         window.onload = async function() {
-            let danas = new Date().toISOString().split('T')[0];
             await osvežiSvePodatkeSaServera();
             window.addEventListener('click', function(e) {
                 if (!e.target.closest('.user-panel')) {
@@ -599,9 +624,14 @@
             }
         }
 
+        /* POPRAVLJENO: SAKRIVANJE I PRIKAZIVANJE POLJA ZA MERU VS NAPOMENU */
         function promenaVrsteVladanjaMera() {
             let vr = document.getElementById('vladanje-vrsta-select').value;
-            document.getElementById('blok-posledice-mera').style.display = (vr === 'Васпитана мера' || vr === 'Васпитна мера') ? 'block' : 'none';
+            let jeMera = (vr === 'Васпитана мера' || vr === 'Васпитна мера');
+            
+            document.getElementById('blok-izbor-mera').style.display = jeMera ? 'block' : 'none';
+            document.getElementById('blok-posledice-mera').style.display = jeMera ? 'block' : 'none';
+            document.getElementById('vladanje-detalji-napomene-blok').style.display = jeMera ? 'none' : 'flex';
         }
 
         function izaberiDatumKalendara(dan) {
@@ -752,7 +782,7 @@
             let napomena = prompt("Унесите напомену:"); if(!napomena) return;
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
             if(u) {
-                if(!u.vladanje_lista) u.vladanje_lista = []; u.vladanje_lista.push({ id: Date.now(), vrsta: 'Напомена', tekst: napomena, datum: `2026-05-${odabraniDanKalendara}`, predmet: aktivanCasPodaci.predmetId });
+                if(!u.vladanje_lista) u.vladanje_lista = []; u.vladanje_lista.push({ id: Date.now(), tip_zapisa: 'napomena', vrsta: 'Напомена о владању', tekst: napomena, datum: `2026-05-${odabraniDanKalendara}`, predmet: aktivanCasPodaci.predmetId, cas: aktivanCasPodaci.rbr });
                 await AzurirajUcenikaNaServeruBezDosijea(u); alert("Уписано!");
             }
         }
@@ -781,6 +811,9 @@
             document.getElementById('dosije-ucenik-ime').innerText = u.ime;
             let tp = document.getElementById('global-predmet').value;
             
+            // Auto kopiranje u formu vladanja na frontu
+            document.getElementById('vladanje-prikaz-predmeta').value = tp;
+            
             let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === u.odeljenje);
             let trenutniIndex = filtriraniOdeljenje.findIndex(x => (x._id === id || x.id == id));
             document.getElementById('dosije-arrow-prev').style.visibility = (trenutniIndex === 0) ? 'hidden' : 'visible';
@@ -792,7 +825,7 @@
             let fOcene = (u.ocene || []).filter(x => x.predmet === tp && x.tip === 'Оцена');
             let fAktivnosti = (u.ocene || []).filter(x => x.predmet === tp && x.tip === 'Активност');
 
-            // 1. BROJČANE OCENE (ZELENA LINIJA)
+            // 1. OCENE (ZELENA LINIJA)
             let oListaHTML = document.getElementById('lista-svih-ocena-ucenika');
             oListaHTML.innerHTML = fOcene.length === 0 ? "<li>Нема бројчаних оцена.</li>" : "";
             fOcene.forEach(o => {
@@ -819,7 +852,7 @@
                     </li>`;
             });
 
-            // 3. IZOSTANCI (DINAMIČKA LINIJA PREMA STATUSU)
+            // 3. IZOSTANCI (DINAMIČKA LINIJA)
             let izostanciKontejner = document.getElementById('lista-izostanaka-kontejner');
             izostanciKontejner.innerHTML = (u.izostanci || []).length === 0 ? "<li>Нема изостанака.</li>" : "";
             (u.izostanci || []).forEach((iz, idx) => {
@@ -831,27 +864,33 @@
                     </li>`;
             });
 
-            // 4. VLADANJE (PLAVA ZA NAPOMENE, CRVENA ZA VASPITNE MERE SA POSLEDICAMA!)
+            // 4. VLADANJE (PLAVA ILI CRVENA LINIJA ZAVISNO OD TIPA)
             let vladanjeKontejner = document.getElementById('lista-vladanja-kontejner');
             let fVladanje = u.vladanje_lista || [];
             vladanjeKontejner.innerHTML = fVladanje.length === 0 ? "<li>Нема мера нити напомена.</li>" : "";
             fVladanje.forEach(v => {
-                let linijaVladanja = (v.vrsta === 'Напомена' || v.vrsta === 'Напомена о владању') ? 'line-blue' : 'line-red';
-                let dodatniTekstPosledice = v.posledica ? `<br><small style="color:var(--es-red); font-weight:bold;">Последица: ${v.posledica}</small>` : '';
+                let jeNapomena = (v.tip_zapisa === 'napomena');
+                let linijaVladanja = jeNapomena ? 'line-blue' : 'line-red';
+                
+                let infotekst = jeNapomena ? 
+                    `<strong>Напомена из: ${v.predmet} (${v.cas}. час)</strong>` : 
+                    `<strong style="color:var(--es-red); text-transform:uppercase;">Службена мера: ${v.vrsta}</strong><br><small style="font-weight:bold;">Последица: ${v.posledica || 'Нема'}</small>`;
+
                 vladanjeKontejner.innerHTML += `
                     <li class="history-item ${linijaVladanja}">
-                        <div><span style="font-size:11px; color:#718096;">Унето: ${v.datum || ''}</span><p style="font-weight:bold; margin-top:2px;">${v.vrsta}</p><p style="color:#4a5568; margin-top:4px;">"${v.tekst}"</p>${dodatniTekstPosledice}</div>
+                        <div><span style="font-size:11px; color:#718096;">Датум: ${v.datum || ''}</span><p style="margin-top:2px;">${infotekst}</p><p style="color:#4a5568; margin-top:4px; font-style:italic;">"${v.tekst}"</p></div>
                         <button class="btn btn-danger btn-xs" onclick="obrisiElementIzDosijea('${u._id || u.id}', ${v.id}, 'vladanje_lista')">Обриши</button>
                     </li>`;
             });
             document.getElementById('zakljucno-vladanje-select').value = u.ocena_vladanja || "5";
             document.getElementById('dosije-vladanje-prosek').innerText = `Владање: ${u.ocena_vladanja || "5"}`;
 
+            promenaVrsteVladanjaMera(); // resetuj polja
             switchPage('stranica-dosije');
         }
 
         async function obrisiElementIzDosijea(uId, elemId, polje) {
-            if(confirm("Обрисати ову ставку заувек?")) {
+            if(confirm("Обрисати?")) {
                 let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
                 u[polje] = u[polje].filter(x => x.id !== elemId); await AzurirajUcenikaNaServeru(u);
             }
@@ -871,15 +910,22 @@
             document.getElementById('aktivnost-opis-input').value = ""; await AzurirajUcenikaNaServeru(u);
         }
 
+        /* POPRAVLJENO: SMART UPISIVANJE RAZDVOJENE NAPOMENE OD SLUŽBENE MERE */
         async function dodajVladanjeIzTaba() {
             let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
             let vr = document.getElementById('vladanje-vrsta-select').value;
             let tk = document.getElementById('vladanje-tekst-input').value; if(!tk) return;
             
-            let noviZapis = { id: Date.now(), vrsta: vr, tekst: tk, datum: new Date().toISOString().split('T')[0] };
+            let noviZapis = { id: Date.now(), datum: new Date().toISOString().split('T')[0], tekst: tk };
             
-            // Ako je vaspitna mera, pokupi i selektovanu posledicu
-            if(vr === 'Васпитана мера' || vr === 'Васпитна мера') {
+            if(vr === 'Напомена') {
+                noviZapis.tip_zapisa = 'napomena';
+                noviZapis.vrsta = 'Напомена о владању';
+                noviZapis.predmet = document.getElementById('global-predmet').value;
+                noviZapis.cas = document.getElementById('vladanje-cas-select').value;
+            } else {
+                noviZapis.tip_zapisa = 'mera';
+                noviZapis.vrsta = document.getElementById('vladanje-sluzbena-mera-select').value;
                 noviZapis.posledica = document.getElementById('vladanje-posledica-select').value;
             }
 
@@ -932,7 +978,7 @@
         async function obrisiPredmetSistem(id) { if(confirm("Обрисати предмет?")) { await fetch(`${API_URL}/api/predmeti/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
         async function obrisiOdeljenjeSistem(naziv) { if(confirm("Обрисати одељење?")) { await fetch(`${API_URL}/api/odeljenja/${naziv}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
         async function dodajNoviPredmetSistem() { let n = document.getElementById('admin-novi-predmet-input').value; if(!n) return; let sifra = n.substring(0,3).toUpperCase() + Math.floor(Math.random()*90+10); await fetch(`${API_URL}/api/predmeti`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: sifra, naziv: n }) }); document.getElementById('admin-novi-predmet-input').value = ""; await osvežiSvePodatkeSaServera(); }
-        async function dodajNovoOdeljenjeSistem() { let o = document.getElementById('admin-novo-odeljenje-input').value; if(!o) return; await fetch(`${API_URL}/api/odeljenja`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presidential: true, naziv: o }) }); document.getElementById('admin-novo-odeljenje-input').value = ""; await osvežiSvePodatkeSaServera(); }
+        async function dodajNovoOdeljenjeSistem() { let o = document.getElementById('admin-novo-odeljenje-input').value; if(!o) return; await fetch(`${API_URL}/api/odeljenja`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ naziv: o }) }); document.getElementById('admin-novo-odeljenje-input').value = ""; await osvežiSvePodatkeSaServera(); }
         async function dodajUcenikaIzAdminPanela() { let ime = document.getElementById('admin-ucenik-ime-input').value; let odeljenje = document.getElementById('global-odeljenje').value; if(!ime) return; await fetch(`${API_URL}/api/ucenici`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ime, odeljenje, ocene:[], izostanci:[], aktivnosti:[], vladanje_lista:[], ocena_vladanja:"5" }) }); document.getElementById('admin-ucenik-ime-input').value = ""; await osvežiSvePodatkeSaServera(); switchPage('stranica-lista-imenik'); }
         async function dodajNastavnikaSistem() { let ime = document.getElementById('admin-nastavnik-ime').value; let uloga = document.getElementById('admin-nastavnik-uloga').value; let username = document.getElementById('admin-nastavnik-user').value; let password = document.getElementById('admin-nastavnik-pass').value; if(!ime || !username || !password) { alert("Попуните поља!"); return; } let odeljenja = Array.from(document.querySelectorAll('input[name="adm-nast-od"]:checked')).map(cb => cb.value); let predmeti = Array.from(document.querySelectorAll('input[name="adm-nast-pr"]:checked')).map(cb => cb.value); await fetch(`${API_URL}/api/nastavnici`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ime, uloga, username, password, odeljenja, predmeti }) }); document.getElementById('admin-nastavnik-ime').value = ""; document.getElementById('admin-nastavnik-user').value = ""; document.getElementById('admin-nastavnik-pass').value = ""; await osvežiSvePodatkeSaServera(); alert("Успешно!"); }
         async function obrisiNastavnikaSistem(id) { if(confirm("Обрисати наставника?")) { await fetch(`${API_URL}/api/nastavnici/${id}`, { method: 'DELETE' }); await osvežiSvePodatkeSaServera(); } }
