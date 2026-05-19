@@ -193,6 +193,15 @@
         .profile-sidebar-left { text-align: center; border-right: 1px solid var(--es-border); padding-right: 25px; }
         .profile-sidebar-left .big-avatar { width: 100px; height: 100px; background: #eef2f5; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 42px; color: #7f91a0; border: 1px solid var(--es-border); }
         
+        /* NAVIGACIJA UNUTAR DOSIJEA UČENIKA (PROLEPŠANA) */
+        .nav-arrows-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .arrow-nav-btn { width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--es-border); background: white; color: var(--es-blue); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .arrow-nav-btn:hover { background: #eef5fa; border-color: var(--es-light-blue); }
+        .random-nav-btn { flex: 1; height: 36px; border-radius: 6px; border: 1px solid var(--es-border); background: #f8fafc; font-weight: bold; color: var(--es-text); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.2s; }
+        .random-nav-btn:hover { background: #edf2f7; color: var(--es-dark-blue); }
+
+        .badge-prosek { display: inline-block; width: 100%; padding: 8px; border-radius: 6px; background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32; font-weight: bold; font-size: 14px; margin-top: 10px; text-align: center; }
+
         .tabs-header { display: flex; border-bottom: 2px solid #edf2f7; margin-bottom: 20px; gap: 15px; }
         .tab-link { padding: 10px 5px; cursor: pointer; color: #718096; font-weight: 500; border-bottom: 2px solid transparent; }
         .tab-link.active { color: var(--es-light-blue); border-bottom-color: var(--es-light-blue); font-weight: bold; }
@@ -235,6 +244,15 @@
         .es-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
         .es-table th, .es-table td { padding: 12px; border: 1px solid var(--es-border); text-align: left; }
         .es-table th { background: #f8fafc; color: #4a5568; font-weight: bold; }
+
+        /* ADMIN PANEL MENI LAYOUT */
+        .admin-layout { display: grid; grid-template-columns: 200px 1fr; gap: 20px; }
+        .admin-menu { display: flex; flex-direction: column; gap: 8px; }
+        .admin-menu-btn { padding: 12px 15px; border-radius: 6px; border: 1px solid var(--es-border); background: white; color: var(--es-text); text-align: left; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .admin-menu-btn:hover, .admin-menu-btn.active { background: var(--es-blue); color: white; border-color: var(--es-dark-blue); }
+        .admin-menu-btn.btn-danger:hover { background: var(--es-red); }
+        .checkbox-container { border: 1px solid var(--es-border); border-radius: 4px; padding: 10px; max-height: 120px; overflow-y: auto; background: #f8fafc; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 6px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -242,7 +260,7 @@
     <div id="stranica-login-sistema" class="full-login-overlay">
         <div class="login-box">
             <h2 id="login-glavni-naslov"><i class="fa-solid fa-graduation-cap"></i> еСДневник Про</h2>
-            <p id="login-podnaslov">Пријава на систем за наставнике и админе</p>
+            <p id="login-podnaslov">Пријава на систем за наставнике i админе</p>
             <div class="form-group" style="text-align: left;">
                 <label id="login-lbl-user">Корисничко име:</label>
                 <input type="text" id="sys-auth-user" class="form-control" placeholder="Унесите корисничко име">
@@ -515,7 +533,7 @@
                             <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
                             <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
                             <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
-                            <button class="btn btn-danger admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
+                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
@@ -527,12 +545,12 @@
                                 <table class="es-table"><thead><tr><th>Разред</th><th>Статус</th><th>Акција</th></tr></thead><tbody id="tabela-admin-odeljenja"></tbody></table>
                             </div>
                             <div id="pane-ucenici" class="admin-pane">
-                                <div class="form-group"><label>Име и презиме ђака:</label><input type="text" id="admin-ucenik-ime-input" class="form-control" placeholder="Марко Марковић"></div>
+                                <div class="form-group"><label>Име i презиме ђака:</label><input type="text" id="admin-ucenik-ime-input" class="form-control" placeholder="Марко Марковић"></div>
                                 <button class="btn btn-primary" onclick="dodajUcenikaIzAdminPanela()">Упиши ученика у базу</button>
                             </div>
                             <div id="pane-nastavnici" class="admin-pane">
                                 <h3>Креирање корисничких профила за наставнике</h3><br>
-                                <div class="form-group"><label>Име и презиме наставника:</label><input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић"></div>
+                                <div class="form-group"><label>Име i презиме наставника:</label><input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић"></div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
                                     <div class="form-group"><label>Username:</label><input type="text" id="admin-nastavnik-user" class="form-control" placeholder="korisnik"></div>
                                     <div class="form-group"><label>Password:</label><input type="text" id="admin-nastavnik-pass" class="form-control" placeholder="sifra123"></div>
@@ -545,9 +563,9 @@
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
                                     <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
                                 </div>
-                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај и активирај профил наставника 👤</button>
+                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај i активирај профил наставника 👤</button>
                                 <br><br>
-                                <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
+                                <table class="es-table"><thead><tr><th>Наставник i улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
                             </div>
                         </div>
                     </div>
@@ -859,7 +877,7 @@
                 let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
                 if(u) { if(!u.izostanci) u.izostanci = []; u.izostanci.push({ lekcija: aktivanCasPodaci.lekcija, predmet: aktivanCasPodaci.predmetId, datum: aktivanCasPodaci.datum, status: 'нерегулисано' }); await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }); }
             }
-            alert("Час је успешно евидентиран и завршен!"); 
+            alert("Час је успешно евидентиран i завршен!"); 
             document.getElementById('lekcija-naziv').value = ""; 
             document.getElementById('crni-marks-count').innerText = "0";
             await osvežiSvePodatkeSaServera(); switchPage('stranica-pocetna');
@@ -942,6 +960,36 @@
 
             promenaVrsteVladanjaMera();
             switchPage('stranica-dosije');
+        }
+
+        /* FUNKCIJE ZA NAVIGACIJU KROZ DOSIJE ĐAKA */
+        function navigacijaUcenika(smer) {
+            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+            if (!u) return;
+            
+            let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === u.odeljenje);
+            let trenutniIndex = filtriraniOdeljenje.findIndex(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+            
+            let noviIndex = trenutniIndex + smer;
+            if (noviIndex >= 0 && noviIndex < filtriraniOdeljenje.length) {
+                let sledeciUcenik = filtriraniOdeljenje[noviIndex];
+                prikažiDosijeUčenika(sledeciUcenik._id || sledeciUcenik.id);
+            }
+        }
+
+        function odaberiNasumicnogUcenika() {
+            let trenOdeljenje = document.getElementById('global-odeljenje').value;
+            let filtriraniOdeljenje = sviUcenici.filter(x => x.odeljenje === trenOdeljenje);
+            
+            if (filtriraniOdeljenje.length === 0) {
+                alert("Нема ученика у овом одељењу за избор!");
+                return;
+            }
+            
+            let nasumicniIndex = Math.floor(Math.random() * filtriraniOdeljenje.length);
+            let izabraniĐak = filtriraniOdeljenje[nasumicniIndex];
+            
+            prikažiDosijeUčenika(izabraniĐak._id || izabraniĐak.id);
         }
 
         async function obrisiElementIzDosijea(uId, elemId, polje) {
@@ -1036,7 +1084,7 @@
         function uspesnoUlogovanUInterfejs() {
             document.getElementById('prikazano-ime-nastavnika-header').innerHTML = `${trenutnoUlogovaniKorisnik.ime} <i class="fa-solid fa-chevron-down" id="arrow-logout-icon"></i>`;
             document.querySelector('.class-role-trans').innerText = trenutnoUlogovaniKorisnik.uloga;
-            document.getElementById('stranica-login-sistema').style.setProperty('display', 'none', 'important');
+            document.getElementById('stranica-login-sistema').style.setProperty('none', 'important');
             document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
             OsveziSelectMenijeIPanele();
         }
@@ -1054,7 +1102,6 @@
             if(tNast) tNast.innerHTML = listaNastavnika.map(n => `<tr><td><strong>${n.ime}</strong><br><small>${n.uloga}</small></td><td><code>${n.username}</code></td><td><button class="btn btn-danger btn-xs" onclick="obrisiNastavnikaSistem('${n._id || n.id}')">Обриши</button></td></tr>`).join('');
         }
 
-        /* VRAĆENA FUNKCIJA KOJA JE FALILA I PRAVILA PROBLEM U DOSIJEU ĐAKA KROZ POPUP */
         async function AzurirajUcenikaNaServeru(u) {
             await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) });
             await osvežiSvePodatkeSaServera(); prikažiDosijeUčenika(odabraniUcenikId);
