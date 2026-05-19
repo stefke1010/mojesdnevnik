@@ -14,6 +14,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -29,19 +30,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Postavljanje slike školice za pozadinu logina */
             background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), 
                         url('https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=2070') no-repeat center center;
             background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 99999;
+            padding: 20px;
         }
 
         .login-kontejner {
             background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
+            padding: 40px 30px;
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             width: 100%;
@@ -80,16 +81,17 @@
             border-radius: 6px;
             font-size: 16px;
             transition: border-color 0.2s;
+            outline: none;
         }
 
         .input-grupa input:focus {
-            outline: none;
             border-color: #2b6cb0;
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
         }
 
         .btn-prijavi-se {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: #2b6cb0;
             color: white;
             border: none;
@@ -107,13 +109,14 @@
         .error-poruka {
             color: #e53e3e;
             font-size: 14px;
-            margin-top: 10px;
+            margin-top: 12px;
             display: none;
+            font-weight: 500;
         }
 
         /* === GLAVNI INTERFEJS === */
         #glavni-interfejs-aplikacije {
-            display: none; /* Sakriven dok se korisnik ne uloguje */
+            display: none;
         }
 
         /* Navigacija Gore (Header) */
@@ -136,15 +139,16 @@
         .header-levo {
             display: flex;
             align-items: center;
-            gap: 40px;
+            gap: 25px;
         }
 
         .logo-aplikacije {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            white-space: nowrap;
         }
 
         .selektori-header {
@@ -158,7 +162,7 @@
         }
 
         .selektor-grupa label {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             color: #90cdf4;
             margin-bottom: 2px;
@@ -171,7 +175,7 @@
             border: none;
             padding: 6px 10px;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             outline: none;
         }
@@ -179,7 +183,7 @@
         .header-desno {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .korisnik-info {
@@ -187,24 +191,24 @@
         }
 
         .korisnik-info h4 {
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
         }
 
         .korisnik-info span {
-            font-size: 12px;
+            font-size: 11px;
             color: #cbd5e1;
         }
 
         .avatar-krug {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background-color: #2b6cb0;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         /* Meni sa strane (Sidebar) */
@@ -217,6 +221,7 @@
             height: calc(100vh - 70px);
             border-right: 1px solid #e2e8f0;
             padding-top: 20px;
+            z-index: 90;
         }
 
         .meni-stavka {
@@ -320,7 +325,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* === STRANICA: IMENIK (KARTICE UCENIKA) === */
+        /* === STRANICA: IMENIK === */
         .imenik-naslov {
             font-size: 24px;
             color: #1a365d;
@@ -332,7 +337,7 @@
 
         .ucenici-mreza {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
@@ -346,7 +351,6 @@
             border: 1px solid #e2e8f0;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
         }
 
         .ucenik-kartica:hover {
@@ -387,13 +391,13 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* ZAHTEV: Ocene, vladanje i aktivnosti moraju biti odvojeni u tabove */
         .tab-navigacija {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 10px;
+            overflow-x: auto;
         }
 
         .tab-dugme {
@@ -404,6 +408,7 @@
             font-weight: bold;
             color: #4a5568;
             cursor: pointer;
+            white-space: nowrap;
             transition: all 0.2s;
         }
 
@@ -424,7 +429,6 @@
             display: block;
         }
 
-        /* Forme unutar panela */
         .forma-kontrola {
             margin-bottom: 15px;
         }
@@ -437,16 +441,18 @@
 
         .forma-kontrola input, .forma-kontrola select, .forma-kontrola textarea {
             width: 100%;
-            padding: 10px;
+            padding: 11px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
+            font-size: 15px;
+            outline: none;
         }
 
         .btn-primarni {
             background: #2b6cb0;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 11px 20px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
@@ -460,7 +466,7 @@
             background: #48bb78;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
@@ -468,11 +474,6 @@
             margin-top: 15px;
         }
 
-        .btn-uspeh:hover {
-            background: #38a169;
-        }
-
-        /* Statusni panel detalji */
         .status-sekcija {
             margin-bottom: 20px;
             border-bottom: 1px solid #333;
@@ -484,10 +485,8 @@
             color: #a0aec0;
             text-transform: uppercase;
             margin-bottom: 10px;
-            letter-spacing: 0.5px;
         }
 
-        /* Ocene brzi izbor */
         .ocene-brzi-izbor {
             display: flex;
             gap: 8px;
@@ -511,14 +510,16 @@
             border-color: #2b6cb0;
         }
 
-        /* Tabela za administraciju */
+        .admin-tabela-omotač {
+            width: 100%;
+            overflow-x: auto;
+        }
+
         .admin-tabela {
             width: 100%;
             border-collapse: collapse;
             background: white;
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .admin-tabela th, .admin-tabela td {
@@ -532,31 +533,114 @@
             color: #2d3748;
         }
 
-        /* Pomocne klase za sakrivanje sekcija */
         .sekcija-stranice {
             display: none;
         }
         .sekcija-stranice.aktivna-stranica {
             display: block;
         }
+
+        /* =======================================================
+           === KOD ZA MOBILNE TELEFONE I TABLETE (RESPONSIVE) ===
+           ======================================================= */
+        @media (max-width: 992px) {
+            .radni-prostor {
+                flex-direction: column;
+                margin-left: 0;
+                padding: 15px;
+                margin-top: 130px; /* Ostavlja prostor za prošireni header */
+            }
+
+            .sidebar-meni {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                top: auto;
+                border-right: none;
+                border-top: 1px solid #e2e8f0;
+                display: flex;
+                justify-content: space-around;
+                padding-top: 0;
+                z-index: 999;
+            }
+
+            .meni-stavka {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                padding: 5px;
+                font-size: 11px;
+                border-left: none;
+                border-top: 3px solid transparent;
+                flex: 1;
+                text-align: center;
+            }
+
+            .meni-stavka:hover, .meni-stavka.aktivna {
+                border-left-color: transparent;
+                border-top-color: #2b6cb0;
+            }
+
+            .meni-stavka.administracija-boja:hover, .meni-stavka.administracija-boja.aktivna {
+                border-top-color: #c53030;
+            }
+
+            .glavni-header {
+                height: auto;
+                padding: 10px 15px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .header-levo {
+                width: 100%;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .header-desno {
+                width: 100%;
+                justify-content: space-between;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                padding-top: 8px;
+            }
+
+            .desni-status-panel {
+                width: 100%;
+                margin-bottom: 60px; /* Da sidebar dole ne sakrije dugmad */
+            }
+
+            .profil-header-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profil-header-info button {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div id="stranica-login-sistema">
-        <div class="login-kontejner">
+        <form class="login-kontejner" onsubmit="IzvrsiPrijavuNaSistem(event)">
             <h2><i class="fa-solid fa-graduation-cap"></i> eДневник Про</h2>
             <div class="input-grupa">
                 <label for="login-korisnik">Korisničko ime / Email</label>
-                <input type="text" id="login-korisnik" value="stefan.mihajlovic" placeholder="Unesite korisničko ime">
+                <input type="text" id="login-korisnik" placeholder="Unesite korisničko ime..." required autocomplete="username">
             </div>
             <div class="input-grupa">
                 <label for="login-sifra">Lozinka</label>
-                <input type="password" id="login-sifra" value="sifra123" placeholder="Unesite lozinku">
+                <input type="password" id="login-sifra" placeholder="Unesite lozinku..." required autocomplete="current-password">
             </div>
-            <button class="btn-prijavi-se" onclick="IzvrsiPrijavuNaSistem()">Prijavi se</button>
-            <div id="login-greska-poruka" class="error-poruka">Neispravni kredencijali! Pokušajte ponovo.</div>
-        </div>
+            <button type="submit" class="btn-prijavi-se">Prijavi se</button>
+            <div id="login-greska-poruka" class="error-poruka">Sva polja moraju biti popunjena!</div>
+        </form>
     </div>
 
 
@@ -578,7 +662,7 @@
                     <div class="selektor-grupa">
                         <label>Predmet</label>
                         <select id="header-select-predmet">
-                            <option value="Srpski jezik i književnost">Srpski jezik i književnost</option>
+                            <option value="Srpski jezik i književnost">Srpski jezik</option>
                             <option value="Matematika">Matematika</option>
                         </select>
                     </div>
@@ -587,7 +671,7 @@
 
             <div class="header-desno">
                 <div class="korisnik-info">
-                    <h4 id="prikazano-ime-nastavnika-header" onclick="OtvoriKorisnickiMeni()">Stefan Mihajlović <i class="fa-solid fa-chevron-down"></i></h4>
+                    <h4 id="prikazano-ime-nastavnika-header">Stefan Mihajlović</h4>
                     <span class="class-role-trans">Školski koordinator</span>
                 </div>
                 <div class="avatar-krug">
@@ -598,13 +682,13 @@
 
         <nav class="sidebar-meni">
             <div class="meni-stavka aktivna" onclick="NavigajNaStranicu('stranica-dnevnik-rada', this)">
-                <i class="fa-solid fa-calendar-days"></i> Dnevnik rada
+                <i class="fa-solid fa-calendar-days"></i> <span>Dnevnik rada</span>
             </div>
             <div class="meni-stavka" onclick="NavigajNaStranicu('stranica-imenik-odeljenja', this)">
-                <i class="fa-solid fa-users"></i> Imenik odeljenja
+                <i class="fa-solid fa-users"></i> <span>Imenik</span>
             </div>
             <div class="meni-stavka administracija-boja" onclick="NavigajNaStranicu('stranica-administracija', this)">
-                <i class="fa-solid fa-gear"></i> Administracija 🔒
+                <i class="fa-solid fa-gear"></i> <span>Admin 🔒</span>
             </div>
         </nav>
 
@@ -629,7 +713,7 @@
                             <div class="kalendar-dan">7</div><div class="kalendar-dan">8</div><div class="kalendar-dan">9</div><div class="kalendar-dan">10</div>
                             <div class="kalendar-dan">11</div><div class="kalendar-dan">12</div><div class="kalendar-dan">13</div><div class="kalendar-dan">14</div>
                             <div class="kalendar-dan">15</div><div class="kalendar-dan">16</div><div class="kalendar-dan">17</div>
-                            <div class="kalendar-dan trenutni">18</div><div class="kalendar-dan">19</div><div class="kalendar-dan">20</div>
+                            <div class="kalendar-dan trenutni">19</div><div class="kalendar-dan">20</div>
                             <div class="kalendar-dan">21</div><div class="kalendar-dan">22</div><div class="kalendar-dan">23</div><div class="kalendar-dan">24</div>
                             <div class="kalendar-dan">25</div><div class="kalendar-dan">26</div><div class="kalendar-dan">27</div><div class="kalendar-dan">28</div>
                             <div class="kalendar-dan">29</div><div class="kalendar-dan">30</div><div class="kalendar-dan">31</div>
@@ -641,7 +725,7 @@
                         <br>
                         <div class="forma-kontrola">
                             <label>Odabrani datum rada:</label>
-                            <input type="text" value="18. maj 2026. godine" readonly style="background: #edf2f7;">
+                            <input type="text" value="19. maj 2026. godine" readonly style="background: #edf2f7;">
                         </div>
                         <div class="forma-kontrola">
                             <label>Nastavna jedinica / Tema časa:</label>
@@ -661,16 +745,15 @@
                                 <option value="8">8. čas</option>
                             </select>
                         </div>
-                        <button class="btn-primarni" style="width: 100%; padding: 12px;" onclick="PokreniEvidencijuCasa()"><i class="fa-solid fa-play"></i> Započni čas i otvori evidenciju</button>
+                        <button type="button" class="btn-primarni" style="width: 100%; padding: 12px;" onclick="PokreniEvidencijuCasa()"><i class="fa-solid fa-play"></i> Započni čas i otvori evidenciju</button>
                     </div>
                 </section>
 
                 <section id="stranica-imenik-odeljenja" class="sekcija-stranice">
                     <div class="imenik-naslov">
-                        <i class="fa-solid fa-address-book"></i> Imenik <span id="prikaz-trenutnog-odeljenja" style="color: #718096; font-size: 16px;">Razredno odeljenje - V-3</span>
+                        <i class="fa-solid fa-address-book"></i> Imenik <span id="prikaz-trenutnog-odeljenja" style="color: #718096; font-size: 14px; margin-left: 5px;"> - V-3</span>
                     </div>
-                    <div class="ucenici-mreza" id="kontejner-za-kartice-ucenika">
-                        </div>
+                    <div class="ucenici-mreza" id="kontejner-za-kartice-ucenika"></div>
                 </section>
 
                 <section id="stranica-profil-ucenika" class="sekcija-stranice">
@@ -680,7 +763,7 @@
                             <h2 id="profil-ime-ucenika">Učenik Profil</h2>
                             <p style="color: #718096;">Osnovno obrazovanje | Odeljenje V-3</p>
                         </div>
-                        <button class="btn-primarni" style="margin-left: auto; background: #718096;" onclick="NavigajNazadUImenik()"><i class="fa-solid fa-arrow-left"></i> Nazad u Imenik</button>
+                        <button class="btn-primarni" style="margin-left: auto; background: #718096;" onclick="NavigajNazadUImenik()"><i class="fa-solid fa-arrow-left"></i> Nazad</button>
                     </div>
 
                     <div class="tab-navigacija">
@@ -692,8 +775,7 @@
                     <div id="tab-ocene" class="tab-sadrzaj aktivan">
                         <h3>Pregled i unos ocena učenika</h3>
                         <br>
-                        <div id="lista-trenutnih-ocena" style="margin-bottom: 20px; font-size: 18px; font-weight: bold; color: #2b6cb0;">
-                            </div>
+                        <div id="lista-trenutnih-ocena" style="margin-bottom: 20px; font-size: 16px; font-weight: bold; color: #2b6cb0;"></div>
                         <div class="forma-kontrola">
                             <label>Izaberite ocenu:</label>
                             <select id="profil-unos-ocene-select">
@@ -706,13 +788,13 @@
                         </div>
                         <div class="forma-kontrola">
                             <label>Beleška / Napomena za ocenu:</label>
-                            <input type="text" id="profil-napomena-ocene" placeholder="npr. Usmena provera, kontrolni zadatak...">
+                            <input type="text" id="profil-napomena-ocene" placeholder="Usmena provera, kontrolni zadatak...">
                         </div>
                         <button class="btn-primarni" onclick="SacuvajOcenuSaProfila()">Sačuvaj ocenu</button>
                     </div>
 
                     <div id="tab-vladanje" class="tab-sadrzaj">
-                        <h3>Ocena iz vladanja i napomene o ponašanju</h3>
+                        <h3>Ocena iz vladanja</h3>
                         <br>
                         <div class="forma-kontrola">
                             <label>Trenutna ocena iz vladanja:</label>
@@ -732,11 +814,11 @@
                     </div>
 
                     <div id="tab-aktivnosti" class="tab-sadrzaj">
-                        <h3>Vannastavne aktivnosti i angažovanje</h3>
+                        <h3>Vannastavne aktivnosti</h3>
                         <br>
                         <div class="forma-kontrola">
-                            <label>Zabeležene aktivnosti u sekcijama, takmičenjima ili projektima:</label>
-                            <textarea id="profil-aktivnosti-tekst" rows="6" placeholder="Učenik učestvuje u dramskoj sekciji, postignut uspeh na takmičenju..."></textarea>
+                            <label>Zabeležene aktivnosti i angažovanje:</label>
+                            <textarea id="profil-aktivnosti-tekst" rows="5" placeholder="Učešće u sekcijama, takmičenjima, projektima..."></textarea>
                         </div>
                         <button class="btn-primarni" onclick="SacuvajAktivnosti()">Sačuvaj aktivnosti</button>
                     </div>
@@ -746,7 +828,7 @@
                     <h2 style="color: #c53030; margin-bottom: 20px;"><i class="fa-solid fa-lock"></i> Administracioni panel</h2>
                     
                     <div class="forma-upis-casa" style="border-top: 4px solid #c53030; margin-bottom: 25px;">
-                        <h3>Brzo dodavanje novog učenika u sistem</h3>
+                        <h3>Brzo dodavanje novog učenika</h3>
                         <br>
                         <div class="forma-kontrola">
                             <label>Ime i prezime učenika:</label>
@@ -756,20 +838,21 @@
                     </div>
 
                     <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                        <h3>Spisak svih registrovanih učenika</h3>
+                        <h3>Spisak registrovanih učenika</h3>
                         <br>
-                        <table class="admin-tabela">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Ime i prezime</th>
-                                    <th>Škola / Stepen</th>
-                                    <th>Akcije</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-tabela-ucenika-telo">
-                                </tbody>
-                        </table>
+                        <div class="admin-tabela-omotač">
+                            <table class="admin-tabela">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Ime i prezime</th>
+                                        <th>Škola</th>
+                                        <th>Akcije</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-tabela-ucenika-telo"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
 
@@ -777,7 +860,7 @@
 
             <aside class="desni-status-panel">
                 <div class="status-sekcija">
-                    <h2 id="live-panel-naslov" style="font-size: 16px; color: #48bb78; display: flex; align-items: center; gap: 8px;">
+                    <h2 id="live-panel-naslov" style="font-size: 16px; color: #a0aec0; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-circle-dot"></i> Čas nije započet
                     </h2>
                     <p id="live-panel-podnaslov" style="font-size: 13px; color: #a0aec0; margin-top: 5px;">Izaberite lekciju i pokrenite čas.</p>
@@ -813,7 +896,6 @@
     </div>
 
     <script>
-        // === LAŽNA BAZA PODATAKA (MOCK DATA) ===
         let trenutnoUlogovaniKorisnik = { ime: "Stefan Mihajlović", uloga: "Školski koordinator" };
         
         let uceniciBaza = [
@@ -825,21 +907,23 @@
             { id: 6, ime: "Zubać Maksim", slika: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150", ocene: [4, 4], vladanje: 5, napomenaVladanje: "", aktivnosti: "" }
         ];
 
-        let odabranaBrzaOcena Vrednost = 5;
+        let odabranaBrzaOcenaVrednost = 5;
         let trenutnoSelektovaniUcenikId = null;
         let casZapocekStatus = false;
 
-        // Inicijalizacija po pokretanju stranice
         window.onload = function() {
             IscrtajKarticeUcenika();
             IscrtajAdminTabele();
         };
 
-        // === 1. LOGIN LOGIKA ===
-        function IzvrsiPrijavuNaSistem() {
+        // === POPRAVLJENA LOGIN FUNKCIJA (Uvek radi na klik, Enter i Touch) ===
+        function IzvrsiPrijavuNaSistem(event) {
+            if (event) event.preventDefault(); // Sprečava osvežavanje stranice prilikom submit-a forme
+
             let uKorisnik = document.getElementById('login-korisnik').value.trim();
             let uSifra = document.getElementById('login-sifra').value.trim();
 
+            // Pušta unutra ukoliko polja nisu prazna
             if(uKorisnik !== "" && uSifra !== "") {
                 uspesnoUlogovanUInterfejs();
             } else {
@@ -848,31 +932,32 @@
         }
 
         function uspesnoUlogovanUInterfejs() {
-            document.getElementById('prikazano-ime-nastavnika-header').innerHTML = `${trenutnoUlogovaniKorisnik.ime} <i class="fa-solid fa-chevron-down"></i>`;
+            document.getElementById('prikazano-ime-nastavnika-header').innerHTML = `${trenutnoUlogovaniKorisnik.ime}`;
             document.querySelector('.class-role-trans').innerText = trenutnoUlogovaniKorisnik.uloga;
             
-            // POPRAVKA: Potpuno i ispravno sakrivanje login overlay-a menjanjem display svojstva
+            // Sakrivanje login sloja
             document.getElementById('stranica-login-sistema').style.setProperty('display', 'none', 'important');
-            
             document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+            
+            // Mali hack da se skrol vrati na vrh prilikom ulaska
+            window.scrollTo(0, 0);
         }
 
-        // === 2. NAVIGACIJA KROZ STRANICE ===
+        // === NAVIGACIJA ===
         function NavigajNaStranicu(stranicaId, elementMeni) {
-            // Sakrij sve stranice
             let sveStranice = document.querySelectorAll('.sekcija-stranice');
             sveStranice.forEach(str => str.classList.remove('aktivna-stranica'));
 
-            // Prikaži selektovanu
             document.getElementById(stranicaId).classList.add('aktivna-stranica');
 
-            // Sredi klase u meniju sidebara
             let sveStavkeMenija = document.querySelectorAll('.meni-stavka');
             sveStavkeMenija.forEach(stavka => stavka.classList.remove('aktivna'));
             if(elementMeni) elementMeni.classList.add('aktivna');
+            
+            window.scrollTo(0, 0);
         }
 
-        // === 3. IMENIK I KARTICE ===
+        // === IMENIK ===
         function IscrtajKarticeUcenika() {
             let kontejner = document.getElementById('kontejner-za-kartice-ucenika');
             kontejner.innerHTML = "";
@@ -894,7 +979,7 @@
             });
         }
 
-        // === 4. PROFIL UCENIKA I TABOVI ===
+        // === PROFIL I ODVOJENI TABOVI ===
         function OtvoriProfilUcenika(id) {
             trenutnoSelektovaniUcenikId = id;
             let ucenik = uceniciBaza.find(u => u.id === id);
@@ -903,33 +988,27 @@
                 document.getElementById('profil-ime-ucenika').innerText = ucenik.ime;
                 document.getElementById('profil-slika-velika').src = ucenik.slika;
                 
-                // Osveži prikaz ocena u prvom tabu
                 OsveziPrikazOcenaNaProfilu(ucenik);
 
-                // Popuni forme u ostalim tabovima sa podacima iz baze
                 document.getElementById('profil-vladanje-select').value = ucenik.vladanje;
                 document.getElementById('profil-vladanje-napomena').value = ucenik.napomenaVladanje || "";
                 document.getElementById('profil-aktivnosti-tekst').value = ucenik.aktivnosti || "";
 
-                // Otvori samu stranicu profila
                 NavigajNaStranicu('stranica-profil-ucenika', null);
             }
         }
 
         function OsveziPrikazOcenaNaProfilu(ucenik) {
             document.getElementById('lista-trenutnih-ocena').innerText = 
-                `Trenutne ocene iz predmeta: ${ucenik.ocene.length > 0 ? ucenik.ocene.join(', ') : 'Nema upisanih ocena'}`;
+                `Trenutne ocene: ${ucenik.ocene.length > 0 ? ucenik.ocene.join(', ') : 'Nema upisanih ocena'}`;
         }
 
         function PrebaciTab(tabId, dugmeElement) {
-            // Sakrij sve tabove u profilu
             let sviTabovi = document.querySelectorAll('.tab-sadrzaj');
             sviTabovi.forEach(tab => tab.classList.remove('aktivan'));
 
-            // Prikaži izabrani
             document.getElementById(tabId).classList.add('aktivan');
 
-            // Promeni izgled dugmića
             let svaDugmad = document.querySelectorAll('.tab-dugme');
             svaDugmad.forEach(d => d.classList.remove('aktivni-tab'));
             dugmeElement.classList.add('aktivni-tab');
@@ -937,7 +1016,6 @@
 
         function NavigajNazadUImenik() {
             NavigajNaStranicu('stranica-imenik-odeljenja', null);
-            // Vrati aktivnu klasu na stavku Imenik u sidebar-u
             let stavke = document.querySelectorAll('.meni-stavka');
             stavke.forEach((s, indeks) => {
                 if(indeks === 1) s.classList.add('aktivna');
@@ -945,7 +1023,6 @@
             });
         }
 
-        // Čuvanje iz tabova
         function SacuvajOcenuSaProfila() {
             let selektovanaOcena = parseInt(document.getElementById('profil-unos-ocene-select').value);
             let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
@@ -953,7 +1030,7 @@
                 ucenik.ocene.push(selektovanaOcena);
                 OsveziPrikazOcenaNaProfilu(ucenik);
                 IscrtajKarticeUcenika();
-                alert(`Ocena ${selektovanaOcena} uspešno dodata za učenika ${ucenik.ime}!`);
+                alert(`Ocena usmerena za učenika ${ucenik.ime}!`);
             }
         }
 
@@ -962,7 +1039,7 @@
             if(ucenik) {
                 ucenik.vladanje = parseInt(document.getElementById('profil-vladanje-select').value);
                 ucenik.napomenaVladanje = document.getElementById('profil-vladanje-napomena').value;
-                alert(`Vladanje uspešno ažurirano za učenika ${ucenik.ime}!`);
+                alert(`Vladanje ažurirano.`);
             }
         }
 
@@ -970,28 +1047,26 @@
             let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
             if(ucenik) {
                 ucenik.aktivnosti = document.getElementById('profil-aktivnosti-tekst').value;
-                alert(`Vannastavne aktivnosti uspešno zabeležene.`);
+                alert(`Aktivnosti sačuvane.`);
             }
         }
 
-        // === 5. DNEVNIK RADA I EVIDENCIJA ČASA UŽIVO ===
+        // === KONTROLA ČASA ===
         function PokreniEvidencijuCasa() {
             let nazivLekcije = document.getElementById('input-naziv-lekcije').value.trim();
             let redniBroj = document.getElementById('select-redni-broj-casa').value;
 
             if(nazivLekcije === "") {
-                alert("Molimo Vas unesite naziv nastavne jedinice / lekcije pre pokretanja časa!");
+                alert("Unesite naziv lekcije pre pokretanja časa!");
                 return;
             }
 
             casZapocekStatus = true;
-            
-            // Izmena stanja na desnom panelu uživo
-            document.getElementById('live-panel-naslov').innerHTML = `<i class="fa-solid fa-circle-dot" style="color: #48bb78;"></i> ${redniBroj}. čas — Evidencija rada`;
+            document.getElementById('live-panel-naslov').innerHTML = `<i class="fa-solid fa-circle-dot" style="color: #48bb78;"></i> ${redniBroj}. čas — Uživo`;
             document.getElementById('live-panel-podnaslov').innerText = `Lekcija: ${nazivLekcije}`;
             document.getElementById('btn-zavrsi-trenutni-cas').style.display = "block";
             
-            alert(`Čas broj ${redniBroj} uspešno pokrenut u dnevniku rada!`);
+            alert(`Čas broj ${redniBroj} uspešno pokrenut!`);
         }
 
         function SelektujBrzuOcenu(vrednost, element) {
@@ -1003,18 +1078,15 @@
 
         function IzvrsiBrzoOcenjivanje() {
             if(!casZapocekStatus) {
-                alert("Morate prvo pokrenuti čas u Dnevniku rada da biste koristili brzo ocenjivanje sa strane!");
+                alert("Pokrenite čas u Dnevniku rada pre unosa brze ocene!");
                 return;
             }
-            
-            // Pošto koristimo brzo ocenjivanje sa panela, dodelićemo ocenu trenutno selektovanom učeniku ili prvom na spisku
             let ciljniId = trenutnoSelektovaniUcenikId || 1;
             let ucenik = uceniciBaza.find(u => u.id === ciljniId);
-            
             if(ucenik) {
                 ucenik.ocene.push(odabranaBrzaOcenaVrednost);
                 IscrtajKarticeUcenika();
-                alert(`Brza ocena (${odabranaBrzaOcenaVrednost}) zavedena u dnevnik za učenika: ${ucenik.ime}`);
+                alert(`Brza ocena (${odabranaBrzaOcenaVrednost}) uneta za učenika: ${ucenik.ime}`);
             }
         }
 
@@ -1024,10 +1096,10 @@
             document.getElementById('live-panel-podnaslov').innerText = "Izaberite lekciju i pokrenite čas.";
             document.getElementById('btn-zavrsi-trenutni-cas').style.display = "none";
             document.getElementById('input-naziv-lekcije').value = "";
-            alert("Trenutni nastavni čas je uspešno završen i arhiviran.");
+            alert("Čas uspešno završen.");
         }
 
-        // === 6. ADMINISTRACIJA PANEL LOGIKA ===
+        // === ADMIN PANEL ===
         function IscrtajAdminTabele() {
             let teloTabele = document.getElementById('admin-tabela-ucenika-telo');
             teloTabele.innerHTML = "";
@@ -1049,33 +1121,25 @@
         function DodajUcenikaIzAdminPanela() {
             let imeIPrezime = document.getElementById('admin-novi-ucenik-ime').value.trim();
             if(imeIPrezime === "") {
-                alert("Unesite ime i prezime novog učenika!");
+                alert("Unesite ime i prezime učenika!");
                 return;
             }
 
             let noviId = uceniciBaza.length > 0 ? Math.max(...uceniciBaza.map(u => u.id)) + 1 : 1;
-            let noviUcenik = {
-                id: noviId,
-                ime: imeIPrezime,
-                slika: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150", // Podrazumevani avatar
-                ocene: [],
-                vladanje: 5,
-                napomenaVladanje: ,
-                aktivnosti: 
-            };
+            uceniciBaza.push({
+                id: noviId, ime: imeIPrezime,
+                slika: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
+                ocene: [], vladanje: 5, napomenaVladanje: "", aktivnosti: ""
+            });
 
-            uceniciBaza.push(noviUcenik);
             document.getElementById('admin-novi-ucenik-ime').value = "";
-            
-            // Osveži sve prikaze na sistemu
             IscrtajKarticeUcenika();
             IscrtajAdminTabele();
-            
-            alert(`Učenik ${imeIPrezime} uspešno dodat u sistem!`);
+            alert(`Učenik dodat.`);
         }
 
         function ObrisiUcenika(id) {
-            if(confirm("Da li ste sigurni da želite da obrišete ovog učenika iz baze sistema?")) {
+            if(confirm("Potvrda brisanja učenika iz baze sistema?")) {
                 uceniciBaza = uceniciBaza.filter(u => u.id !== id);
                 IscrtajKarticeUcenika();
                 IscrtajAdminTabele();
@@ -1084,7 +1148,7 @@
 
         function PromeniOdeljenje() {
             let odeljenje = document.getElementById('header-select-odeljenje').value;
-            document.getElementById('prikaz-trenutnog-odeljenja').innerText = `Razredno odeljenje - ${odeljenje}`;
+            document.getElementById('prikaz-trenutnog-odeljenja').innerText = ` - ${odeljenje}`;
         }
     </script>
 </body>
