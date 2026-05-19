@@ -4,7 +4,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // === MIDDLEWARE (OBAVEZNO ZA JSON I STATIČKE FAJLOVE) ===
-// Omogućava Expressu da bez problema čita JSON podatke koje mu šalješ preko fetch-a
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -15,19 +14,13 @@ app.use(express.static(path.join(__dirname)));
 app.post('/api/login', async (req, res) => {
     const { email, lozinka } = req.body;
 
-    // 1. Provera da li su polja poslata sa frontenda
     if (!email || !lozinka) {
         return res.status(400).json({ poruka: "Sva polja moraju biti popunjena!" });
     }
 
     try {
-        // 2. OVDE KASNIJE SPAJAŠ SVOJU SUPABASE ILI POSTGRESQL BAZU
-        // npr: const { data, error } = await supabase.auth.signInWithPassword({ email, password: lozinka });
-        
-        // Trenutna bezbedna provera za testiranje dok ne uvežeš bazu do kraja:
+        // Privremena provera za testiranje dok se ne poveže Supabase/PostgreSQL do kraja
         if (email === "admin@skola.rs" && lozinka === "sifra123") {
-            
-            // Ako su podaci tačni, vraćamo status 200 (OK) i objekat sa podatkom o korisniku
             return res.status(200).json({
                 poruka: "Uspešna prijava!",
                 korisnik: {
@@ -36,19 +29,17 @@ app.post('/api/login', async (req, res) => {
                 }
             });
         } else {
-            // Ako podaci ne odgovaraju, vraćamo 401 (Unauthorized)
             return res.status(401).json({ poruka: "Pogrešno korisničko ime ili lozinka!" });
         }
-
     } catch (error) {
         console.error("Sistemska greška na serveru:", error);
         return res.status(500).json({ poruka: "Greška na serveru prilikom prijave." });
     }
 });
 
-// === GLAVNA RUTA ZA SLUŽENJE HTML-A (ISPRAVLJENA ZA RENDER) ===
-// Umesto zvezdice (*) koristimo (.*) kako path-to-regexp ne bi bacao grešku na Node v24
-app.get('(.*)', (req, res) => {
+// === GLAVNA RUTA ZA SLUŽENJE HTML-A (KONAČNA ISPRAVKA ZA EXPRESS 5 / RENDER) ===
+// Sintaksa /:catchall* kreira imenovani parametar i prihvata bilo koji pod-URL bez pucanja baze
+app.get('/:catchall*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
