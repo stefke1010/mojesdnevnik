@@ -1046,7 +1046,34 @@
 
         function switchPage(pageId) { document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active')); let t = document.getElementById(pageId); if(t) t.classList.add('active'); }
         function prebaciAdminTab(pId, bId) { document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active')); document.getElementById(pId).classList.add('active'); document.getElementById(bId).classList.add('active'); }
-        function otvoriLokalniTab(e, tName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tName).classList.add('active'); e.currentTarget.classList.add('active'); }
-    </script>
+        function otvoriLokalniTab(e, tName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tName).classList.add('active'); e.currentTarget.classList.add('active'); 
+    <script>
+// Funkcija za učitavanje svih učenika iz baze
+async function osveziPodatkeIzBaze() {
+    try {
+        const response = await fetch('/api/ucenici');
+        const ucenici = await response.json();
+        
+        // Ovde bi išla logika za iscrtavanje u .imenik-grid
+        const mreza = document.getElementById('mreza-ucenika-imenik');
+        mreza.innerHTML = '';
+        
+        ucenici.forEach(ucenik => {
+            mreza.innerHTML += `
+                <div class="student-profile-card">
+                    <div class="avatar-container"><i class="fa-solid fa-user"></i></div>
+                    <div class="card-name">${ucenik.ime}</div>
+                    <div class="card-subtext">${ucenik.odeljenje}</div>
+                </div>
+            `;
+        });
+    } catch (e) {
+        console.error("Greška pri dohvatanju podataka:", e);
+    }
+}
+
+// Pozivamo funkciju čim se stranica učita
+window.onload = osveziPodatkeIzBaze;
+</script>
 </body>
 </html>
