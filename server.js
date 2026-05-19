@@ -37,9 +37,9 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// === GLAVNA RUTA ZA SLUŽENJE HTML-A (KONAČNA ISPRAVKA ZA EXPRESS 5 / RENDER) ===
-// Sintaksa /:catchall* kreira imenovani parametar i prihvata bilo koji pod-URL bez pucanja baze
-app.get('/:catchall*', (req, res) => {
+// === GLAVNA RUTA ZA SLUŽENJE HTML-A (KONAČNO REŠENJE BEZ REGEX GREŠAKA) ===
+// app.use hvata sve ostale zahteve koji nisu prošli kroz /api/login i bezbedno šalje index.html
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
