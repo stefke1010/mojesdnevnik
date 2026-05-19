@@ -4,19 +4,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // === MIDDLEWARE (OBAVEZNO ZA JSON I STATIČKE FAJLOVE) ===
-// Ovo omogućava Expressu da čita podatke koje mu šalješ preko fetch-a u JSON formatu
+// Omogućava Expressu da bez problema čita JSON podatke koje mu šalješ preko fetch-a
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Služenje statičkih fajlova (HTML, CSS, JS) iz trenutnog foldera
-// Pretpostavlja se da ti je HTML fajl u istom folderu ili u public-u
+// Služenje statičkih fajlova (HTML, CSS, JS) iz trenutnog direktorijuma projektu
 app.use(express.static(path.join(__dirname)));
 
 // === RUTA ZA LOGIN (/api/login) ===
 app.post('/api/login', async (req, res) => {
     const { email, lozinka } = req.body;
 
-    // 1. Provera da li su polja uopšte poslata sa frontenda
+    // 1. Provera da li su polja poslata sa frontenda
     if (!email || !lozinka) {
         return res.status(400).json({ poruka: "Sva polja moraju biti popunjena!" });
     }
@@ -47,8 +46,9 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// === GLAVNA RUTA ZA SLUŽENJE HTML-A ===
-app.get('*', (req, res) => {
+// === GLAVNA RUTA ZA SLUŽENJE HTML-A (ISPRAVLJENA ZA RENDER) ===
+// Umesto zvezdice (*) koristimo (.*) kako path-to-regexp ne bi bacao grešku na Node v24
+app.get('(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
