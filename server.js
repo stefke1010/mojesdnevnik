@@ -1,154 +1,63 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// === MIDDLEWARE (OBAVEZNO ZA JSON I STATIČKE FAJLOVE) ===
+// Ovo omogućava Expressu da čita podatke koje mu šalješ preko fetch-a u JSON formatu
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ednevnik';
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ Uspešno povezan sa MongoDB bazom!'))
-  .catch(err => console.error('❌ Greška pri povezivanju sa bazom:', err));
+// Služenje statičkih fajlova (HTML, CSS, JS) iz trenutnog foldera
+// Pretpostavlja se da ti je HTML fajl u istom folderu ili u public-u
+app.use(express.static(path.join(__dirname)));
 
-// --- MONGODB ŠEME ---
+// === RUTA ZA LOGIN (/api/login) ===
+app.post('/api/login', async (req, res) => {
+    const { email, lozinka } = req.body;
 
-const PredmetSchema = new mongoose.Schema({
-    id: String,      
-    naziv: String    
-});
-const Predmet = mongoose.model('Predmet', PredmetSchema);
+    // 1. Provera da li su polja uopšte poslata sa frontenda
+    if (!email || !lozinka) {
+        return res.status(400).json({ poruka: "Sva polja moraju biti popunjena!" });
+    }
 
-const OdeljenjeSchema = new mongoose.Schema({
-    naziv: String    
-});
-const Odeljenje = mongoose.model('Odeljenje', OdeljenjeSchema);
-
-const NastavnikSchema = new mongoose.Schema({
-    ime: String,
-    uloga: String,
-    username: String,
-    password: { type: String, default: "admin123" },
-    odeljenja: [String],
-    predmeti: [String]
-});
-const Nastavnik = mongoose.model('Nastavnik', NastavnikSchema);
-
-const CasSchema = new mongoose.Schema({
-    lekcija: String,
-    rbr: String,
-    tip: String,
-    odeljenje: String,
-    predmetId: String,
-    datum: String
-});
-const Cas = mongoose.model('Cas', CasSchema);
-
-const UcenikSchema = new mongoose.Schema({
-    ime: String,
-    odeljenje: String,
-    ocena_vladanja: { type: String, default: "5" }, 
-    ocene: [{ 
-        id: Number, 
-        tip: String,        
-        vrednost: String,   
-        vrsta: String,      
-        predmet: String, 
-        datum: String       
-    }],
-    izostanci: [{ 
-        lekcija: String, 
-        predmet: String, 
-        datum: String, 
-        status: { type: String, default: "нерегулисано" } 
-    }],
-    vladanje_lista: [{ 
-        id: Number, 
-        tip_zapisa: String, // 'napomena' ili 'mera'
-        vrsta: String,      // 'Ukor...', 'Opomena...'
-        tekst: String,      
-        datum: String, 
-        predmet: String,    // Pamti se samo za napomene
-        cas: String,        // Pamti se samo za napomene
-        posledica: String   // Pamti se samo za mere
-    }]
-});
-const Ucenik = mongoose.model('Ucenik', UcenikSchema);
-
-// --- API RUTE ---
-
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
-
-app.get('/api/podaci', async (req, res) => {
     try {
-        const ucenici = await Ucenik.find();
-        const casovi = await Cas.find();
-        const nastavnici = await Nastavnik.find();
-        const predmeti = await Predmet.find();
-        const odeljenja = await Odeljenje.find();
-        res.json({ ucenici, casovi, nastavnici, predmeti, odeljenja });
-    } catch (err) { res.status(500).json({ error: err.message }); }
-});
-
-app.post('/api/nastavnici/promena-lozinke', async (req, res) => {
-    try {
-        const { username, novaLozinka } = req.body;
-        let korisnik = await Nastavnik.findOne({ username: username });
-        if (!korisnik && username === 'admin') {
-            korisnik = new Nastavnik({ ime: "Стефан Михајловић", uloga: "Администратор", username: "admin" });
+        // 2. OVDE KASNIJE SPAJAŠ SVOJU SUPABASE ILI POSTGRESQL BAZU
+        // npr: const { data, error } = await supabase.auth.signInWithPassword({ email, password: lozinka });
+        
+        // Trenutna bezbedna provera za testiranje dok ne uvežeš bazu do kraja:
+        if (email === "admin@skola.rs" && lozinka === "sifra123") {
+            
+            // Ako su podaci tačni, vraćamo status 200 (OK) i objekat sa podatkom o korisniku
+            return res.status(200).json({
+                poruka: "Uspešna prijava!",
+                korisnik: {
+                    ime: "Stefan Mihajlović",
+                    rola: "nastavnik"
+                }
+            });
+        } else {
+            // Ako podaci ne odgovaraju, vraćamo 401 (Unauthorized)
+            return res.status(401).json({ poruka: "Pogrešno korisničko ime ili lozinka!" });
         }
-        if (korisnik) {
-            korisnik.password = novaLozinka;
-            await korisnik.save();
-            return res.json({ success: true, message: "Lozinka promenjena!" });
-        }
-        res.status(404).json({ success: false });
-    } catch (err) { res.status(400).json({ error: err.message }); }
+
+    } catch (error) {
+        console.error("Sistemska greška na serveru:", error);
+        return res.status(500).json({ poruka: "Greška na serveru prilikom prijave." });
+    }
 });
 
-app.post('/api/predmeti', async (req, res) => {
-    try { const nov = await Predmet.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
-});
-app.delete('/api/predmeti/:id', async (req, res) => {
-    try { await Predmet.deleteOne({ id: req.params.id }); res.json({ success: true }); } catch (err) { res.status(400).json(err); }
+// === GLAVNA RUTA ZA SLUŽENJE HTML-A ===
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.post('/api/odeljenja', async (req, res) => {
-    try { const nov = await Odeljenje.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
+// === POKRETANJE SERVERA ===
+app.listen(PORT, () => {
+    console.log(`\n==================================================`);
+    console.log(`🚀 Server uspešno pokrenut na adresi: http://localhost:${PORT}`);
+    console.log(`🔐 Test login podaci:`);
+    console.log(`   Korisnik: admin@skola.rs`);
+    console.log(`   Lozinka:  sifra123`);
+    console.log(`==================================================\n`);
 });
-app.delete('/api/odeljenja/:naziv', async (req, res) => {
-    try { await Odeljenje.deleteOne({ naziv: req.params.naziv }); res.json({ success: true }); } catch (err) { res.status(400).json(err); }
-});
-
-app.post('/api/nastavnici', async (req, res) => {
-    try { const nov = await Nastavnik.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
-});
-app.delete('/api/nastavnici/:id', async (req, res) => {
-    try { await Nastavnik.findByIdAndDelete(req.params.id); res.json({ success: true }); } catch (err) { res.status(400).json(err); }
-});
-
-app.post('/api/casovi', async (req, res) => {
-    try { const nov = await Cas.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
-});
-app.put('/api/casovi/:id', async (req, res) => {
-    try { const azur = await Cas.findByIdAndUpdate(req.params.id, req.body, { new: true }); res.json(azur); } catch (err) { res.status(400).json(err); }
-});
-app.delete('/api/casovi/:id', async (req, res) => {
-    try { await Cas.findByIdAndDelete(req.params.id); res.json({ success: true }); } catch (err) { res.status(400).json(err); }
-});
-
-app.post('/api/ucenici', async (req, res) => {
-    try { const nov = await Ucenik.create(req.body); res.status(200).json(nov); } catch (err) { res.status(400).json(err); }
-});
-app.put('/api/ucenici/:id', async (req, res) => {
-    try { const azur = await Ucenik.findByIdAndUpdate(req.params.id, req.body, { new: true }); res.json(azur); } catch (err) { res.status(400).json(err); }
-});
-app.delete('/api/ucenici/:id', async (req, res) => {
-    try { await Ucenik.findByIdAndDelete(req.params.id); res.json({ success: true }); } catch (err) { res.status(400).json(err); }
-});
-
-app.listen(PORT, () => console.log(`🚀 Moćni server radi na portu ${PORT}`));
