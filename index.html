@@ -278,7 +278,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
-        /* STATISTIČKE KARTICE (NOVO) */
+        /* STATISTIČKE KARTICE */
         .statistika-mreza {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -467,7 +467,7 @@
             display: block;
         }
 
-        /* TABELA IZOSTANAKA SA VIZUELNIM LINIJAMA (NOVO) */
+        /* TABELA IZOSTANKA SA LINIJAMA */
         .izostanak-red {
             display: flex;
             justify-content: space-between;
@@ -479,9 +479,9 @@
             border-left: 5px solid #cbd5e1;
         }
 
-        .izostanak-red.neregulisan { border-left-color: #ed8936; } /* Narandžasta */
-        .izostanak-red.opravdan { border-left-color: #48bb78; }    /* Zelena */
-        .izostanak-red.neopravdan { border-left-color: #e53e3e; }  /* Crvena */
+        .izostanak-red.neregulisan { border-left-color: #ed8936; } 
+        .izostanak-red.opravdan { border-left-color: #48bb78; }    
+        .izostanak-red.neopravdan { border-left-color: #e53e3e; }  
 
         .izostanak-akcije {
             display: flex;
@@ -609,7 +609,7 @@
             display: block;
         }
 
-        /* === RESPONSIVE (MOBILNI TELEFONI) === */
+        /* === RESPONSIVE === */
         @media (max-width: 992px) {
             .radni-prostor {
                 flex-direction: column;
@@ -695,11 +695,11 @@
             <h2><i class="fa-solid fa-graduation-cap"></i> eДневник Про</h2>
             <div class="input-grupa">
                 <label for="login-korisnik">Korisničko ime / Email</label>
-                <input type="text" id="login-korisnik" placeholder="Unesite bilo koje ime..." required autocomplete="username">
+                <input type="text" id="login-korisnik" placeholder="Unesite vaše korisničko ime..." required autocomplete="username">
             </div>
             <div class="input-grupa">
                 <label for="login-sifra">Lozinka</label>
-                <input type="password" id="login-sifra" placeholder="Unesite bilo koju lozinku..." required autocomplete="current-password">
+                <input type="password" id="login-sifra" placeholder="Unesite lozinku..." required autocomplete="current-password">
             </div>
             <button type="submit" class="btn-prijavi-se">Prijavi se</button>
             <div id="login-greska-poruka" class="error-poruka">Sva polja moraju biti popunjena!</div>
@@ -1011,8 +1011,6 @@
     </div>
 
     <script>
-        let trenutnoUlogovaniKorisnik = { ime: "Stefan Mihajlović", uloga: "Školski koordinator" };
-        
         let uceniciBaza = [
             { id: 1, ime: "Adamović Ema", slika: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150", ocene: [5, 4], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: [{datum: "14.05.2026.", status: "neregulisan"}] },
             { id: 2, ime: "Beriša Ahmet", slika: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150", ocene: [3, 5], vladanje: 4, napomenaVladanje: "", aktivnosti: "", izostanci: [] },
@@ -1035,11 +1033,373 @@
             PopuniSelectUcenikaULivePanelu();
         };
 
-        function IzvrsiPrijavuNaSistem(event) {
+        // === REALNA LOGIN FUNKCIJA (KOMUNIKACIJA SA BACKENDOM) ===
+        async function IzvrsiPrijavuNaSistem(event) {
             if (event) event.preventDefault();
+            
             let uKorisnik = document.getElementById('login-korisnik').value.trim();
             let uSifra = document.getElementById('login-sifra').value.trim();
+            let greskaElement = document.getElementById('login-greska-poruka');
 
-            if(uKorisnik !== "" && uSifra !== "") {
-                document.getElementById('stranica-login-sistema').style.setProperty('display', 'none', 'important');
-                document.getElementById('
+            if(uKorisnik === "" || uSifra === "") {
+                greskaElement.innerText = "Sva polja moraju biti popunjena!";
+                greskaElement.style.display = 'block';
+                return;
+            }
+
+            try {
+                const odgovor = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: uKorisnik, lozinka: uSifra })
+                });
+
+                const podaci = await odgovor.json();
+
+                if (odgovor.ok) {
+                    document.getElementById('stranica-login-sistema').style.setProperty('display', 'none', 'important');
+                    document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+                    document.getElementById('prikazano-ime-nastavnika-header').innerText = podaci.korisnik?.ime || uKorisnik;
+                    window.scrollTo(0, 0);
+                } else {
+                    greskaElement.innerText = podaci.poruka || "Pogrešno korisničko ime ili lozinka!";
+                    greskaElement.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Greška pri prijavi:", error);
+                greskaElement.innerText = "Greška pri povezivanju sa serverom.";
+                greskaElement.style.display = 'block';
+            }
+        }
+
+        // === STATISTIKA ===
+        function OsveziGlobalnuStatistiku() {
+            document.getElementById('stat-ukupno-ucenika').innerText = uceniciBaza.length;
+            document.getElementById('stat-upisano-casova').innerText = brojUpisanihCasovaDanas;
+            
+            let sveOcene = [];
+            uceniciBaza.forEach(u => sveOcene.push(...u.ocene));
+            if(sveOcene.length > 0) {
+                let prosek = sveOcene.reduce((a, b) => a + b, 0) / sveOcene.length;
+                document.getElementById('stat-prosek-odeljenja').innerText = prosek.toFixed(2);
+            } else {
+                document.getElementById('stat-prosek-odeljenja').innerText = "0.00";
+            }
+        }
+
+        function PopuniSelectUcenikaULivePanelu() {
+            let selectOcena = document.getElementById('live-selektuj-ucenika-za-ocenu');
+            let selectOdsutni = document.getElementById('live-upis-odsutnog-select');
+            
+            selectOcena.innerHTML = "";
+            selectOdsutni.innerHTML = "";
+
+            uceniciBaza.forEach(u => {
+                selectOcena.innerHTML += `<option value="${u.id}">${u.ime}</option>`;
+                selectOdsutni.innerHTML += `<option value="${u.id}">${u.ime}</option>`;
+            });
+        }
+
+        // === NAVIGACIJA ===
+        function NavigajNaStranicu(stranicaId, elementMeni) {
+            let sveStranice = document.querySelectorAll('.sekcija-stranice');
+            sveStranice.forEach(str => str.classList.remove('aktivna-stranica'));
+
+            document.getElementById(stranicaId).classList.add('aktivna-stranica');
+
+            let sveStavkeMenija = document.querySelectorAll('.meni-stavka');
+            sveStavkeMenija.forEach(stavka => stavka.classList.remove('aktivna'));
+            if(elementMeni) elementMeni.classList.add('aktivna');
+            
+            window.scrollTo(0, 0);
+        }
+
+        // === IMENIK ===
+        function IscrtajKarticeUcenika() {
+            let kontejner = document.getElementById('kontejner-za-kartice-ucenika');
+            kontejner.innerHTML = "";
+
+            uceniciBaza.forEach(ucenik => {
+                let kartica = document.createElement('div');
+                kartica.className = "ucenik-kartica";
+                kartica.onclick = () => OtvoriProfilUcenika(ucenik.id);
+
+                kartica.innerHTML = `
+                    <img src="${ucenik.slika}" class="ucenik-slika" alt="${ucenik.ime}">
+                    <div class="ucenik-ime">${ucenik.ime}</div>
+                    <div class="ucenik-skola">Osnovno obrazovanje</div>
+                    <div style="margin-top:12px; font-size:13px; color:#2b6cb0; font-weight:bold; background: #ebf8ff; padding: 4px; border-radius:4px;">
+                        Ocene: ${ucenik.ocene.length > 0 ? ucenik.ocene.join(', ') : 'Nema ocena'}
+                    </div>
+                `;
+                kontejner.appendChild(kartica);
+            });
+        }
+
+        // === PROFIL I TABOVI ===
+        function OtvoriProfilUcenika(id) {
+            trenutnoSelektovaniUcenikId = id;
+            let ucenik = uceniciBaza.find(u => u.id === id);
+            
+            if(ucenik) {
+                document.getElementById('profil-ime-ucenika').innerText = ucenik.ime;
+                document.getElementById('profil-slika-velika').src = ucenik.slika;
+                
+                OsveziPrikazOcenaNaProfilu(ucenik);
+                IscrtajIzostankeNaProfilu(ucenik);
+
+                document.getElementById('profil-vladanje-select').value = ucenik.vladanje;
+                document.getElementById('profil-vladanje-napomena').value = ucenik.napomenaVladanje || "";
+                document.getElementById('profil-aktivnosti-tekst').value = ucenik.aktivnosti || "";
+
+                NavigajNaStranicu('stranica-profil-ucenika', null);
+            }
+        }
+
+        function OsveziPrikazOcenaNaProfilu(ucenik) {
+            document.getElementById('lista-trenutnih-ocena').innerText = 
+                `Trenutne ocene: ${ucenik.ocene.length > 0 ? ucenik.ocene.join(', ') : 'Nema upisanih ocena'}`;
+            
+            if(ucenik.ocene.length > 0) {
+                let prosek = ucenik.ocene.reduce((a, b) => a + b, 0) / ucenik.ocene.length;
+                document.getElementById('profil-prosek-tekst').innerText = `Trenutni prosek: ${prosek.toFixed(2)}`;
+            } else {
+                document.getElementById('profil-prosek-tekst').innerText = `Trenutni prosek: Nema ocena`;
+            }
+        }
+
+        function PrebaciTab(tabId, dugmeElement) {
+            let sviTabovi = document.querySelectorAll('.tab-sadrzaj');
+            sviTabovi.forEach(tab => tab.classList.remove('aktivan'));
+
+            document.getElementById(tabId).classList.add('aktivan');
+
+            let svaDugmad = document.querySelectorAll('.tab-dugme');
+            svaDugmad.forEach(d => d.classList.remove('aktivni-tab'));
+            dugmeElement.classList.add('aktivni-tab');
+        }
+
+        function NavigajNazadUImenik() {
+            NavigajNaStranicu('stranica-imenik-odeljenja', null);
+            let stavke = document.querySelectorAll('.meni-stavka');
+            stavke.forEach((s, indeks) => {
+                if(indeks === 1) s.classList.add('aktivna');
+                else s.classList.remove('aktivna');
+            });
+        }
+
+        function SacuvajOcenuSaProfila() {
+            let selektovanaOcena = parseInt(document.getElementById('profil-unos-ocene-select').value);
+            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
+            if(ucenik) {
+                ucenik.ocene.push(selektovanaOcena);
+                OsveziPrikazOcenaNaProfilu(ucenik);
+                IscrtajKarticeUcenika();
+                OsveziGlobalnuStatistiku();
+                alert(`Ocena uspešno ubeležena za učenika ${ucenik.ime}!`);
+            }
+        }
+
+        function SacuvajVladanje() {
+            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
+            if(ucenik) {
+                ucenik.vladanje = parseInt(document.getElementById('profil-vladanje-select').value);
+                ucenik.napomenaVladanje = document.getElementById('profil-vladanje-napomena').value;
+                alert(`Vladanje uspešno ažurirano.`);
+            }
+        }
+
+        function SacuvajAktivnosti() {
+            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
+            if(ucenik) {
+                ucenik.aktivnosti = document.getElementById('profil-aktivnosti-tekst').value;
+                alert(`Aktivnosti sačuvane.`);
+            }
+        }
+
+        // === UPRAVLJANJE IZOSTANCIMA ===
+        function IscrtajIzostankeNaProfilu(ucenik) {
+            let kontejner = document.getElementById('profil-lista-izostanaka');
+            kontejner.innerHTML = "";
+
+            if(ucenik.izostanci.length === 0) {
+                kontejner.innerHTML = "<p style='color:#718096; font-style:italic;'>Učenik nema zabeleženih izostanaka.</p>";
+                return;
+            }
+
+            ucenik.izostanci.forEach((iz, indeks) => {
+                let red = document.createElement('div');
+                red.className = `izostanak-red ${iz.status}`;
+                red.innerHTML = `
+                    <div>
+                        <strong>${iz.datum}</strong> - Status: <span style='text-transform:uppercase; font-size:12px; font-weight:bold;'>${iz.status}</span>
+                    </div>
+                    <div class="izostanak-akcije">
+                        <button class="btn-izostanak-mini" style="background:#48bb78;" onclick="RegulisiIzostanak(${ucenik.id}, ${indeks}, 'opravdan')">Opravdaj</button>
+                        <button class="btn-izostanak-mini" style="background:#e53e3e;" onclick="RegulisiIzostanak(${ucenik.id}, ${indeks}, 'neopravdan')">Neopravdaj</button>
+                        <button class="btn-izostanak-mini" style="background:#718096;" onclick="ObrisiIzostanak(${ucenik.id}, ${indeks})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                kontejner.appendChild(red);
+            });
+        }
+
+        function DodajNoviIzostanakSaProfila() {
+            let datum = document.getElementById('profil-izostanak-datum').value.trim();
+            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
+            if(ucenik && datum !== "") {
+                ucenik.izostanci.push({ datum: datum, status: "neregulisan" });
+                IscrtajIzostankeNaProfilu(ucenik);
+            }
+        }
+
+        function RegulisiIzostanak(ucenikId, indeks, noviStatus) {
+            let ucenik = uceniciBaza.find(u => u.id === ucenikId);
+            if(ucenik && ucenik.izostanci[indeks]) {
+                ucenik.izostanci[indeks].status = noviStatus;
+                IscrtajIzostankeNaProfilu(ucenik);
+            }
+        }
+
+        function ObrisiIzostanak(ucenikId, indeks) {
+            let ucenik = uceniciBaza.find(u => u.id === ucenikId);
+            if(ucenik && ucenik.izostanci[indeks]) {
+                ucenik.izostanci.splice(indeks, 1);
+                IscrtajIzostankeNaProfilu(ucenik);
+            }
+        }
+
+        // === KONTROLA ČASA ===
+        function PokreniEvidencijuCasa() {
+            let nazivLekcije = document.getElementById('input-naziv-lekcije').value.trim();
+            let redniBroj = document.getElementById('select-redni-broj-casa').value;
+
+            if(nazivLekcije === "") {
+                alert("Unesite naziv lekcije pre pokretanja časa!");
+                return;
+            }
+
+            casZapocekStatus = true;
+            trenutnoOdsutniNaCasu = [];
+            
+            document.getElementById('live-panel-naslov').innerHTML = `<i class="fa-solid fa-circle-dot" style="color: #48bb78;"></i> ${redniBroj}. čas — Uživo`;
+            document.getElementById('live-panel-podnaslov').innerText = `Lekcija: ${nazivLekcije}`;
+            document.getElementById('dinamicki-live-kontent').style.display = "block";
+            document.getElementById('btn-zavrsi-trenutni-cas').style.display = "block";
+            document.getElementById('lista-odsutnih-imena').innerText = "Nema odsutnih na ovom času.";
+            
+            alert(`Čas broj ${redniBroj} uspešno pokrenut!`);
+        }
+
+        function SelektujBrzuOcenu(vrednost, element) {
+            odabranaBrzaOcenaVrednost = vrednost;
+            let sviBrziGumbi = document.querySelectorAll('.brza-ocena-btn');
+            sviBrziGumbi.forEach(g => g.classList.remove('odabrana'));
+            element.classList.add('odabrana');
+        }
+
+        function IzvrsiBrzoOcenjivanje() {
+            if(!casZapocekStatus) {
+                alert("Pokrenite čas u Dnevniku rada pre unosa brze ocene!");
+                return;
+            }
+            let odabraniId = parseInt(document.getElementById('live-selektuj-ucenika-za-ocenu').value);
+            let ucenik = uceniciBaza.find(u => u.id === odabraniId);
+            if(ucenik) {
+                ucenik.ocene.push(odabranaBrzaOcenaVrednost);
+                IscrtajKarticeUcenika();
+                OsveziGlobalnuStatistiku();
+                alert(`Brza ocena (${odabranaBrzaOcenaVrednost}) uneta za učenika: ${ucenik.ime}`);
+            }
+        }
+
+        function BrzoUpisiOdsutnogSaCasa() {
+            if(!casZapocekStatus) {
+                alert("Morate prvo započeti čas!");
+                return;
+            }
+            let odabraniId = parseInt(document.getElementById('live-upis-odsutnog-select').value);
+            let ucenik = uceniciBaza.find(u => u.id === odabraniId);
+            
+            if(ucenik && !trenutnoOdsutniNaCasu.includes(ucenik.ime)) {
+                trenutnoOdsutniNaCasu.push(ucenik.ime);
+                ucenik.izostanci.push({ datum: "19.05.2026.", status: "neregulisan" });
+                
+                document.getElementById('lista-odsutnih-imena').innerHTML = trenutnoOdsutniNaCasu.join("<br>");
+            }
+        }
+
+        function ZavrsiCas() {
+            casZapocekStatus = false;
+            brojUpisanihCasovaDanas++;
+            
+            document.getElementById('live-panel-naslov').innerHTML = `<i class="fa-solid fa-circle-dot" style="color: #94a3b8;"></i> Čas nije započet`;
+            document.getElementById('live-panel-podnaslov').innerText = "Izaberite lekciju i pokrenite čas.";
+            document.getElementById('dinamicki-live-kontent').style.display = "none";
+            document.getElementById('btn-zavrsi-trenutni-cas').style.display = "none";
+            
+            document.getElementById('input-naziv-lekcije').value = "";
+            OsveziGlobalnuStatistiku();
+            alert("Čas uspešno završen i upisan u sistem.");
+        }
+
+        // === ADMIN PANEL ===
+        function IscrtajAdminTabele() {
+            let teloTabele = document.getElementById('admin-tabela-ucenika-telo');
+            teloTabele.innerHTML = "";
+
+            uceniciBaza.forEach(ucenik => {
+                let red = document.createElement('tr');
+                red.innerHTML = `
+                    <td>${ucenik.id}</td>
+                    <td><strong>${ucenik.ime}</strong></td>
+                    <td>Osnovno obrazovanje</td>
+                    <td>
+                        <button class="btn-primarni" style="padding: 4px 8px; font-size:12px; background:#e53e3e;" onclick="ObrisiUcenika(${ucenik.id})">Ukloni</button>
+                    </td>
+                `;
+                teloTabele.appendChild(red);
+            });
+        }
+
+        function DodajUcenikaIzAdminPanela() {
+            let imeIPrezime = document.getElementById('admin-novi-ucenik-ime').value.trim();
+            if(imeIPrezime === "") {
+                alert("Unesite ime i prezime učenika!");
+                return;
+            }
+
+            let noviId = uceniciBaza.length > 0 ? Math.max(...uceniciBaza.map(u => u.id)) + 1 : 1;
+            uceniciBaza.push({
+                id: noviId, ime: imeIPrezime,
+                slika: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
+                ocene: [], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: []
+            });
+
+            document.getElementById('admin-novi-ucenik-ime').value = "";
+            IscrtajKarticeUcenika();
+            IscrtajAdminTabele();
+            OsveziGlobalnuStatistiku();
+            PopuniSelectUcenikaULivePanelu();
+            alert(`Učenik uspešno dodat u bazu.`);
+        }
+
+        function ObrisiUcenika(id) {
+            if(confirm("Potvrda brisanja učenika?")) {
+                uceniciBaza = uceniciBaza.filter(u => u.id !== id);
+                IscrtajKarticeUcenika();
+                IscrtajAdminTabele();
+                OsveziGlobalnuStatistiku();
+                PopuniSelectUcenikaULivePanelu();
+            }
+        }
+
+        function PromeniOdeljenje() {
+            let odeljenje = document.getElementById('header-select-odeljenje').value;
+            document.getElementById('prikaz-trenutnog-odeljenja').innerText = ` - ${odeljenje}`;
+        }
+    </script>
+</body>
+</html>
