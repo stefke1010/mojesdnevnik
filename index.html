@@ -417,18 +417,69 @@
             margin-top: 4px;
         }
 
-        /* PROFIL I TABOVI */
-        .profil-header-info {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
+        /* === ELEGANTAN ISKAKAĆU PROZOR (MODAL ZA PROFIL UCENIKA) === */
+        .modal-omotač {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
             align-items: center;
-            gap: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 2000;
+            padding: 20px;
         }
 
+        .modal-prozor {
+            background: white;
+            width: 100%;
+            max-width: 750px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            animation: spustiModal 0.3s ease-out;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        @keyframes spustiModal {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: #1a365d;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-telo {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .btn-zatvori-modal {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-zatvori-modal:hover {
+            color: #fc8181;
+        }
+
+        /* TABOVI UNUTAR MODALA */
         .tab-navigacija {
             display: flex;
             gap: 8px;
@@ -457,17 +508,66 @@
 
         .tab-sadrzaj {
             display: none;
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .tab-sadrzaj.aktivan {
             display: block;
         }
 
-        /* TABELA IZOSTANKA SA LINIJAMA */
+        /* DUGMICI OD 1 DO 5 ZA OCENE */
+        .izbor-ocena-dugmad {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .dugme-ocena-izbor {
+            flex: 1;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #334155;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .dugme-ocena-izbor:hover, .dugme-ocena-izbor.odabrana-ocena {
+            background: #2b6cb0;
+            color: white;
+            border-color: #2b6cb0;
+            transform: scale(1.05);
+        }
+
+        /* PRIKAZ OCENA SA IKONICAMA ZA BRISANJE */
+        .ocena-bedz {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #bee3f8;
+        }
+
+        .ocena-bedz i {
+            color: #e53e3e;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .ocena-bedz i:hover {
+            color: #9b2c2c;
+        }
+
+        /* LINIJE ZA IZOSTANKE */
         .izostanak-red {
             display: flex;
             justify-content: space-between;
@@ -675,16 +775,6 @@
                 width: 100%;
                 margin-bottom: 60px;
             }
-
-            .profil-header-info {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .profil-header-info button {
-                width: 100%;
-                margin-top: 10px;
-            }
         }
     </style>
 </head>
@@ -844,91 +934,6 @@
                     <div class="ucenici-mreza" id="kontejner-za-kartice-ucenika"></div>
                 </section>
 
-                <section id="stranica-profil-ucenika" class="sekcija-stranice">
-                    <div class="profil-header-info">
-                        <img id="profil-slika-velika" src="" alt="Profil" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover;">
-                        <div>
-                            <h2 id="profil-ime-ucenika">Učenik Profil</h2>
-                            <p id="profil-prosek-tekst" style="color: #2b6cb0; font-weight: bold; margin-top: 3px;"></p>
-                        </div>
-                        <button class="btn-primarni" style="margin-left: auto; background: #718096;" onclick="NavigajNazadUImenik()"><i class="fa-solid fa-arrow-left"></i> Nazad</button>
-                    </div>
-
-                    <div class="tab-navigacija">
-                        <button class="tab-dugme aktivni-tab" onclick="PrebaciTab('tab-ocene', this)"><i class="fa-solid fa-star"></i> Ocene</button>
-                        <button class="tab-dugme" onclick="PrebaciTab('tab-vladanje', this)"><i class="fa-solid fa-scale-balanced"></i> Vladanje</button>
-                        <button class="tab-dugme" onclick="PrebaciTab('tab-aktivnosti', this)"><i class="fa-solid fa-chart-line"></i> Aktivnosti</button>
-                        <button class="tab-dugme" onclick="PrebaciTab('tab-izostanci', this)"><i class="fa-solid fa-user-clock"></i> Izostanci</button>
-                    </div>
-
-                    <div id="tab-ocene" class="tab-sadrzaj aktivan">
-                        <h3>Pregled i unos ocena učenika</h3>
-                        <br>
-                        <div id="lista-trenutnih-ocena" style="margin-bottom: 20px; font-size: 16px; font-weight: bold; color: #2b6cb0;"></div>
-                        <div class="forma-kontrola">
-                            <label>Izaberite ocenu:</label>
-                            <select id="profil-unos-ocene-select">
-                                <option value="5">5 (Odličan)</option>
-                                <option value="4">4 (Vrlo dobar)</option>
-                                <option value="3">3 (Dobar)</option>
-                                <option value="2">2 (Dovoljan)</option>
-                                <option value="1">1 (Nedovoljan)</option>
-                            </select>
-                        </div>
-                        <div class="forma-kontrola">
-                            <label>Beleška / Napomena za ocenu:</label>
-                            <input type="text" id="profil-napomena-ocene" placeholder="Usmena provera, kontrolni zadatak...">
-                        </div>
-                        <button class="btn-primarni" onclick="SacuvajOcenuSaProfila()">Sačuvaj ocenu</button>
-                    </div>
-
-                    <div id="tab-vladanje" class="tab-sadrzaj">
-                        <h3>Ocena iz vladanja</h3>
-                        <br>
-                        <div class="forma-kontrola">
-                            <label>Trenutna ocena iz vladanja:</label>
-                            <select id="profil-vladanje-select">
-                                <option value="5">Primerno (5)</option>
-                                <option value="4">Vrlo dobro (4)</option>
-                                <option value="3">Dobro (3)</option>
-                                <option value="2">Zadovoljavajuće (2)</option>
-                                <option value="1">Loše (1)</option>
-                            </select>
-                        </div>
-                        <div class="forma-kontrola">
-                            <label>Zavedena napomena o vladanju:</label>
-                            <textarea id="profil-vladanje-napomena" placeholder="Unesite pohvale ili vaspitne mere..."></textarea>
-                        </div>
-                        <button class="btn-primarni" onclick="SacuvajVladanje()">Ažuriraj vladanje</button>
-                    </div>
-
-                    <div id="tab-aktivnosti" class="tab-sadrzaj">
-                        <h3>Vannastavne aktivnosti</h3>
-                        <br>
-                        <div class="forma-kontrola">
-                            <label>Zabeležene aktivnosti i angažovanje:</label>
-                            <textarea id="profil-aktivnosti-tekst" rows="5" placeholder="Učešće u sekcijama, takmičenjima, projektima..."></textarea>
-                        </div>
-                        <button class="btn-primarni" onclick="SacuvajAktivnosti()">Sačuvaj aktivnosti</button>
-                    </div>
-
-                    <div id="tab-izostanci" class="tab-sadrzaj">
-                        <h3>Evidencija i pravdanje izostanaka</h3>
-                        <br>
-                        <div class="forma-kontrola" style="display: flex; gap: 10px; align-items: flex-end;">
-                            <div style="flex: 1;">
-                                <label>Upiši novi izostanak (Datum):</label>
-                                <input type="text" id="profil-izostanak-datum" value="19.05.2026.">
-                            </div>
-                            <button class="btn-primarni" style="background: #ed8936;" onclick="DodajNoviIzostanakSaProfila()">Zabeleži izostanak</button>
-                        </div>
-                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
-                        <h4>Istorija izostanaka:</h4>
-                        <br>
-                        <div id="profil-lista-izostanaka"></div>
-                    </div>
-                </section>
-
                 <section id="stranica-administracija" class="sekcija-stranice">
                     <h2 style="color: #c53030; margin-bottom: 20px;"><i class="fa-solid fa-lock"></i> Administracioni panel</h2>
                     
@@ -1010,6 +1015,93 @@
         </div>
     </div>
 
+
+    <div id="modal-profil-ucenika" class="modal-omotač">
+        <div class="modal-prozor">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <img id="profil-slika-velika" src="" alt="Profil" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                    <div>
+                        <h3 id="profil-ime-ucenika" style="font-size: 20px;">Učenik Profil</h3>
+                        <span id="profil-prosek-tekst" style="font-size: 13px; color: #cbd5e1; font-weight: bold;"></span>
+                    </div>
+                </div>
+                <button class="btn-zatvori-modal" onclick="ZatvoriProfilModala()">&times;</button>
+            </div>
+            
+            <div class="modal-telo">
+                <div class="tab-navigacija">
+                    <button class="tab-dugme aktivni-tab" onclick="PrebaciTab('tab-ocene', this)"><i class="fa-solid fa-star"></i> Ocene</button>
+                    <button class="tab-dugme" onclick="PrebaciTab('tab-vladanje', this)"><i class="fa-solid fa-scale-balanced"></i> Vladanje</button>
+                    <button class="tab-dugme" onclick="PrebaciTab('tab-aktivnosti', this)"><i class="fa-solid fa-chart-line"></i> Aktivnosti</button>
+                    <button class="tab-dugme" onclick="PrebaciTab('tab-izostanci', this)"><i class="fa-solid fa-user-clock"></i> Izostanci</button>
+                </div>
+
+                <div id="tab-ocene" class="tab-sadrzaj aktivan">
+                    <h4 style="color: #1a365d; margin-bottom: 10px;">Trenutne ocene:</h4>
+                    <div id="lista-trenutnih-ocena-kontejner" style="min-height: 40px; margin-bottom: 20px;"></div>
+                    
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                    
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Kliknite za unos ocene:</label>
+                    <div class="izbor-ocena-dugmad">
+                        <button class="dugme-ocena-izbor" onclick="OdaberiOcenuModal(1, this)">1</button>
+                        <button class="dugme-ocena-izbor" onclick="OdaberiOcenuModal(2, this)">2</button>
+                        <button class="dugme-ocena-izbor" onclick="OdaberiOcenuModal(3, this)">3</button>
+                        <button class="dugme-ocena-izbor" onclick="OdaberiOcenuModal(4, this)">4</button>
+                        <button class="dugme-ocena-izbor odabrana-ocena" onclick="OdaberiOcenuModal(5, this)">5</button>
+                    </div>
+
+                    <div class="forma-kontrola">
+                        <label>Beleška / Napomena za ocenu:</label>
+                        <input type="text" id="profil-napomena-ocene" placeholder="npr. Kontrolni zadatak, Usmena provera...">
+                    </div>
+                    <button class="btn-primarni" style="width: 100%;" onclick="SacuvajOcenuSaProfila()"><i class="fa-solid fa-check"></i> Upiši ocenu</button>
+                </div>
+
+                <div id="tab-vladanje" class="tab-sadrzaj">
+                    <div class="forma-kontrola">
+                        <label>Ocena iz vladanja:</label>
+                        <select id="profil-vladanje-select">
+                            <option value="5">Primerno (5)</option>
+                            <option value="4">Vrlo dobro (4)</option>
+                            <option value="3">Dobro (3)</option>
+                            <option value="2">Zadovoljavajuće (2)</option>
+                            <option value="1">Loše (1)</option>
+                        </select>
+                    </div>
+                    <div class="forma-kontrola">
+                        <label>Zavedena napomena / Pojačan vaspitni rad:</label>
+                        <textarea id="profil-vladanje-napomena" rows="4" placeholder="Unesite vaspitne mere, napomene ili pohvale..."></textarea>
+                    </div>
+                    <button class="btn-primarni" style="width: 100%;" onclick="SacuvajVladanje()"><i class="fa-solid fa-floppy-disk"></i> Ažuriraj vladanje</button>
+                </div>
+
+                <div id="tab-aktivnosti" class="tab-sadrzaj">
+                    <div class="forma-kontrola">
+                        <label>Vannastavne aktivnosti i angažovanje učenika:</label>
+                        <textarea id="profil-aktivnosti-tekst" rows="5" placeholder="Učešće na takmičenjima, sekcijama, projektima..."></textarea>
+                    </div>
+                    <button class="btn-primarni" style="width: 100%;" onclick="SacuvajAktivnosti()"><i class="fa-solid fa-floppy-disk"></i> Sačuvaj aktivnosti</button>
+                </div>
+
+                <div id="tab-izostanci" class="tab-sadrzaj">
+                    <div class="forma-kontrola" style="display: flex; gap: 10px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <label>Upiši novi izostanak (Datum):</label>
+                            <input type="text" id="profil-izostanak-datum" value="19.05.2026.">
+                        </div>
+                        <button class="btn-primarni" style="background: #ed8936;" onclick="DodajNoviIzostanakSaProfila()"><i class="fa-solid fa-plus"></i> Zabeleži</button>
+                    </div>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                    <h4 style="margin-bottom: 10px;">Istorija izostanaka:</h4>
+                    <div id="profil-lista-izostanaka"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         let uceniciBaza = [
             { id: 1, ime: "Adamović Ema", slika: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150", ocene: [5, 4], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: [{datum: "14.05.2026.", status: "neregulisan"}] },
@@ -1021,6 +1113,7 @@
         ];
 
         let odabranaBrzaOcenaVrednost = 5;
+        let odabranaOcenaUModalu = 5; // Čuva kliknuto dugme 1-5 u modalu
         let trenutnoSelektovaniUcenikId = null;
         let casZapocekStatus = false;
         let brojUpisanihCasovaDanas = 0;
@@ -1033,7 +1126,7 @@
             PopuniSelectUcenikaULivePanelu();
         };
 
-        // === REALNA LOGIN FUNKCIJA (KOMUNIKACIJA SA BACKENDOM) ===
+        // === LOGIN FUNKCIJA ===
         async function IzvrsiPrijavuNaSistem(event) {
             if (event) event.preventDefault();
             
@@ -1050,9 +1143,7 @@
             try {
                 const odgovor = await fetch('/api/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: uKorisnik, lozinka: uSifra })
                 });
 
@@ -1102,18 +1193,17 @@
             });
         }
 
-        // === NAVIGACIJA ===
+        // === NAVIGACIJA STRANICA ===
         function NavigajNaStranicu(stranicaId, elementMeni) {
             let sveStranice = document.querySelectorAll('.sekcija-stranice');
             sveStranice.forEach(str => str.classList.remove('aktivna-stranica'));
 
-            document.getElementById(stranicaId).classList.add('aktivna-stranica');
+            let ciljnaStranica = document.getElementById(stranicaId);
+            if(ciljnaStranica) ciljnaStranica.classList.add('aktivna-stranica');
 
             let sveStavkeMenija = document.querySelectorAll('.meni-stavka');
             sveStavkeMenija.forEach(stavka => stavka.classList.remove('aktivna'));
             if(elementMeni) elementMeni.classList.add('aktivna');
-            
-            window.scrollTo(0, 0);
         }
 
         // === IMENIK ===
@@ -1124,7 +1214,7 @@
             uceniciBaza.forEach(ucenik => {
                 let kartica = document.createElement('div');
                 kartica.className = "ucenik-kartica";
-                kartica.onclick = () => OtvoriProfilUcenika(ucenik.id);
+                kartica.onclick = () => OtvoriProfilUModalu(ucenik.id);
 
                 kartica.innerHTML = `
                     <img src="${ucenik.slika}" class="ucenik-slika" alt="${ucenik.ime}">
@@ -1138,8 +1228,8 @@
             });
         }
 
-        // === PROFIL I TABOVI ===
-        function OtvoriProfilUcenika(id) {
+        // === RAD SA MODALOM (ISKAKAĆIM PROZOROM) ===
+        function OtvoriProfilUModalu(id) {
             trenutnoSelektovaniUcenikId = id;
             let ucenik = uceniciBaza.find(u => u.id === id);
             
@@ -1153,21 +1243,24 @@
                 document.getElementById('profil-vladanje-select').value = ucenik.vladanje;
                 document.getElementById('profil-vladanje-napomena').value = ucenik.napomenaVladanje || "";
                 document.getElementById('profil-aktivnosti-tekst').value = ucenik.aktivnosti || "";
+                document.getElementById('profil-napomena-ocene').value = "";
 
-                NavigajNaStranicu('stranica-profil-ucenika', null);
+                // Resetuj gumbe za ocene u modalu na 5
+                let gumbi = document.querySelectorAll('.dugme-ocena-izbor');
+                gumbi.forEach(g => g.classList.remove('odabrana-ocena'));
+                gumbi[4].classList.add('odabrana-ocena');
+                odabranaOcenaUModalu = 5;
+
+                // Uvek otvori prvi tab (Ocene) na početku
+                let prviTabDugme = document.querySelectorAll('.tab-dugme')[0];
+                PrebaciTab('tab-ocene', prviTabDugme);
+
+                document.getElementById('modal-profil-ucenika').style.display = 'flex';
             }
         }
 
-        function OsveziPrikazOcenaNaProfilu(ucenik) {
-            document.getElementById('lista-trenutnih-ocena').innerText = 
-                `Trenutne ocene: ${ucenik.ocene.length > 0 ? ucenik.ocene.join(', ') : 'Nema upisanih ocena'}`;
-            
-            if(ucenik.ocene.length > 0) {
-                let prosek = ucenik.ocene.reduce((a, b) => a + b, 0) / ucenik.ocene.length;
-                document.getElementById('profil-prosek-tekst').innerText = `Trenutni prosek: ${prosek.toFixed(2)}`;
-            } else {
-                document.getElementById('profil-prosek-tekst').innerText = `Trenutni prosek: Nema ocena`;
-            }
+        function ZatvoriProfilModala() {
+            document.getElementById('modal-profil-ucenika').style.display = 'none';
         }
 
         function PrebaciTab(tabId, dugmeElement) {
@@ -1181,24 +1274,54 @@
             dugmeElement.classList.add('aktivni-tab');
         }
 
-        function NavigajNazadUImenik() {
-            NavigajNaStranicu('stranica-imenik-odeljenja', null);
-            let stavke = document.querySelectorAll('.meni-stavka');
-            stavke.forEach((s, indeks) => {
-                if(indeks === 1) s.classList.add('aktivna');
-                else s.classList.remove('aktivna');
+        // === KLIK OD 1 DO 5 U MODALU ===
+        function OdaberiOcenuModal(vrednost, element) {
+            odabranaOcenaUModalu = vrednost;
+            let gumbi = document.querySelectorAll('.dugme-ocena-izbor');
+            gumbi.forEach(g => g.classList.remove('odabrana-ocena'));
+            element.classList.add('odabrana-ocena');
+        }
+
+        function OsveziPrikazOcenaNaProfilu(ucenik) {
+            let kontejner = document.getElementById('lista-trenutnih-ocena-kontejner');
+            kontejner.innerHTML = "";
+
+            if(ucenik.ocene.length === 0) {
+                kontejner.innerHTML = "<span style='color:#718096; font-style:italic;'>Nema upisanih ocena</span>";
+                document.getElementById('profil-prosek-tekst').innerText = `Prosek: Nema ocena`;
+                return;
+            }
+
+            // Iscrtavanje svake ocene sa ikonicom "x" za brisanje i ispravljanje
+            ucenik.ocene.forEach((ocena, indeks) => {
+                let bedz = document.createElement('span');
+                bedz.className = "ocena-bedz";
+                bedz.innerHTML = `${ocena} <i class="fa-solid fa-square-xmark" onclick="ObrisiOcenuSaProfila(${indeks})" title="Obriši ocenu"></i>`;
+                kontejner.appendChild(bedz);
             });
+
+            let prosek = ucenik.ocene.reduce((a, b) => a + b, 0) / ucenik.ocene.length;
+            document.getElementById('profil-prosek-tekst').innerText = `Srednja ocena: ${prosek.toFixed(2)}`;
         }
 
         function SacuvajOcenuSaProfila() {
-            let selektovanaOcena = parseInt(document.getElementById('profil-unos-ocene-select').value);
             let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
             if(ucenik) {
-                ucenik.ocene.push(selektovanaOcena);
+                ucenik.ocene.push(odabranaOcenaUModalu);
                 OsveziPrikazOcenaNaProfilu(ucenik);
                 IscrtajKarticeUcenika();
                 OsveziGlobalnuStatistiku();
-                alert(`Ocena uspešno ubeležena za učenika ${ucenik.ime}!`);
+                document.getElementById('profil-napomena-ocene').value = "";
+            }
+        }
+
+        function ObrisiOcenuSaProfila(indeks) {
+            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
+            if(ucenik) {
+                ucenik.ocene.splice(indeks, 1);
+                OsveziPrikazOcenaNaProfilu(ucenik);
+                IscrtajKarticeUcenika();
+                OsveziGlobalnuStatistiku();
             }
         }
 
@@ -1207,7 +1330,7 @@
             if(ucenik) {
                 ucenik.vladanje = parseInt(document.getElementById('profil-vladanje-select').value);
                 ucenik.napomenaVladanje = document.getElementById('profil-vladanje-napomena').value;
-                alert(`Vladanje uspešno ažurirano.`);
+                alert(`Vladanje za učenika ${ucenik.ime} uspešno ažurirano.`);
             }
         }
 
@@ -1215,7 +1338,7 @@
             let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
             if(ucenik) {
                 ucenik.aktivnosti = document.getElementById('profil-aktivnosti-tekst').value;
-                alert(`Aktivnosti sačuvane.`);
+                alert(`Aktivnosti uspešno sačuvane.`);
             }
         }
 
@@ -1234,7 +1357,7 @@
                 red.className = `izostanak-red ${iz.status}`;
                 red.innerHTML = `
                     <div>
-                        <strong>${iz.datum}</strong> - Status: <span style='text-transform:uppercase; font-size:12px; font-weight:bold;'>${iz.status}</span>
+                        <strong>${iz.datum}</strong> - Status: <span style='text-transform:uppercase; font-size:11px; font-weight:bold;'>${iz.status}</span>
                     </div>
                     <div class="izostanak-akcije">
                         <button class="btn-izostanak-mini" style="background:#48bb78;" onclick="RegulisiIzostanak(${ucenik.id}, ${indeks}, 'opravdan')">Opravdaj</button>
@@ -1271,7 +1394,7 @@
             }
         }
 
-        // === KONTROLA ČASA ===
+        // === LIVE ČAS PANEL ===
         function PokreniEvidencijuCasa() {
             let nazivLekcije = document.getElementById('input-naziv-lekcije').value.trim();
             let redniBroj = document.getElementById('select-redni-broj-casa').value;
@@ -1326,7 +1449,6 @@
             if(ucenik && !trenutnoOdsutniNaCasu.includes(ucenik.ime)) {
                 trenutnoOdsutniNaCasu.push(ucenik.ime);
                 ucenik.izostanci.push({ datum: "19.05.2026.", status: "neregulisan" });
-                
                 document.getElementById('lista-odsutnih-imena').innerHTML = trenutnoOdsutniNaCasu.join("<br>");
             }
         }
@@ -1398,7 +1520,7 @@
 
         function PromeniOdeljenje() {
             let odeljenje = document.getElementById('header-select-odeljenje').value;
-            document.getElementById('prikaz-trenutnog-odeljenja').innerText = ` - ${odeljenje}`;
+            // Opciono proširenje filtriranja
         }
     </script>
 </body>
