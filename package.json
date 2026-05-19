@@ -1,27 +1,14 @@
 {
-  "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "mongoose": "^9.6.2"
-  },
-  "name": "mojesdnevnik",
+  "name": "esdnevnik",
   "version": "1.0.0",
-  "description": "",
+  "description": "Digitalni skolski dnevnik sa MongoDB bazom",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/stefke1010/mojesdnevnik.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/stefke1010/mojesdnevnik/issues"
-  },
-  "homepage": "https://github.com/stefke1010/mojesdnevnik#readme"
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.0.0"
+  }
 }
