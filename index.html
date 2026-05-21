@@ -1042,422 +1042,211 @@
 
 
     <script>
-        let uceniciBaza = [
-            { id: 1, ime: "Adamović Ema", slika: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150", ocene: [5, 4], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: [{datum: "14.05.2026.", status: "neregulisan"}] },
-            { id: 2, ime: "Beriša Ahmet", slika: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150", ocene: [3, 5], vladanje: 4, napomenaVladanje: "", aktivnosti: "", izostanci: [] },
-            { id: 3, ime: "Branković Boris", slika: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150", ocene: [4], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: [] },
-            { id: 4, ime: "Vujanović Mihajlo", slika: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150", ocene: [2, 3], vladanje: 3, napomenaVladanje: "", aktivnosti: "", izostanci: [] },
-            { id: 5, ime: "Gajić Radoica", slika: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150", ocene: [5, 5], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: [] },
-            { id: 6, ime: "Zubać Maksim", slika: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150", ocene: [4, 4], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: [] }
-        ];
+        // ==========================================
+// 1. AUTENTIFIKACIJA I SELEKCIJA SISTEMA
+// ==========================================
+function izvrsiPrijavuNaSistem() {
+    const user = document.getElementById('sys-auth-user').value;
+    const pass = document.getElementById('sys-auth-pass').value;
 
-        let odabranaBrzaOcenaVrednost = 5;
-        let odabranaOcenaUProfilu = 5; 
-        let trenutnoSelektovaniUcenikId = null;
-        let casZapocekStatus = false;
-        let brojUpisanihCasovaDanas = 0;
-        let trenutnoOdsutniNaCasu = [];
+    if (user === "admin" && pass === "admin") {
+        document.getElementById('stranica-login-sistema').style.display = 'none';
+        document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
+        console.log("Uspešna prijava na sistem.");
+        ucitajUcenikeIzBaze();
+    } else {
+        alert("Погрешно корисничко име или лозинка!");
+    }
+}
 
-        window.onload = function() {
-            IscrtajKarticeUcenika();
-            IscrtajAdminTabele();
-            OsveziGlobalnuStatistiku();
-            PopuniSelectUcenikaULivePanelu();
-        };
+function izvrsiOdjavuSaSistema(e) {
+    if (e) e.stopPropagation();
+    location.reload();
+}
 
-        // === LOGIN FUNKCIJA ===
-        async function IzvrsiPrijavuNaSistem(event) {
-            if (event) event.preventDefault();
-            
-            let uKorisnik = document.getElementById('login-korisnik').value.trim();
-            let uSifra = document.getElementById('login-sifra').value.trim();
-            let greskaElement = document.getElementById('login-greska-poruka');
+function toggleLogoutDropdown(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('dropdown-logout-box');
+    if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+}
 
-            if(uKorisnik === "" || uSifra === "") {
-                greskaElement.innerText = "Sva polja moraju biti popunjena!";
-                greskaElement.style.display = 'block';
-                return;
-            }
+// ==========================================
+// 2. NAVIGACIJA I FILTRIRANJE
+// ==========================================
+function switchPage(pageId) {
+    document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) targetPage.classList.add('active');
+    
+    if (window.event && window.event.currentTarget) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        window.event.currentTarget.classList.add('active');
+    }
+}
 
-            try {
-                const odgovor = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: uKorisnik, lozinka: uSifra })
-                });
+function promeniFiltera() {
+    console.log("Promenjen filter odeljenja ili predmeta.");
+    ucitajUcenikeIzBaze();
+}
 
-                const podaci = await odgovor.json();
+// ==========================================
+// 3. RAD SA KALENDAROM I UPISOM ČASA
+// ==========================================
+function izaberiDatumKalendara(dan) {
+    // Skloni aktivnu klasu sa prethodnog dana
+    document.querySelectorAll('.calendar-cell').forEach(c => c.classList.remove('active-day'));
+    
+    // Dodaj aktivnu klasu na kliknuti dan
+    const selektovaniDan = document.getElementById(`cal-day-${dan}`);
+    if (selektovaniDan) selektovaniDan.classList.add('active-day');
 
-                if (odgovor.ok) {
-                    document.getElementById('stranica-login-sistema').style.setProperty('display', 'none', 'important');
-                    document.getElementById('glavni-interfejs-aplikacije').style.display = 'block';
-                    document.getElementById('prikazano-ime-nastavnika-header').innerText = podaci.korisnik?.ime || uKorisnik;
-                    window.scrollTo(0, 0);
-                } else {
-                    greskaElement.innerText = podaci.poruka || "Pogrešno korisničko ime ili lozinka!";
-                    greskaElement.style.display = 'block';
-                }
-            } catch (error) {
-                console.error("Greška pri prijavi:", error);
-                greskaElement.innerText = "Greška pri povezivanju sa serverom.";
-                greskaElement.style.display = 'block';
-            }
+    const prikazDatuma = document.getElementById('upis-prikaz-datuma');
+    if (prikazDatuma) {
+        prikazDatuma.value = `${dan}. Мај 2026.`;
+    }
+    
+    ucitajUpisaneCasoveZaDan(dan);
+}
+
+function zapocniAktivniCas() {
+    const lekcija = document.getElementById('lekcija-naziv').value;
+    const rbr = document.getElementById('lekcija-rbr').value;
+    const datum = document.getElementById('upis-prikaz-datuma').value;
+
+    if (!datum) return alert("Молимо вас одаберите датум на календару!");
+    if (!lekcija) return alert("Унесите назив наставне јединице!");
+
+    console.log(`Započinjanje časa: ${lekcija}, broj: ${rbr}, datum: ${datum}`);
+    alert(`Час успешно уписан и започет!\nЛекција: ${lekcija}`);
+    
+    // Prebaci automatski na prikaz odeljenja da možeš da ocenjuješ
+    switchPage('stranica-lista-imenik');
+}
+
+// ==========================================
+// 4. KOMUNIKACIJA SA BACKEND-OM (MongoDB / Express)
+// ==========================================
+async function ucitajUcenikeIzBaze() {
+    try {
+        const odeljenje = document.getElementById('global-odeljenje').value;
+        const res = await fetch(`/api/ucenici?odeljenje=${odeljenje}`);
+        const ucenici = await res.json();
+        
+        // Osveži mrežu u Imeniku
+        osveziMrežuUcenikaImenik(ucenici);
+        // Osveži prikaz u Toku časa ako imaš taj element
+        osveziTokČasaMrežu(ucenici);
+    } catch (err) {
+        console.error("Greška pri povlačenju učenika:", err);
+    }
+}
+
+async function ucitajUpisaneCasoveZaDan(dan) {
+    try {
+        const res = await fetch(`/api/casovi?dan=${dan}`);
+        const casovi = await res.json();
+        const tabela = document.getElementById('tabela-upisanih-casova-za-izabrani-dan');
+        
+        if (!tabela) return;
+        tabela.innerHTML = '';
+
+        if (casovi.length === 0) {
+            tabela.innerHTML = `<tr><td colspan="4" style="color: #718096;">Нема уписаних часова за овај дан.</td></tr>`;
+            return;
         }
 
-        // === STATISTIKA ===
-        function OsveziGlobalnuStatistiku() {
-            document.getElementById('stat-ukupno-ucenika').innerText = uceniciBaza.length;
-            document.getElementById('stat-upisano-casova').innerText = brojUpisanihCasovaDanas;
-            
-            let sveOcene = [];
-            uceniciBaza.forEach(u => sveOcene.push(...u.ocene));
-            if(sveOcene.length > 0) {
-                let prosek = sveOcene.reduce((a, b) => a + b, 0) / sveOcene.length;
-                document.getElementById('stat-prosek-odeljenja').innerText = prosek.toFixed(2);
-            } else {
-                document.getElementById('stat-prosek-odeljenja').innerText = "0.00";
-            }
-        }
+        casovi.forEach(c => {
+            tabela.innerHTML += `
+                <tr>
+                    <td>${c.redniBroj}.</td>
+                    <td><strong>${c.nazivLekcije}</strong></td>
+                    <td>${c.predmet}</td>
+                    <td><button class="btn btn-secondary btn-xs" onclick="izbrisiCas('${c._id}', ${dan})">Obriši</button></td>
+                </tr>`;
+        });
+    } catch (err) {
+        console.log("Greška pri učitavanju časova:", err);
+    }
+}
 
-        function PopuniSelectUcenikaULivePanelu() {
-            let selectOcena = document.getElementById('live-selektuj-ucenika-za-ocenu');
-            let selectOdsutni = document.getElementById('live-upis-odsutnog-select');
-            
-            selectOcena.innerHTML = "";
-            selectOdsutni.innerHTML = "";
+// ==========================================
+// 5. PRIKAZ PODATAKA U INTERFEJSU
+// ==========================================
+function osveziMrežuUcenikaImenik(ucenici) {
+    const mreza = document.getElementById('mreza-ucenika-imenik');
+    if (!mreza) return;
+    mreza.innerHTML = '';
 
-            uceniciBaza.forEach(u => {
-                selectOcena.innerHTML += `<option value="${u.id}">${u.ime}</option>`;
-                selectOdsutni.innerHTML += `<option value="${u.id}">${u.ime}</option>`;
-            });
-        }
+    if (ucenici.length === 0) {
+        mreza.innerHTML = '<p style="color: #718096; padding: 20px;">Нема ученика у овом одељењу.</p>';
+        return;
+    }
 
-        // === NAVIGACIJA STRANICA ===
-        function NavigajNaStranicu(stranicaId, elementMeni) {
-            let sveStranice = document.querySelectorAll('.sekcija-stranice');
-            sveStranice.forEach(str => str.classList.remove('aktivna-stranica'));
+    ucenici.forEach(u => {
+        mreza.innerHTML += `
+            <div class="student-profile-card" onclick="otvoriDosijeUcenika('${u._id}')">
+                <div class="student-badges-container">
+                    ${u.vladanje < 5 ? `<div class="status-badge-circle badge-red-warning">${u.vladanje}</div>` : ''}
+                </div>
+                <div class="avatar-container"><i class="fa-solid fa-user-graduate"></i></div>
+                <div class="card-name">${u.ime} ${u.prezime || ''}</div>
+                <div class="card-subtext">${u.odeljenje}</div>
+            </div>`;
+    });
+}
 
-            let ciljnaStranica = document.getElementById(stranicaId);
-            if(ciljnaStranica) ciljnaStranica.classList.add('aktivna-stranica');
+function osveziTokČasaMrežu(ucenici) {
+    const mreza = document.getElementById('ucenici-tok-mreza-element'); // proveri ID u svom HTML-u
+    if (!mreza) return;
+    mreza.innerHTML = '';
 
-            let sveStavkeMenija = document.querySelectorAll('.meni-stavka');
-            sveStavkeMenija.forEach(stavka => stavka.classList.remove('aktivna'));
-            if(elementMeni) elementMeni.classList.add('aktivna');
-        }
+    ucenici.forEach(u => {
+        mreza.innerHTML += `
+            <div class="tok-student-card">
+                <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
+                <div class="s-name">${u.ime}</div>
+                <div class="tok-actions-bar">
+                    <button class="smart-icon-btn btn-mark" onclick="pokreniBrzoOcenjivanje('${u._id}')" title="Oceni"><i class="fa-solid fa-star"></i></button>
+                    <button class="smart-icon-btn btn-note" onclick="dodajZabeleškuUčeniku('${u._id}')" title="Zabeleška"><i class="fa-solid fa-comment-dots"></i></button>
+                    <button class="smart-icon-btn btn-abs-x" onclick="toggleIzostanak('${u._id}')" title="Izostanak"><i class="fa-solid fa-user-xmark"></i></button>
+                </div>
+            </div>`;
+    });
+}
 
-        // === IMENIK ===
-        function IscrtajKarticeUcenika() {
-            let kontejner = document.getElementById('kontejner-za-kartice-ucenika');
-            kontejner.innerHTML = "";
+// ==========================================
+// 6. OCENE, VLADANJE I IZOSTANCI (MODALI)
+// ==========================================
+function otvoriDosijeUcenika(id) {
+    console.log("Otvaranje dosijea za učenika ID:", id);
+    // Ovde ide tvoj kod za prikazivanje modala sa ocenama po mesecima
+}
 
-            uceniciBaza.forEach(ucenik => {
-                let kartica = document.createElement('div');
-                kartica.className = "ucenik-kartica";
-                kartica.onclick = () => OtvoriProfilUcenika(ucenik.id);
+function pokreniBrzoOcenjivanje(id) {
+    console.log("Brzo ocenjivanje za učenika:", id);
+    // Tvoja logika za otvaranje mini-modala sa ocenama 1-5
+}
 
-                kartica.innerHTML = `
-                    <img src="${ucenik.slika}" class="ucenik-slika" alt="${ucenik.ime}">
-                    <div class="ucenik-ime">${ucenik.ime}</div>
-                    <div class="ucenik-skola">Osnovno obrazovanje</div>
-                    <div style="margin-top:12px; font-size:13px; color:#2b6cb0; font-weight:bold; background: #ebf8ff; padding: 4px; border-radius:4px;">
-                        Ocene: ${ucenik.ocene.length > 0 ? ucenik.ocene.join(', ') : 'Nema ocena'}
-                    </div>
-                `;
-                kontejner.appendChild(kartica);
-            });
-        }
+function dodajZabeleškuUčeniku(id) {
+    const tekst = prompt("Унесите напомену о раду/понашању ученика:");
+    if (tekst) {
+        console.log(`Zabeleška za ${id}: ${tekst}`);
+        // fetch šalje na tvoj server.js...
+    }
+}
 
-        // === PROFIL UČENIKA I STRANICA TABOVA ===
-        function OtvoriProfilUcenika(id) {
-            trenutnoSelektovaniUcenikId = id;
-            let ucenik = uceniciBaza.find(u => u.id === id);
-            
-            if(ucenik) {
-                document.getElementById('profil-ime-ucenika').innerText = ucenik.ime;
-                document.getElementById('profil-slika-velika').src = ucenik.slika;
-                
-                OsveziPrikazOcenaUProfilu(ucenik);
-                IscrtajIzostankeUProfilu(ucenik);
+function toggleIzostanak(id) {
+    console.log("Upisivanje/brisanje izostanka za:", id);
+    // Tvoja logika za slanje izostanka
+}
 
-                document.getElementById('profil-vladanje-select').value = ucenik.vladanje;
-                document.getElementById('profil-vladanje-napomena').value = ucenik.napomenaVladanje || "";
-                document.getElementById('profil-aktivnosti-tekst').value = ucenik.aktivnosti || "";
-                document.getElementById('profil-napomena-ocene').value = "";
-
-                // Resetovanje selektora ocene na 5
-                let gumbi = document.querySelectorAll('.dugme-ocena-izbor');
-                gumbi.forEach(g => g.classList.remove('odabrana-ocena'));
-                gumbi[4].classList.add('odabrana-ocena');
-                odabranaOcenaUProfilu = 5;
-
-                // Otvori tab sa ocenama na početku
-                let prviTabDugme = document.querySelectorAll('.tab-navigacija .tab-dugme')[0];
-                PrebaciUnutrasnjiTab('tab-ocene', prviTabDugme);
-
-                NavigajNaStranicu('stranica-profil-ucenika', null);
-            }
-        }
-
-        function VratiSeUImenik() {
-            NavigajNaStranicu('stranica-imenik-odeljenja', document.querySelectorAll('.sidebar-meni .meni-stavka')[1]);
-        }
-
-        function PrebaciUnutrasnjiTab(tabId, dugmeElement) {
-            let sviTabovi = document.querySelectorAll('.tab-sadrzaj');
-            sviTabovi.forEach(tab => tab.classList.remove('aktivan'));
-
-            document.getElementById(tabId).classList.add('aktivan');
-
-            let svaDugmad = document.querySelectorAll('.tab-navigacija .tab-dugme');
-            svaDugmad.forEach(d => d.classList.remove('aktivni-tab'));
-            dugmeElement.classList.add('aktivni-tab');
-        }
-
-        function OdaberiOcenuUProfilu(vrednost, element) {
-            odabranaOcenaUProfilu = vrednost;
-            let gumbi = document.querySelectorAll('.dugme-ocena-izbor');
-            gumbi.forEach(g => g.classList.remove('odabrana-ocena'));
-            element.classList.add('odabrana-ocena');
-        }
-
-        function OsveziPrikazOcenaUProfilu(ucenik) {
-            let kontejner = document.getElementById('lista-trenutnih-ocena-kontejner');
-            kontejner.innerHTML = "";
-
-            if(ucenik.ocene.length === 0) {
-                kontejner.innerHTML = "<span style='color:#718096; font-style:italic;'>Nema upisanih ocena</span>";
-                document.getElementById('profil-prosek-tekst').innerText = `Prosek: Nema ocena`;
-                return;
-            }
-
-            ucenik.ocene.forEach((ocena, indeks) => {
-                let bedz = document.createElement('span');
-                bedz.className = "ocena-bedz";
-                bedz.innerHTML = `${ocena} <i class="fa-solid fa-square-xmark" onclick="ObrisiOcenuIzProfila(${indeks})" title="Obriši ocenu"></i>`;
-                kontejner.appendChild(bedz);
-            });
-
-            let prosek = ucenik.ocene.reduce((a, b) => a + b, 0) / ucenik.ocene.length;
-            document.getElementById('profil-prosek-tekst').innerText = `Srednja ocena: ${prosek.toFixed(2)}`;
-        }
-
-        function SacuvajOcenuSaProfila() {
-            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
-            if(ucenik) {
-                ucenik.ocene.push(odabranaOcenaUProfilu);
-                OsveziPrikazOcenaUProfilu(ucenik);
-                IscrtajKarticeUcenika();
-                OsveziGlobalnuStatistiku();
-                document.getElementById('profil-napomena-ocene').value = "";
-            }
-        }
-
-        function ObrisiOcenuIzProfila(indeks) {
-            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
-            if(ucenik) {
-                ucenik.ocene.splice(indeks, 1);
-                OsveziPrikazOcenaUProfilu(ucenik);
-                IscrtajKarticeUcenika();
-                OsveziGlobalnuStatistiku();
-            }
-        }
-
-        function SacuvajVladanje() {
-            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
-            if(ucenik) {
-                ucenik.vladanje = parseInt(document.getElementById('profil-vladanje-select').value);
-                ucenik.napomenaVladanje = document.getElementById('profil-vladanje-napomena').value;
-                alert(`Vladanje za učenika ${ucenik.ime} uspešno ažurirano.`);
-            }
-        }
-
-        function SacuvajAktivnosti() {
-            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
-            if(ucenik) {
-                ucenik.aktivnosti = document.getElementById('profil-aktivnosti-tekst').value;
-                alert(`Aktivnosti uspešno sačuvane.`);
-            }
-        }
-
-        // === IZOSTANCI UPRAVLJANJE ===
-        function IscrtajIzostankeUProfilu(ucenik) {
-            let kontejner = document.getElementById('profil-lista-izostanaka');
-            kontejner.innerHTML = "";
-
-            if(ucenik.izostanci.length === 0) {
-                kontejner.innerHTML = "<p style='color:#718096; font-style:italic;'>Učenik nema zabeleženih izostanaka.</p>";
-                return;
-            }
-
-            ucenik.izostanci.forEach((iz, indeks) => {
-                let red = document.createElement('div');
-                red.className = `izostanak-red ${iz.status}`;
-                red.innerHTML = `
-                    <div>
-                        <strong>${iz.datum}</strong> - Status: <span style='text-transform:uppercase; font-size:11px; font-weight:bold;'>${iz.status}</span>
-                    </div>
-                    <div class="izostanak-akcije">
-                        <button class="btn-izostanak-mini" style="background:#48bb78;" onclick="RegulisiIzostanak(${ucenik.id}, ${indeks}, 'opravdan')">Opravdaj</button>
-                        <button class="btn-izostanak-mini" style="background:#e53e3e;" onclick="RegulisiIzostanak(${ucenik.id}, ${indeks}, 'neopravdan')">Neopravdaj</button>
-                        <button class="btn-izostanak-mini" style="background:#718096;" onclick="ObrisiIzostanak(${ucenik.id}, ${indeks})"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-                kontejner.appendChild(red);
-            });
-        }
-
-        function DodajNoviIzostanakSaProfila() {
-            let datum = document.getElementById('profil-izostanak-datum').value.trim();
-            let ucenik = uceniciBaza.find(u => u.id === trenutnoSelektovaniUcenikId);
-            if(ucenik && datum !== "") {
-                ucenik.izostanci.push({ datum: datum, status: "neregulisan" });
-                IscrtajIzostankeUProfilu(ucenik);
-            }
-        }
-
-        function RegulisiIzostanak(ucenikId, indeks, noviStatus) {
-            let ucenik = uceniciBaza.find(u => u.id === ucenikId);
-            if(ucenik && ucenik.izostanci[indeks]) {
-                ucenik.izostanci[indeks].status = noviStatus;
-                IscrtajIzostankeUProfilu(ucenik);
-            }
-        }
-
-        function ObrisiIzostanak(ucenikId, indeks) {
-            let ucenik = uceniciBaza.find(u => u.id === ucenikId);
-            if(ucenik && ucenik.izostanci[indeks]) {
-                ucenik.izostanci.splice(indeks, 1);
-                IscrtajIzostankeUProfilu(ucenik);
-            }
-        }
-
-        // === LIVE ČAS PANEL ===
-        function PokreniEvidencijuCasa() {
-            let nazivLekcije = document.getElementById('input-naziv-lekcije').value.trim();
-            let redniBroj = document.getElementById('select-redni-broj-casa').value;
-
-            if(nazivLekcije === "") {
-                alert("Unesite naziv lekcije pre pokretanja časa!");
-                return;
-            }
-
-            casZapocekStatus = true;
-            trenutnoOdsutniNaCasu = [];
-            
-            document.getElementById('live-panel-naslov').innerHTML = `<i class="fa-solid fa-circle-dot" style="color: #48bb78;"></i> ${redniBroj}. čas — Uživo`;
-            document.getElementById('live-panel-podnaslov').innerText = `Lekcija: ${nazivLekcije}`;
-            document.getElementById('dinamicki-live-kontent').style.display = "block";
-            document.getElementById('btn-zavrsi-trenutni-cas').style.display = "block";
-            document.getElementById('lista-odsutnih-imena').innerText = "Nema odsutnih na ovom času.";
-            
-            alert(`Čas broj ${redniBroj} uspešno pokrenut!`);
-        }
-
-        function SelektujBrzuOcenu(vrednost, element) {
-            odabranaBrzaOcenaVrednost = vrednost;
-            let sviBrziGumbi = document.querySelectorAll('.brza-ocena-btn');
-            sviBrziGumbi.forEach(g => g.classList.remove('odabrana'));
-            element.classList.add('odabrana');
-        }
-
-        function IzvrsiBrzoOcenjivanje() {
-            if(!casZapocekStatus) {
-                alert("Pokrenite čas u Dnevniku rada pre unosa brze ocene!");
-                return;
-            }
-            let odabraniId = parseInt(document.getElementById('live-selektuj-ucenika-za-ocenu').value);
-            let ucenik = uceniciBaza.find(u => u.id === odabraniId);
-            if(ucenik) {
-                ucenik.ocene.push(odabranaBrzaOcenaVrednost);
-                IscrtajKarticeUcenika();
-                OsveziGlobalnuStatistiku();
-                alert(`Brza ocena (${odabranaBrzaOcenaVrednost}) uneta za učenika: ${ucenik.ime}`);
-            }
-        }
-
-        function BrzoUpisiOdsutnogSaCasa() {
-            if(!casZapocekStatus) {
-                alert("Morate prvo započeti čas!");
-                return;
-            }
-            let odabraniId = parseInt(document.getElementById('live-upis-odsutnog-select').value);
-            let ucenik = uceniciBaza.find(u => u.id === odabraniId);
-            
-            if(ucenik && !trenutnoOdsutniNaCasu.includes(ucenik.ime)) {
-                trenutnoOdsutniNaCasu.push(ucenik.ime);
-                ucenik.izostanci.push({ datum: "19.05.2026.", status: "neregulisan" });
-                document.getElementById('lista-odsutnih-imena').innerHTML = trenutnoOdsutniNaCasu.join("<br>");
-            }
-        }
-
-        function ZavrsiCas() {
-            casZapocekStatus = false;
-            brojUpisanihCasovaDanas++;
-            
-            document.getElementById('live-panel-naslov').innerHTML = `<i class="fa-solid fa-circle-dot" style="color: #94a3b8;"></i> Čas nije započet`;
-            document.getElementById('live-panel-podnaslov').innerText = "Izaberite lekciju i pokrenite čas.";
-            document.getElementById('dinamicki-live-kontent').style.display = "none";
-            document.getElementById('btn-zavrsi-trenutni-cas').style.display = "none";
-            
-            document.getElementById('input-naziv-lekcije').value = "";
-            OsveziGlobalnuStatistiku();
-            alert("Čas uspešno završen i upisan u sistem.");
-        }
-
-        // === ADMIN PANEL ===
-        function IscrtajAdminTabele() {
-            let teloTabele = document.getElementById('admin-tabela-ucenika-telo');
-            teloTabele.innerHTML = "";
-
-            uceniciBaza.forEach(ucenik => {
-                let red = document.createElement('tr');
-                red.innerHTML = `
-                    <td>${ucenik.id}</td>
-                    <td><strong>${ucenik.ime}</strong></td>
-                    <td>Osnovno obrazovanje</td>
-                    <td>
-                        <button class="btn-primarni" style="padding: 4px 8px; font-size:12px; background:#e53e3e;" onclick="ObrisiUcenika(${ucenik.id})">Ukloni</button>
-                    </td>
-                `;
-                teloTabele.appendChild(red);
-            });
-        }
-
-        function DodajUcenikaIzAdminPanela() {
-            let imeIPrezime = document.getElementById('admin-novi-ucenik-ime').value.trim();
-            if(imeIPrezime === "") {
-                alert("Unesite ime i prezime učenika!");
-                return;
-            }
-
-            let noviId = uceniciBaza.length > 0 ? Math.max(...uceniciBaza.map(u => u.id)) + 1 : 1;
-            uceniciBaza.push({
-                id: noviId, ime: imeIPrezime,
-                slika: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
-                ocene: [], vladanje: 5, napomenaVladanje: "", aktivnosti: "", izostanci: []
-            });
-
-            document.getElementById('admin-novi-ucenik-ime').value = "";
-            IscrtajKarticeUcenika();
-            IscrtajAdminTabele();
-            OsveziGlobalnuStatistiku();
-            PopuniSelectUcenikaULivePanelu();
-            alert(`Učenik uspešno dodat u bazu.`);
-        }
-
-        function ObrisiUcenika(id) {
-            if(confirm("Potvrda brisanja učenika?")) {
-                uceniciBaza = uceniciBaza.filter(u => u.id !== id);
-                IscrtajKarticeUcenika();
-                IscrtajAdminTabele();
-                OsveziGlobalnuStatistiku();
-                PopuniSelectUcenikaULivePanelu();
-            }
-        }
-
-        function PromeniOdeljenje() {
-            let odeljenje = document.getElementById('header-select-odeljenje').value;
-        }
+// Zatvaranje dropdown menija klikom sa strane
+window.onclick = function() {
+    const dropdown = document.getElementById('dropdown-logout-box');
+    if (dropdown) dropdown.style.display = 'none';
+}
     </script>
 </body>
 </html>
