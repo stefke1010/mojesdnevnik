@@ -1074,6 +1074,49 @@ async function osveziPodatkeIzBaze() {
 
 // Pozivamo funkciju čim se stranica učita
 window.onload = osveziPodatkeIzBaze;
-</script>
+<script>
+window.izvrsiPrijavuNaSistem = async function () {
+    const username = document.getElementById('sys-auth-user').value;
+    const password = document.getElementById('sys-auth-pass').value;
+
+    if (!username || !password) {
+        alert("Унесите корисничко име и лозинку!");
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
+
+        if (!response.ok) {
+            alert("Погрешни подаци!");
+            return;
+        }
+
+        const korisnik = await response.json();
+
+        trenutnoUlogovaniKorisnik = korisnik;
+
+        document.getElementById('stranica-login-sistema').style.display = 'none';
+        document.getElementById('glavni-interfejs-aplikacije').style.display = 'flex';
+
+        document.getElementById('prikazano-ime-nastavnika-header').innerHTML =
+            `${korisnik.ime} <i class="fa-solid fa-chevron-down" id="arrow-logout-icon"></i>`;
+
+    } catch (err) {
+        console.error(err);
+
+        alert("Грешка при повезивању са сервером!");
+    }
+};
+</script>                                   
 </body>
 </html>
