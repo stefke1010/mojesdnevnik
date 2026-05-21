@@ -99,21 +99,21 @@
         .side-form-box { background: white; border-radius: 8px; border: 1px solid var(--es-border); padding: 20px; height: fit-content; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .prethodna-lekcija-box { background: #f0f4f8; border-left: 4px solid var(--es-light-blue); padding: 12px 15px; border-radius: 4px; margin-bottom: 15px; font-size: 13px; }
 
-        /* INTERFEJS TOK ČASA */
+        /* INTERFEJS TOK ČASA - REPLIKA SA PRVE SLIKE */
         .tok-casa-layout { display: grid; grid-template-columns: 1fr 340px; gap: 25px; height: 100%; }
         .ucenici-tok-mreza { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
         
-        .tok-student-card { background: white; border-radius: 6px; border: 1px solid var(--es-border); padding: 15px; text-align: center; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .tok-student-card { background: white; border-radius: 6px; border: 1px solid var(--es-border); padding: 15px; text-align: center; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.02); transition: background 0.2s; }
         .tok-student-card .avatar-circle { width: 55px; height: 55px; background: #eef2f5; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: #7f91a0; font-size: 22px; border: 1px solid var(--es-border); }
         .tok-student-card .s-name { font-size: 14px; font-weight: bold; color: var(--es-dark-blue); margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .tok-actions-bar { display: flex; justify-content: center; gap: 8px; border-top: 1px solid #edf2f7; padding-top: 10px; }
         
         .smart-icon-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--es-border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.2s; }
-        .btn-mark:hover { background: #e8f5e9; color: var(--es-green); border-color: var(--es-green); }
-        .btn-note:hover { background: #e3f2fd; color: var(--es-light-blue); border-color: var(--es-light-blue); }
-        .btn-act:hover { background: #f3e5f5; color: #9c27b0; border-color: #9c27b0; }
-        .btn-abs-x { color: #a0aec0; }
-        .btn-abs-x:hover, .btn-abs-x.active-abs { background: #ffe2e2; color: var(--es-red); border-color: var(--es-red); }
+        .smart-icon-btn.btn-mark:hover { background: #e8f5e9; color: var(--es-green); border-color: var(--es-green); font-weight: bold; }
+        .smart-icon-btn.btn-note:hover { background: #e3f2fd; color: var(--es-light-blue); border-color: var(--es-light-blue); }
+        .smart-icon-btn.btn-act:hover { background: #f3e5f5; color: #9c27b0; border-color: #9c27b0; }
+        .smart-icon-btn.btn-abs-x { color: #a0aec0; }
+        .smart-icon-btn.btn-abs-x:hover, .smart-icon-btn.btn-abs-x.active-abs { background: #ffe2e2; color: var(--es-red); border-color: var(--es-red); }
 
         /* CRNI PANEL DESNO */
         .desni-crni-panel { background: #111; color: #eee; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); height: fit-content; }
@@ -216,7 +216,7 @@
         .matrix-grade-btn { width: 45px; height: 45px; border-radius: 6px; border: 2px solid var(--es-border); background: white; font-size: 18px; font-weight: bold; color: var(--es-dark-blue); cursor: pointer; transition: all 0.15s; }
         .matrix-grade-btn:hover, .matrix-grade-btn.selected-m-grade { background: var(--es-blue); color: white; border-color: var(--es-dark-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
 
-        /* FOTELJA FIKS: ZAKLJUČAN I SKRIVEN POPUP PROZORČIĆ (DISPLEJ NONE SADA JE ZAKUCAN!) */
+        /* ZAKLJUČAN I SKRIVEN POPUP PROZORČIĆ (MORA DA BUDE SKRIVEN FABRIČKI) */
         .modal-overlay { 
             position: fixed !important; 
             top: 0 !important; 
@@ -224,7 +224,7 @@
             width: 100vw !important; 
             height: 100vh !important; 
             background: rgba(0, 0, 0, 0.4) !important; 
-            display: none; /* SAKRIVENO FABRIČKI */
+            display: none; 
             align-items: center !important; 
             justify-content: center !important; 
             z-index: 100000 !important; 
@@ -546,7 +546,7 @@
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
                                     <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
                                 </div>
-                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај и активирај профил наставника 👤</button>
+                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај i активирај профил наставника 👤</button>
                                 <br><br>
                                 <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
                             </div>
@@ -772,17 +772,24 @@
             if(!lekcija) { alert("Молимо унесите наставну јединицу!"); return; }
             aktivanCasPodaci = { lekcija, rbr, odeljenje: document.getElementById('global-odeljenje').value, predmetId: document.getElementById('global-predmet').value, datum: `${odabraniDanKalendara}.05.2026.` };
             lokalniIzostanciNaCasu = {};
+            
             document.getElementById('crni-panel-cas-rbr').innerText = `${rbr}. час — Евиденција рада`;
             document.getElementById('crni-panel-lekcija-tema').innerText = `${aktivanCasPodaci.predmetId} (${aktivanCasPodaci.odeljenje})`;
             document.getElementById('crni-panel-datum-tekst').innerText = `Датум рада: ${aktivanCasPodaci.datum}`;
+            
             switchPage('stranica-tok-casa');
-            renderujUcenikeZaProzivkuIInicijaciju();
+            renderujUcenikeZaProzivkuIInicijaciju(); // POPRAVLJENO: POZIV TRAŽENE FUNKCIJE KOJA ISPISUJE ĐAKE I PAMETNE DUGMIĆE!
             osveziCrniPanelStatistiku();
         }
 
+        /* POPRAVLJENO: MAKSIMALNO VRHUNSKI ISPIS SVIH ĐAKA SA LEVE STRANE TOKOM ČASA SA 4 DUGMETA */
         function renderujUcenikeZaProzivkuIInicijaciju() {
-            let kontejner = document.getElementById('mreza-ucenika-tok-casa'); if(!contejner && !kontejner) return; kontejner.innerHTML = "";
-            sviUcenici.filter(u => u.odeljenje === aktivanCasPodaci.odeljenje).forEach((u, index) => {
+            let kontejner = document.getElementById('mreza-ucenika-tok-casa'); 
+            if(!kontejner) return; 
+            kontejner.innerHTML = "";
+            
+            let filtrirani = sviUcenici.filter(u => u.odeljenje === aktivanCasPodaci.odeljenje);
+            filtrirani.forEach((u) => {
                 let uId = u._id || u.id;
                 kontejner.innerHTML += `
                     <div class="tok-student-card" id="tok-card-${uId}">
@@ -799,9 +806,18 @@
         }
 
         function okiniOdsustvoUcenika(uId) {
-            let btn = document.getElementById(`abs-x-${uId}`); let kartica = document.getElementById(`tok-card-${uId}`);
-            if(lokalniIzostanciNaCasu[uId]) { delete lokalniIzostanciNaCasu[uId]; btn.classList.remove('active-abs'); kartica.style.background = "#ffffff"; }
-            else { lokalniIzostanciNaCasu[uId] = true; btn.classList.add('active-abs'); kartica.style.background = "#fff5f5"; }
+            let btn = document.getElementById(`abs-x-${uId}`); 
+            let kartica = document.getElementById(`tok-card-${uId}`);
+            
+            if(lokalniIzostanciNaCasu[uId]) { 
+                delete lokalniIzostanciNaCasu[uId]; 
+                if(btn) btn.classList.remove('active-abs'); 
+                if(kartica) kartica.style.background = "#ffffff"; 
+            } else { 
+                lokalniIzostanciNaCasu[uId] = true; 
+                if(btn) btn.classList.add('active-abs'); 
+                if(kartica) kartica.style.background = "#fff5f5"; 
+            }
             osveziCrniPanelStatistiku();
         }
 
@@ -809,7 +825,7 @@
             let odsustniBrojac = Object.keys(lokalniIzostanciNaCasu).length;
             document.getElementById('crni-absent-count').innerText = odsustniBrojac;
             let listaImena = []; Object.keys(lokalniIzostanciNaCasu).forEach(id => { let u = sviUcenici.find(x => (x._id === id || x.id == id)); if(u) listaImena.push(u.ime); });
-            document.getElementById('crni-absent-lista').innerHTML = listaImena.length > 0 ? listaImena.join('<br>') : "Нема одсутних.";
+            document.getElementById('crni-absent-lista').innerHTML = listaImena.length > 0 ? listaImena.join('<br>') : "Нема одсутних ученика.";
         }
 
         function otvoriBrziProzorZaOcenuKaoPopup(uId) {
@@ -823,11 +839,12 @@
         }
 
         async function brziUpisNapomene(uId) {
-            let napomena = prompt("Унесите напомену:"); if(!napomena) return;
+            let napomena = prompt("Унесите напомену о владању ученика:"); if(!napomena) return;
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
             if(u) {
                 if(!u.vladanje_lista) u.vladanje_lista = []; u.vladanje_lista.push({ id: Date.now(), tip_zapisa: 'napomena', vrsta: 'Напомена о владању', tekst: napomena, datum: `2026-05-${odabraniDanKalendara}`, predmet: aktivanCasPodaci.predmetId, cas: aktivanCasPodaci.rbr });
-                await AzurirajUcenikaNaServeruBezDosijea(u); alert("Уписано!");
+                await AzurirajUcenikaNaServeruBezDosijea(u); 
+                alert("Напомена успешно уписана!");
             }
         }
 
@@ -835,7 +852,9 @@
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
             if(u) {
                 if(!u.ocene) u.ocene = []; u.ocene.push({ id: Date.now(), tip: 'Активност', vrednost: '😊', vrsta: 'Активност на часу', predmet: aktivanCasPodaci.predmetId, datum: `05/${odabraniDanKalendara}/2026` });
-                await AzurirajUcenikaNaServeruBezDosijea(u); document.getElementById('crni-marks-count').innerText = Number(document.getElementById('crni-marks-count').innerText) + 1;
+                await AzurirajUcenikaNaServeruBezDosijea(u); 
+                document.getElementById('crni-marks-count').innerText = Number(document.getElementById('crni-marks-count').innerText) + 1;
+                document.getElementById('crni-marks-lista').innerHTML += `<br>${u.ime} (Активност: 😊)`;
             }
         }
 
@@ -845,8 +864,12 @@
                 let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
                 if(u) { if(!u.izostanci) u.izostanci = []; u.izostanci.push({ lekcija: aktivanCasPodaci.lekcija, predmet: aktivanCasPodaci.predmetId, datum: aktivanCasPodaci.datum, status: 'нерегулисано' }); await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }); }
             }
-            alert("Сачувано!"); document.getElementById('lekcija-naziv').value = ""; document.getElementById('crni-marks-count').innerText = "0";
-            await osvežiSvePodatkeSaServera(); switchPage('stranica-pocetna');
+            alert("Час је успешно евидентиран и завршен!"); 
+            document.getElementById('lekcija-naziv').value = ""; 
+            document.getElementById('crni-marks-count').innerText = "0";
+            document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
+            await osvežiSvePodatkeSaServera(); 
+            switchPage('stranica-pocetna');
         }
 
         function prikažiDosijeUčenika(id) {
@@ -990,7 +1013,7 @@
             if(document.getElementById('stranica-tok-casa').classList.contains('active')) {
                 await AzurirajUcenikaNaServeruBezDosijea(u);
                 document.getElementById('crni-marks-count').innerText = Number(document.getElementById('crni-marks-count').innerText) + 1;
-                document.getElementById('crni-marks-lista').innerHTML += `<br> ${u.ime} (Оцена: ${val})`;
+                document.getElementById('crni-marks-lista').innerHTML += `<br>${u.ime} (Оцена: ${val})`;
             } else {
                 await AzurirajUcenikaNaServeru(u);
             }
@@ -1044,7 +1067,6 @@
         function prebaciAdminTab(pId, bId) { document.querySelectorAll('.admin-pane').forEach(p => p.classList.remove('active')); document.querySelectorAll('.admin-menu-btn').forEach(b => b.classList.remove('active')); document.getElementById(pId).classList.add('active'); document.getElementById(bId).classList.add('active'); }
         function otvoriLokalniTab(e, tName) { document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active')); document.querySelectorAll('.tab-link').forEach(tl => tl.classList.remove('active')); document.getElementById(tName).classList.add('active'); e.currentTarget.classList.add('active'); }
         
-        /* POPRAVLJENE KONTROLE MODALA (SADA PRORADILE NA JEDAN KLIK!) */
         function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
         function zatvoriModal(id) { document.getElementById(id).style.setProperty('display', 'none', 'important'); }
     </script>
