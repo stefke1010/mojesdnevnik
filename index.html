@@ -469,7 +469,7 @@
                                         </div>
                                         
                                         <div class="form-group" id="blok-izbor-mera" style="margin:0; display:none;">
-                                            <label>Изаберите васпитну меру:</label>
+                                            <label>Изаберите меру:</label>
                                             <select class="form-control" id="vladanje-sluzbena-mera-select">
                                                 <option value="Опомена одељењског старешине">Опомена одељењског старешине</option>
                                                 <option value="Укор одељењског старешине">Укор одељењског старешине</option>
@@ -638,7 +638,7 @@
 
         async function promeniLozinkuKorisnika(event) {
             if(event) event.stopPropagation();
-            let novaLozinka = prompt("Унесите нову системску лозинку:");
+            let novaLozinka = prompt("Унесите нову лозинку:");
             if(!novaLozinka) return;
             await fetch('/api/nastavnici/promena-lozinke', {
                 method: 'POST',
@@ -857,7 +857,7 @@
         }
 
         async function brziUpisNapomene(uId) {
-            let napomena = prompt("Унесите напомену о владању ученика:"); if(!napomena) return;
+            let napomena = prompt("Упишите напомену о владању на часу изабраном учеником:"); if(!napomena) return;
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
             if(u) {
                 if(!u.vladanje_lista) u.vladanje_lista = []; u.vladanje_lista.push({ id: Date.now(), tip_zapisa: 'napomena', vrsta: 'Напомена о владању', tekst: napomena, datum: `2026-05-${odabraniDanKalendara}`, predmet: aktivanCasPodaci.predmetId, cas: aktivanCasPodaci.rbr });
@@ -1016,7 +1016,7 @@
 
         async function sacuvajOcenuVladanja() {
             let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            u.ocena_vladanja = document.getElementById('zakljucno-vladanje-select').value; await AzurirajUcenikaNaServeru(u); alert("Оцена владања снимљена!");
+            u.ocena_vladanja = document.getElementById('zakljucno-vladanje-select').value; await AzurirajUcenikaNaServeru(u); alert("Оцена владања је уписана");
         }
 
         async function sacuvajOcenuĐakuUBazu() {
