@@ -991,53 +991,100 @@
             document.getElementById('aktivnost-opis-input').value = ""; await AzurirajUcenikaNaServeru(u);
         }
 
-        async function dodajVladanjeIzTaba() {
-            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            let vr = document.getElementById('vladanje-vrsta-select').value;
-            let tk = document.getElementById('vladanje-tekst-input').value; if(!tk) return;
-            
-            let noviZapis = { id: Date.now(), datum: new Date().toISOString().split('T')[0], tekst: tk };
-            
-            if(vr === 'Напомена') {
-                noviZapis.tip_zapisa = 'napomena';
-                noviZapis.vrsta = 'Напомена о владању';
-                noviZapis.predmet = document.getElementById('global-predmet').value;
-                noviZapis.cas = document.getElementById('vladanje-cas-select').value;
-            } else {
-                noviZapis.tip_zapisa = 'mera';
-                noviZapis.vrsta = document.getElementById('vladanje-sluzbena-mera-select').value;
-                noviZapis.posledica = document.getElementById('vladanje-posledica-select').value;
-            }
+        // ==========================================
+// ПАМЕТНА ФУНКЦИЈА ЗА УПИС НАПОМЕНА И МЕРА
+// ==========================================
+async function dodajVladanjeIzTaba() {
+    // Проверавамо да ли постоји глобални низ са ученицима
+    if (typeof sviUcenici === 'undefined') {
+        alert("Грешка: Систем не може да пронађе листу ученика (sviUcenici)!");
+        return;
+    }
 
-            if(!u.vladanje_lista) u.vladanje_lista = []; 
-            u.vladanje_lista.push(noviZapis);
-            document.getElementById('vladanje-tekst-input').value = ""; 
-            await AzurirajUcenikaNaServeru(u);
+    // Проналазимо ученика коме се уписује мера
+    let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+    if (!u) {
+        alert("Грешка: Ученик није одабран или није пронађен!");
+        return;
+    }
+    
+    // Узимамо вредности из форми
+    let vr = document.getElementById('vladanje-vrsta-select') ? document.getElementById('vladanje-vrsta-select').value : 'Напомена';
+    let tk = document.getElementById('vladanje-tekst-input').value; 
+    if(!tk) return alert("Упишите детаље белешке!");
+    
+    // Правимо основни објекат за упис
+    let noviZapis = { 
+        id: Date.now(), 
+        datum: new Date().toISOString().split('T')[0], 
+        tekst: tk 
+    };
+    
+    // ПРОВЕРА: Да ли је обична напомена са часа или службена васпитна мера
+    if(vr === 'Напомена') {
+        noviZapis.tip_zapisa = 'napomena';
+        noviZapis.vrsta = 'Напомена о владању';
+        
+        let pPredmet = document.getElementById('vladanje-prikaz-predmeta');
+        noviZapis.predmet = pPredmet ? pPredmet.value : (document.getElementById('global-predmet') ? document.getElementById('global-predmet').value : 'Непознат предмет');
+        
+        let cSelect = document.getElementById('vladanje-cas-select');
+        noviZapis.cas = cSelect ? cSelect.value : '1';
+        noviZapis.boja_linije = '#2c7cb4'; // Плава за обичне напомене са часа
+    } 
+    // ОВДЕ ИДУ ВАСПИТНЕ МЕРЕ (Твој нови услов за црвену и зелену боју)
+    else {
+        noviZapis.tip_zapisa = 'mera';
+        
+        let odabranaMera = document.getElementById('vladanje-sluzbena-mera-select') ? document.getElementById('vladanje-sluzbena-mera-select').value : 'Службена мера';
+        noviZapis.vrsta = odabranaMera;
+        
+        let pSelect = document.getElementById('vladanje-posledica-select');
+        noviZapis.posledica = pSelect ? pSelect.value : 'нема последице';
+        
+        // -------------------------------------------------------------
+        // ТВОЈ КOД ЗА ПАМЕТНО БОЈЕЊЕ ПОЗИТИВНИХ И НЕГАТИВНИХ МЕРА
+        // -------------------------------------------------------------
+        let tekstMale = odabranaMera.toLowerCase();
+        
+        // 1. ЦРВЕНА БОЈА за све негативне мере (укор, опомена, појачан васпитни рад)
+        if (tekstMale.includes('укор') || tekstMale.includes('опомена') || tekstMale.includes('појачан')) {
+            noviZapis.boja_linije = '#f44336'; // ЕсДневник црвена
+        } 
+        // 2. ЗЕЛЕНА БОЈА за све позитивне мере (похвала, награда, предлог)
+        else if (tekstMale.includes('похвала') || tekstMale.includes('награда') || tekstMale.includes('предлог')) {
+            noviZapis.boja_linije = '#4caf50'; // ЕсДневник зелена
+        } 
+        // 3. ПЛАВА БОЈА за све остало
+        else {
+            noviZapis.boja_linije = '#2c7cb4'; 
         }
+        // -------------------------------------------------------------
+    }
 
-        async function sacuvajOcenuVladanja() {
-            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            u.ocena_vladanja = document.getElementById('zakljucno-vladanje-select').value; await AzurirajUcenikaNaServeru(u); alert("Оцена владања је уписана");
-        }
-
-        async function sacuvajOcenuĐakuUBazu() {
-            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            let val = privremenaSelektovanaOcenaModala; 
-            let kat = document.getElementById('nova-ocena-kategorija').value;
-            
-            if(!u.ocene) u.ocene = [];
-            u.ocene.push({ id: Date.now(), tip: 'Оцена', vrednost: val, vrsta: kat, predmet: document.getElementById('global-predmet').value, datum: `05/${odabraniDanKalendara}/2026` });
-            zatvoriModal('modal-ocena-upis'); 
-            
-            if(document.getElementById('stranica-tok-casa').classList.contains('active')) {
-                await AzurirajUcenikaNaServeruBezDosijea(u);
-                document.getElementById('crni-marks-count').innerText = Number(document.getElementById('crni-marks-count').innerText) + 1;
-                document.getElementById('crni-marks-lista').innerHTML += `<br>${u.ime} (Оцена: ${val})`;
-            } else {
-                await AzurirajUcenikaNaServeru(u);
-            }
-        }
-
+    // Додајемо нови запис у листу владања ученика
+    if(!u.vladanje_lista) u.vladanje_lista = []; 
+    u.vladanje_lista.push(noviZapis);
+    
+    // Бришемо текст из поља за унос након уписа
+    document.getElementById('vladanje-tekst-input').value = ""; 
+    
+    // Чување на серверу (зависно од тога како ти се зове функција)
+    if (typeof AzurirajUcenikaNaServeru === 'function') {
+        await AzurirajUcenikaNaServeru(u);
+    } else if (typeof azurirajUcenikaNaServeru === 'function') {
+        await azurirajUcenikaNaServeru(u);
+    }
+    
+    // Освежавање приказа на екрану
+    if (typeof PrikaziDosijeUcenika === 'function') {
+        PrikaziDosijeUcenika(u.id || u._id);
+    } else if (typeof prikaziDosijeUcenika === 'function') {
+        prikaziDosijeUcenika(u.id || u._id);
+    } else if (typeof osveziPrikazDosijea === 'function') {
+        osveziPrikazDosijea();
+    }
+}
         async function AzurirajUcenikaNaServeru(u) {
             await fetch(`${API_URL}/api/ucenici/${u._id || u.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) });
             await osvežiSvePodatkeSaServera(); prikažiDosijeUčenika(odabraniUcenikId);
