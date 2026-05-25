@@ -432,6 +432,7 @@
                                             <option value="🙂">🙂 Смајлић</option>
                                             <option value="😐">😐 Равнић</option>
                                             <option value="🙁">🙁 Тужић</option>
+                                            <option value="описна оцена">описна оцена</option>
                                         </select>
                                     </div>
                                     <div class="sel-block" style="flex:1;">
@@ -767,7 +768,7 @@
                 let imaTriJedinice = brojJedinicaIzPredmeta >= 3;
 
                 let bedzeviHTML = `<div class="student-badges-container">`;
-                if(imaVladanjeMera) bedzeviHTML += `<div class="status-badge-circle badge-blue" title="Има забележен укор или напомену"><i class="fa-solid fa-message"></i></div>`;
+                if(imaVladanjeMera) bedzeviHTML += `<div class="status-badge-circle badge-blue" title="Има забележену похвалу, меру или напомену"><i class="fa-solid fa-message"></i></div>`;
                 if(imaNeregulisane) bedzeviHTML += `<div class="status-badge-circle badge-yellow" title="Има нерегулисане изостанке"><i class="fa-solid fa-clock"></i></div>`;
                 if(imaTriJedinice) bedzeviHTML += `<div class="status-badge-circle badge-red-warning" title="Има 3 или више јединице из овог предмета"><i class="fa-solid fa-exclamation"></i></div>`;
                 bedzeviHTML += `</div>`;
@@ -929,7 +930,7 @@
             fAktivnosti.forEach(a => {
                 aListaHTML.innerHTML += `
                     <li class="history-item line-purple">
-                        <span>Симбол: <strong style='font-size:16px;'>${a.vrednost}</strong> — Опис: ${a.vrsta}</span>
+                        <span>Описна оцена или активност: <strong style='font-size:16px;'>${a.vrednost}</strong> — Опис: ${a.vrsta}</span>
                         <button class="btn btn-danger btn-xs" onclick="obrisiElementIzDosijea('${u._id || u.id}', ${a.id}, 'ocene')">Обриши</button>
                     </li>`;
             });
