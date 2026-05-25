@@ -464,7 +464,7 @@
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Владање на часу</option>
-                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
+                                                <option value="Васпитна мера"Mера</option>
                                             </select>
                                         </div>
                                         
@@ -665,7 +665,7 @@
 
         function promenaVrsteVladanjaMera() {
             let vr = document.getElementById('vladanje-vrsta-select').value;
-            let jeMera = (vr === 'Васпитана мера' || vr === 'Васпитна мера');
+            let jeMera = (vr === 'Mера' || vr === 'Мера');
             
             document.getElementById('blok-izbor-mera').style.display = jeMera ? 'block' : 'none';
             document.getElementById('blok-posledice-mera').style.display = jeMera ? 'block' : 'none';
@@ -767,7 +767,7 @@
                 let imaTriJedinice = brojJedinicaIzPredmeta >= 3;
 
                 let bedzeviHTML = `<div class="student-badges-container">`;
-                if(imaVladanjeMera) bedzeviHTML += `<div class="status-badge-circle badge-blue" title="Има забележен укор или напомену"><i class="fa-solid fa-message"></i></div>`;
+                if(imaVladanjeMera) bedzeviHTML += `<div class="status-badge-circle badge-blue" title="Има уписану меру или напомену"><i class="fa-solid fa-message"></i></div>`;
                 if(imaNeregulisane) bedzeviHTML += `<div class="status-badge-circle badge-yellow" title="Има нерегулисане изостанке"><i class="fa-solid fa-clock"></i></div>`;
                 if(imaTriJedinice) bedzeviHTML += `<div class="status-badge-circle badge-red-warning" title="Има 3 или више јединице из овог предмета"><i class="fa-solid fa-exclamation"></i></div>`;
                 bedzeviHTML += `</div>`;
@@ -775,7 +775,7 @@
                 kontejner.innerHTML += `
                     <div class="student-profile-card" onclick="prikažiDosijeUčenika('${uId}')">
                         ${bedzeviHTML}
-                        <button class="delete-student-btn" onclick="obrisiUcenikaZauvek(event, '${uId}')" title="Обриши ђака"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="delete-student-btn" onclick="obrisiUcenikaZauvek(event, '${uId}')" title="Обриши ученика заувек"><i class="fa-solid fa-trash-can"></i></button>
                         <div class="avatar-container"><i class="fa-solid fa-user-graduate"></i></div>
                         <div class="card-name">${u.ime}</div><div class="card-subtext">Основно образовање</div>
                     </div>`;
@@ -883,7 +883,7 @@
                 if(u) { if(!u.izostanci) u.izostanci = []; u.izostanci.push({ lekcija: aktivanCasPodaci.lekcija, predmet: aktivanCasPodaci.predmetId, datum: aktivanCasPodaci.datum, status: 'нерегулисано' }); await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }); }
             }
             alert("Час је успешно евидентиран и завршен!"); 
-            document.getElementById('lekcija-naziv').value = ""; 
+            document.getElementById('lekcija-naziv').value = ; 
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
             await osvežiSvePodatkeSaServera(); 
@@ -1003,10 +1003,45 @@
                 noviZapis.predmet = document.getElementById('global-predmet').value;
                 noviZapis.cas = document.getElementById('vladanje-cas-select').value;
             } else {
-                noviZapis.tip_zapisa = 'mera';
-                noviZapis.vrsta = document.getElementById('vladanje-sluzbena-mera-select').value;
-                noviZapis.posledica = document.getElementById('vladanje-posledica-select').value;
-            }
+               noviZapis.tip_zapisa = 'mera';
+        
+        let odabranaMera = document.getElementById('vladanje-sluzbena-mera-select').value;
+        noviZapis.vrsta = odabranaMera;
+        noviZapis.posledica = document.getElementById('vladanje-posledica-select').value;
+        
+        // Пребацујемо текст у мала слова да бисмо лакше претраживали кључне речи
+        let tekstMale = odabranaMera.toLowerCase();
+        
+        // Зелена боја за Похвале, Награде и Предлоге
+        if (tekstMale.includes('похвала') || tekstMale.includes('награда') || tekstMale.includes('предлог')) {
+            noviZapis.boja_linije = '#4caf50'; 
+        } 
+        // Наранџаста боја за Опомене и Појачан васпитни рад
+        else if (tekstMale.includes('опомена') || tekstMale.includes('појачан')) {
+            noviZapis.boja_linije = '#ff9800'; 
+        } 
+        // Црвена боја за све врсте Укора
+        else if (tekstMale.includes('укор')) {
+            noviZapis.boja_linije = '#f44336'; 
+        } 
+        // Ако се ипак деси нешто неочекивано, узима боју из Color Picker-а
+        else {
+            let inputBoje = document.getElementById('vladanje-boja-input');
+            noviZapis.boja_linije = inputBoje ? inputBoje.value : '#f44336';
+        }
+    }
+
+    // 5. Додајемо нови запис у листу владања ученика
+    if(!u.vladanje_lista) u.vladanje_lista = []; 
+    u.vladanje_lista.push(noviZapis);
+    
+    // 6. Бришемо текст из поља за унос
+    document.getElementById('vladanje-tekst-input').value = ""; 
+    
+    // 7. Шаљемо промене на сервер/базу и поново учитавамо приказ досијеа ученика
+    await AzurirajUcenikaNaServeru(u);
+    PrikaziDosijeUcenika(u.id || u._id); 
+}
 
             if(!u.vladanje_lista) u.vladanje_lista = []; 
             u.vladanje_lista.push(noviZapis);
@@ -1016,7 +1051,7 @@
 
         async function sacuvajOcenuVladanja() {
             let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            u.ocena_vladanja = document.getElementById('zakljucno-vladanje-select').value; await AzurirajUcenikaNaServeru(u); alert("Оцена владања снимљена!");
+            u.ocena_vladanja = document.getElementById('zakljucno-vladanje-select').value; await AzurirajUcenikaNaServeru(u); alert("Оцена владања је уписана.");
         }
 
         async function sacuvajOcenuĐakuUBazu() {
