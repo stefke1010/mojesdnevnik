@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>еСДневник Про - Дневник Рада</title>
+    <title>Moj есдневник</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -262,11 +262,11 @@
         <div class="sidebar">
             <div class="logo-area">
                 <i class="fa-solid fa-graduation-cap"></i>
-                <div><p>еСДневник Про</p></div>
+                <div><p>Мој есдневник</p></div>
             </div>
             <ul class="nav-menu">
-                <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник рада</li>
-                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик одељења</li>
+                <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник</li>
+                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
                 <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li>
             </ul>
         </div>
@@ -378,7 +378,7 @@
                                 <div class="crni-list-items" id="crni-absent-lista">Нема одсутних ученика.</div>
                             </div>
                             <div class="crni-stats-block">
-                                <div class="crni-stats-title"><span>Забележене оцене / активности:</span> <span id="crni-marks-count">0</span></div>
+                                <div class="crni-stats-title"><span>Забележене оцене и активности:</span> <span id="crni-marks-count">0</span></div>
                                 <div class="crni-list-items" id="crni-marks-lista">Нема унетих оцена.</div>
                             </div>
                             <button class="btn btn-success" style="margin-top: auto; padding: 12px;" onclick="zavrsiCasKomplet()"><i class="fa-solid fa-square-check"></i> Заврши час</button>
@@ -479,6 +479,20 @@
                                                 <option value="Опомена наставничког већа">Опомена наставничког већа</option>
                                                 <option value="Опомена одељењског већа">Опомена одељењског већа</option>
                                                 <option value="Појачан васпитни рад">Појачан васпитни рад</option>
+                                                <option value="Похвала одељењског старешине">Похвала одељењског старешине</option>
+                                                <option value="Похвала одељењског већа">Похвала одељењског већа</option>
+                                                <option value="Похвала наставничког већа">Похвала наставничког већа</option>
+                                                <option value="Награда наставничког већа">Награда наставничког већа</option>
+                                                <option value="Награда одељењског већа">Награда одељењског већа</option>
+                                                <option value="Награда одељењског старешине">Награда одељењског старешине</option>
+                                                <option value="Предлог за похвалу одељењског старешине">Предлог за похвалу одељењског старешине</option>
+                                                <option value="Предлог за похвалу одељењског већа">Предлог за похвалу одељењског већа</option>
+                                                <option value="Предлог за похвалу наставничког већа">Предлог за похвалу наставничког већа</option>
+                                                <option value="Предлог за награду одељењског старешине">Предлог за похвалу одељењског старешине</option>
+                                                <option value="Предлог за награду одељењског већа">Предлог за награду одељењског већа</option>
+                                                <option value="Предлог за награду наставничког већа">Предлог за награду наставничког већа</option>
+                                               
+                                                
                                             </select>
                                         </div>
                                     </div>
@@ -499,14 +513,14 @@
                                     <div class="form-group" id="blok-posledice-mera" style="display:none;">
                                         <label>Одаберите последицу мере:</label>
                                         <select class="form-control" id="vladanje-posledica-select">
-                                            <option value="Нема последице">Нема последице</option>
-                                            <option value="Остале последице">Остале последице</option>
-                                            <option value="Друштвено-користан рад">Друштвено-користан рад</option>
+                                            <option value="нема последице">нема последице</option>
+                                            <option value="остале последице">остале последице</option>
+                                            <option value="друштвено-користан рад">друштвено-користан рад</option>
                                         </select>
                                     </div>
 
-                                    <div class="form-group"><label>Текст образложења белешке:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
-                                    <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Додај у картон</button>
+                                    <div class="form-group"><label>Белешка:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
+                                    <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Упиши напомену/меру</button>
                                 </div>
                                 <ul class="history-list" id="lista-vladanja-kontejner" style="padding:0;"></ul>
                             </div>
