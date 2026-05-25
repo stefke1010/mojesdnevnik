@@ -464,7 +464,7 @@
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Владање на часу</option>
-                                                <option value="Мера">Мера</option>
+                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
                                             </select>
                                         </div>
                                         
@@ -519,7 +519,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group"><label>Белешка:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Белешка"></textarea></div>
+                                    <div class="form-group"><label>Белешка:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
                                     <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Упиши напомену/меру</button>
                                 </div>
                                 <ul class="history-list" id="lista-vladanja-kontejner" style="padding:0;"></ul>
@@ -767,7 +767,7 @@
                 let imaTriJedinice = brojJedinicaIzPredmeta >= 3;
 
                 let bedzeviHTML = `<div class="student-badges-container">`;
-                if(imaVladanjeMera) bedzeviHTML += `<div class="status-badge-circle badge-blue" title="Има забележену меру или напомену"><i class="fa-solid fa-message"></i></div>`;
+                if(imaVladanjeMera) bedzeviHTML += `<div class="status-badge-circle badge-blue" title="Има забележен укор или напомену"><i class="fa-solid fa-message"></i></div>`;
                 if(imaNeregulisane) bedzeviHTML += `<div class="status-badge-circle badge-yellow" title="Има нерегулисане изостанке"><i class="fa-solid fa-clock"></i></div>`;
                 if(imaTriJedinice) bedzeviHTML += `<div class="status-badge-circle badge-red-warning" title="Има 3 или више јединице из овог предмета"><i class="fa-solid fa-exclamation"></i></div>`;
                 bedzeviHTML += `</div>`;
