@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>еСДневник Про - Дневник Рада</title>
+    <title>Moj есдневник</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -21,6 +21,7 @@
             --es-purple-bg: #f0f2f9;
             --es-purple-text: #3f51b5;
         }
+
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         body { background-color: var(--es-bg); color: var(--es-text); display: flex; height: 100vh; overflow: hidden; width: 100vw; }
@@ -240,19 +241,19 @@
 </head>
 <body>
 
-    <div id="stranica-login-sistema" class="full-login-overlay">
+   <div id="stranica-login-sistema" class="full-login-overlay">
         <div class="login-box">
             <h2 id="login-glavni-naslov"><i class="fa-solid fa-graduation-cap"></i> еСДневник Про</h2>
-            <p id="login-podnaslov">Пријава на систем за наставнике и админе</p>
+            <p id="login-podnaslov">Пријава na sistem za nastavnike i admine</p>
             <div class="form-group" style="text-align: left;">
                 <label id="login-lbl-user">Корисничко име:</label>
-                <input type="text" id="sys-auth-user" class="form-control" value="admin">
+                <input type="text" id="sys-auth-user" class="form-control" placeholder="Unesite korisničko ime">
             </div>
             <div class="form-group" style="text-align: left; margin-bottom: 25px;">
                 <label id="login-lbl-pass">Лозинка:</label>
-                <input type="password" id="sys-auth-pass" class="form-control" value="admin123">
+                <input type="password" id="sys-auth-pass" class="form-control" placeholder="Unesite lozinku">
             </div>
-            <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријави се на систем 🔓</button>
+            <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријави се у дневник</button>
         </div>
     </div>
 
@@ -261,12 +262,12 @@
         <div class="sidebar">
             <div class="logo-area">
                 <i class="fa-solid fa-graduation-cap"></i>
-                <div><p>еСДневник Про</p></div>
+                <div><p>Мој есдневник</p></div>
             </div>
             <ul class="nav-menu">
-                <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник рада</li>
-                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик одељења</li>
-                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација 🔐</li>
+                <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник</li>
+                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
+                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li>
             </ul>
         </div>
 
@@ -336,7 +337,7 @@
 
                         <div class="side-form-box">
                             <div class="prethodna-lekcija-box">
-                                <strong>📋 Претходна наставна јединица:</strong>
+                                <strong>Претходна наставна јединица:</strong>
                                 <p id="txt-prethodna-lekcija" style="margin-top: 4px; color: #4a5568; font-style: italic;">Нема података.</p>
                             </div>
 
@@ -356,7 +357,7 @@
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори евиденцију 🚀</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час и отвори</button>
                         </div>
 
                     </div>
@@ -377,7 +378,7 @@
                                 <div class="crni-list-items" id="crni-absent-lista">Нема одсутних ученика.</div>
                             </div>
                             <div class="crni-stats-block">
-                                <div class="crni-stats-title"><span>Забележене оцене / активности:</span> <span id="crni-marks-count">0</span></div>
+                                <div class="crni-stats-title"><span>Забележене оцене и активности:</span> <span id="crni-marks-count">0</span></div>
                                 <div class="crni-list-items" id="crni-marks-lista">Нема унетих оцена.</div>
                             </div>
                             <button class="btn btn-success" style="margin-top: auto; padding: 12px;" onclick="zavrsiCasKomplet()"><i class="fa-solid fa-square-check"></i> Заврши час</button>
@@ -428,9 +429,9 @@
                                     <div class="sel-block">
                                         <span>Одаберите симбол:</span>
                                         <select class="form-control" id="aktivnost-simbol-select" style="width:140px;">
-                                            <option value="😊">😊 Смајли (+)</option>
-                                            <option value="😐">😐 Равнић (/)</option>
-                                            <option value="🙁">🙁 Тужић (-)</option>
+                                            <option value="🙂">🙂 Смајлић</option>
+                                            <option value="😐">😐 Равнић</option>
+                                            <option value="🙁">🙁 Тужић</option>
                                         </select>
                                     </div>
                                     <div class="sel-block" style="flex:1;">
@@ -452,10 +453,10 @@
                                     <div class="sel-block">
                                         <span>Оцена / Закључно владање:</span>
                                         <select class="form-control" id="zakljucno-vladanje-select" style="width:180px;">
-                                            <option value="5">Примерно (5)</option><option value="4">Врло добро (4)</option><option value="3">Добар (3)</option><option value="2">Довољно (2)</option><option value="1">Незадовољавајуће (1)</option>
+                                            <option value="5">Примерно (5)</option><option value="4">Врло добро (4)</option><option value="3">Добро (3)</option><option value="2">Довољно (2)</option><option value="1">Незадовољавајуће (1)</option>
                                         </select>
                                     </div>
-                                    <button class="btn btn-primary" style="width:auto; margin-top:15px;" onclick="sacuvajOcenuVladanja()">Додај оцену за владање 💾</button>
+                                    <button class="btn btn-primary" style="width:auto; margin-top:15px;" onclick="sacuvajOcenuVladanja()">Оцени владање</button>
                                 </div>
                                 <div style="background:#f8fafc; padding:15px; border:1px solid var(--es-border); border-radius:6px; margin-bottom:15px;">
                                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:12px;">
@@ -463,7 +464,7 @@
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Владање на часу</option>
-                                                <option value="Мера">Мера</option>
+                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
                                             </select>
                                         </div>
                                         
@@ -471,51 +472,34 @@
                                             <label>Изаберите васпитну меру:</label>
                                             <select class="form-control" id="vladanje-sluzbena-mera-select">
                                                 <option value="Опомена одељењског старешине">Опомена одељењског старешине</option>
-
                                                 <option value="Укор одељењског старешине">Укор одељењског старешине</option>
-
                                                 <option value="Укор одељењског већа">Укор одељењског већа</option>
-
                                                 <option value="Укор директора">Укор директора</option>
-
                                                 <option value="Укор наставничког већа">Укор наставничког већа</option>
-
                                                 <option value="Опомена наставничког већа">Опомена наставничког већа</option>
-
                                                 <option value="Опомена одељењског већа">Опомена одељењског већа</option>
-
                                                 <option value="Појачан васпитни рад">Појачан васпитни рад</option>
-
                                                 <option value="Похвала одељењског старешине">Похвала одељењског старешине</option>
-
                                                 <option value="Похвала одељењског већа">Похвала одељењског већа</option>
-
                                                 <option value="Похвала наставничког већа">Похвала наставничког већа</option>
-
                                                 <option value="Награда наставничког већа">Награда наставничког већа</option>
-
                                                 <option value="Награда одељењског већа">Награда одељењског већа</option>
-
                                                 <option value="Награда одељењског старешине">Награда одељењског старешине</option>
-
                                                 <option value="Предлог за похвалу одељењског старешине">Предлог за похвалу одељењског старешине</option>
-
                                                 <option value="Предлог за похвалу одељењског већа">Предлог за похвалу одељењског већа</option>
-
                                                 <option value="Предлог за похвалу наставничког већа">Предлог за похвалу наставничког већа</option>
-
                                                 <option value="Предлог за награду одељењског старешине">Предлог за похвалу одељењског старешине</option>
-
                                                 <option value="Предлог за награду одељењског већа">Предлог за награду одељењског већа</option>
-
                                                 <option value="Предлог за награду наставничког већа">Предлог за награду наставничког већа</option>
+                                               
+                                                
                                             </select>
                                         </div>
                                     </div>
 
                                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:12px;" id="vladanje-detalji-napomene-blok">
                                         <div class="form-group" style="margin:0;">
-                                            <label>Предмет (Аутоматски):</label>
+                                            <label>Изабрани предмет:</label>
                                             <input type="text" id="vladanje-prikaz-predmeta" class="form-control" readonly style="background:#edf2f7; font-weight:bold;">
                                         </div>
                                         <div class="form-group" style="margin:0;">
@@ -529,14 +513,14 @@
                                     <div class="form-group" id="blok-posledice-mera" style="display:none;">
                                         <label>Одаберите последицу мере:</label>
                                         <select class="form-control" id="vladanje-posledica-select">
-                                            <option value="Нема последице">Нема последице</option>
-                                            <option value="Остале последице">Остале последице</option>
-                                            <option value="Друштвено-користан рад">Друштвено-користан рад 🛠️</option>
+                                            <option value="нема последице">нема последице</option>
+                                            <option value="остале последице">остале последице</option>
+                                            <option value="друштвено-користан рад">друштвено-користан рад</option>
                                         </select>
                                     </div>
 
-                                    <div class="form-group"><label>Текст образложења белешке:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
-                                    <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Додај у картон</button>
+                                    <div class="form-group"><label>Белешка:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
+                                    <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Упиши напомену/меру</button>
                                 </div>
                                 <ul class="history-list" id="lista-vladanja-kontejner" style="padding:0;"></ul>
                             </div>
@@ -550,7 +534,7 @@
                             <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
                             <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
                             <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
-                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар 👤</button>
+                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
@@ -580,7 +564,7 @@
                                     <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
                                     <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
                                 </div>
-                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Сачувај i активирај профил наставника 👤</button>
+                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Активирај профил</button>
                                 <br><br>
                                 <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
                             </div>
@@ -611,9 +595,9 @@
                 </div>
                 <div class="form-group">
                     <label style="font-weight:bold;">Белешка / Напомена за оцену:</label>
-                    <input type="text" class="form-control" id="nova-ocena-kategorija" value="Усмена провера">
+                    <input type="text" class="form-control" id="nova-ocena-kategorija"
                 </div>
-                <button class="btn btn-success" style="width:100%; padding:11px;" onclick="sacuvajOcenuĐakuUBazu()">Сачувај у дневник ✔</button>
+                <button class="btn btn-success" style="width:100%; padding:11px;" onclick="sacuvajOcenuĐakuUBazu()">Сачувај у дневник</button>
             </div>
         </div>
     </div>
@@ -885,10 +869,10 @@
         async function brziUpisAktivnosti(uId) {
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
             if(u) {
-                if(!u.ocene) u.ocene = []; u.ocene.push({ id: Date.now(), tip: 'Активност', vrednost: '😊', vrsta: 'Активност на часу', predmet: aktivanCasPodaci.predmetId, datum: `05/${odabraniDanKalendara}/2026` });
+                if(!u.ocene) u.ocene = []; u.ocene.push({ id: Date.now(), tip: 'Активност', vrednost: '🙂', vrsta: 'Похвала на часу', predmet: aktivanCasPodaci.predmetId, datum: `05/${odabraniDanKalendara}/2026` });
                 await AzurirajUcenikaNaServeruBezDosijea(u); 
                 document.getElementById('crni-marks-count').innerText = Number(document.getElementById('crni-marks-count').innerText) + 1;
-                document.getElementById('crni-marks-lista').innerHTML += `<br>${u.ime} (Активност: 😊)`;
+                document.getElementById('crni-marks-lista').innerHTML += `<br>${u.ime} (Активност: 🙂)`;
             }
         }
 
