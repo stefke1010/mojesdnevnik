@@ -1129,6 +1129,28 @@
         
         function otvoriProzorZaOcenjivanje() { document.getElementById('modal-ocena-upis').style.setProperty('display', 'flex', 'important'); }
         function zatvoriModal(id) { document.getElementById(id).style.setProperty('display', 'none', 'important'); }
+        // ==========================================
+        // ФУНКЦИЈА ЗА ПРИЈАВУ НА СИСТЕМ
+        // ==========================================
+        function izvrsiPrijavuNaSistem() {
+            // Проналазимо елементе за лог-ин и главни интерфејс
+            let loginStranica = document.getElementById('stranica-login-sistema');
+            let glavniInterfejs = document.getElementById('glavni-interfejs-aplikacije');
+            
+            // Ако елементи постоје, склањамо лог-ин и приказујемо дневник
+            if (loginStranica) {
+                loginStranica.style.setProperty('display', 'none', 'important');
+            }
+            if (glavniInterfejs) {
+                glavniInterfejs.style.display = 'block';
+            }
+            
+            // Аутоматски учитавамо почетну страницу дневника
+            if (typeof switchPage === 'function') {
+                switchPage('stranica-pocetna');
+            }
+        }
+    
     </script>
 </body>
 </html>
