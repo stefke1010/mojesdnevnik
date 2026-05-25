@@ -991,19 +991,32 @@
         }
 
         async function dodajVladanjeIzTaba() {
-            let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
-            let vr = document.getElementById('vladanje-vrsta-select').value;
-            let tk = document.getElementById('vladanje-tekst-input').value; if(!tk) return;
-            
-            let noviZapis = { id: Date.now(), datum: new Date().toISOString().split('T')[0], tekst: tk };
-            
-            if(vr === 'Напомена') {
-                noviZapis.tip_zapisa = 'napomena';
-                noviZapis.vrsta = 'Напомена о владању';
-                noviZapis.predmet = document.getElementById('global-predmet').value;
-                noviZapis.cas = document.getElementById('vladanje-cas-select').value;
-            } else {
-               noviZapis.tip_zapisa = 'mera';
+    // 1. Проналазимо ученика коме се уписује мера
+    let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
+    
+    // 2. Узимамо вредности из форми
+    let vr = document.getElementById('vladanje-vrsta-select').value;
+    let tk = document.getElementById('vladanje-tekst-input').value; 
+    if(!tk) return alert("Упишите детаље белешке!");
+    
+    // 3. Правимо основни објекат за упис
+    let noviZapis = { 
+        id: Date.now(), 
+        datum: new Date().toISOString().split('T')[0], 
+        tekst: tk 
+    };
+    
+    // 4. ПРОВЕРА: Да ли је обична напомена или службена мера
+    if(vr === 'Напомена') {
+        noviZapis.tip_zapisa = 'napomena';
+        noviZapis.vrsta = 'Напомена о владању';
+        noviZapis.predmet = document.getElementById('vladanje-prikaz-predmeta').value;
+        noviZapis.cas = document.getElementById('vladanje-cas-select').value;
+        noviZapis.boja_linije = '#2c7cb4'; // Стандардна светлоплава за обичне напомене
+    } 
+    // ПАМЕТНИ КОД ЗА МЕРЕ И ПОХВАЛЕ
+    else {
+        noviZapis.tip_zapisa = 'mera';
         
         let odabranaMera = document.getElementById('vladanje-sluzbena-mera-select').value;
         noviZapis.vrsta = odabranaMera;
@@ -1042,12 +1055,6 @@
     await AzurirajUcenikaNaServeru(u);
     PrikaziDosijeUcenika(u.id || u._id); 
 }
-
-            if(!u.vladanje_lista) u.vladanje_lista = []; 
-            u.vladanje_lista.push(noviZapis);
-            document.getElementById('vladanje-tekst-input').value = ""; 
-            await AzurirajUcenikaNaServeru(u);
-        }
 
         async function sacuvajOcenuVladanja() {
             let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
