@@ -46,7 +46,7 @@ $0="UTF-8">
         .nav-admin { border-top: 1px solid #edf2f7; background: #fff7f7; color: #c53030; }
         .main-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; }
         /* HEADER */
-        .header { background: linear-gradient(90deg, #0e2a44 0%, #1c5484 60%, #2c7cb4 100%); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; flex-shrink: 0; }
+        .headerg { background: linear-gradient(90deg, #0e2a44 0%, #1c5484 60%, #2c7cb4 100%); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; flex-shrink: 0; }
         .school-selectors { display: flex; align-items: center; gap: 20px; }
         .sel-block { display: flex; flex-direction: column; }
         .sel-block span { font-size: 10px; color: #a5c2dc; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
@@ -227,11 +227,11 @@ $0="UTF-8">
             <p id="login-podnaslov">Пријава na sistem za nastavnike i admine</p>
             <div class="form-group" style="text-align: left;">
                 <label id="login-lbl-user">Корисничко име:</label>
-                <input type="text" id="sys-auth-user" class="form-control" placeholder="Unesite korisničko ime" value="admin">
+                <input type="text" id="sys-auth-user" class="form-control" placeholder="Unesite korisničko ime" value="">
             </div>
             <div class="form-group" style="text-align: left; margin-bottom: 25px;">
                 <label id="login-lbl-pass">Лозинка:</label>
-                <input type="password" id="sys-auth-pass" class="form-control" placeholder="Unesite lozinku" value="admin123">
+                <input type="password" id="sys-auth-pass" class="form-control" placeholder="Unesite lozinku" value="">
             </div>
             <button class="btn btn-success" id="login-submit-btn" onclick="izvrsiPrijavuNaSistem()">Пријави се у дневник</button>
         </div>
