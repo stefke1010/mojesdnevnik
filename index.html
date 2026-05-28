@@ -6,7 +6,8 @@
 
 $0="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>електронски Дневник</title>
+    <title>есДневник
+    за наставнике</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -370,8 +371,8 @@ $0="UTF-8">
                         </div>
                         <div class="profile-right">
                             <div class="tabs-header">
-                                <div class="tab-link active" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Бројчане Оцене</div>
-                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-aktivnosti')">Описне оцене i Активности</div>
+                                <div class="tab-link active" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Бројчане оцене</div>
+                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-aktivnosti')">Описне оцене и Активности</div>
                                 <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-izostanci')">Изостанци</div>
                                 <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-vladanje')">Владање</div>
                             </div>
@@ -388,7 +389,7 @@ $0="UTF-8">
                             <div id="tab-dosije-aktivnosti" class="tab-content">
                                 <div style="background:#f8fafc; padding:15px; border:1px solid var(--es-border); border-radius:6px; margin-bottom:15px; display:flex; gap:10px; align-items:center;">
                                     <div class="sel-block">
-                                        <span>Одаберите симбол:</span>
+                                        <span>Одаберите:</span>
                                         <select class="form-control" id="aktivnost-simbol-select" style="width:140px;">
                                             <option value=" 🙂 "> 🙂  Смајлић</option>
                                             <option value=" 😐 "> 😐  Равнић</option>
@@ -405,7 +406,7 @@ $0="UTF-8">
                                 <ul class="history-list" id="lista-svih-aktivnosti-ucenika"></ul>
                             </div>
                             <div id="tab-dosije-izostanci" class="tab-content">
-                                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--es-dark-blue);">Евиденција i правдање изостанака:</h4>
+                                <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--es-dark-blue);">Евиденција и правдање изостанака:</h4>
                                 <ul class="history-list" id="lista-izostanaka-kontejner"></ul>
                             </div>
                             <div id="tab-dosije-vladanje" class="tab-content">
