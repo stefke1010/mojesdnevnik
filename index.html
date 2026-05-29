@@ -343,8 +343,8 @@ $0="UTF-8">
                                 <div class="crni-list-items" id="crni-absent-lista">Нема одсутних ученика.</div>
                             </div>
                             <div class="crni-stats-block">
-                                <div class="crni-stats-title"><span>Забележене оцене i активности:</span> <span id="crni-marks-count">0</span></div>
-                                <div class="crni-list-items" id="crni-marks-lista">Нема унетих оцена.</div>
+                                <div class="crni-stats-title"><span>Забележене оцене и активности:</span> <span id="crni-marks-count">0</span></div>
+                                <div class="crni-list-items" id="crni-marks-lista">Нема унетих оцена/активности.</div>
                             </div>
                             <button class="btn btn-success" style="margin-top: auto; padding: 12px;" onclick="zavrsiCasKomplet()"><i class="fa-solid fa-square-check"></i> Заврши час</button>
                         </div>
@@ -1006,7 +1006,7 @@ $0="UTF-8">
                     await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }).catch(() => null); 
                 }
             }
-            alert("Час је успешно евидентиран i завршен!"); 
+            alert("Час је успешно завршен!"); 
             document.getElementById('lekcija-naziv').value = ""; 
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
