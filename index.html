@@ -309,7 +309,7 @@ $0="UTF-8">
                                 <strong>Претходна наставна јединица:</strong>
                                 <p id="txt-prethodna-lekcija" style="margin-top: 4px; color: #4a5568; font-style: italic;">Нема података.</p>
                             </div>
-                            <h3 style="color: var(--es-dark-blue); margin-bottom: 15px;"><i class="fa-solid fa-circle-plus"></i> Додај наставни час</h3>
+                            <h3 style="color: var(--es-dark-blue); margin-bottom: 15px;"><i class="fa-solid fa-circle-plus"></i> Додај час +</h3>
                             
                             <div class="form-group">
                                 <label>Одабрани датум рада:</label>
@@ -325,7 +325,7 @@ $0="UTF-8">
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час i отвори</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни часbutton>
                         </div>
                     </div>
                 </div>
@@ -372,7 +372,7 @@ $0="UTF-8">
                         <div class="profile-right">
                             <div class="tabs-header">
                                 <div class="tab-link active" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Бројчане оцене</div>
-                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-aktivnosti')">Описне оцене и Активности</div>
+                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-aktivnosti')">Описне оцене и активности</div>
                                 <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-izostanci')">Изостанци</div>
                                 <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-vladanje')">Владање</div>
                             </div>
@@ -425,8 +425,7 @@ $0="UTF-8">
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Владање на часу</option>
-                                                <option value="Мера">Мера</option>
-                                                <option value="Оцена владања">Оцена владања</option>
+                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
                                             </select>
                                         </div>
                                         
@@ -457,46 +456,6 @@ $0="UTF-8">
                                                 
                                             </select>
                                         </div>
-
-                                        function promenaVrsteVladanjaMera() 
-                                        // 1. Дохватамо вредност из главног менија
-    var vrsta = document.getElementById("vladanje-vrsta-select").value;
-    
-    // 2. Дохватамо референце на блокове које желимо да приказујемо/скривамо
-    var blokMera = document.getElementById("blok-izbor-mera");
-    var blokOcena = document.getElementById("blok-izbor-ocene");
-
-    // 3. Прво сакривамо све блокове (ресет)
-    blokMera.style.display = "none";
-    blokOcena.style.display = "none";
-
-    // 4. Логика за приказивање на основу изабране вредности
-    if (vrsta === "Мера") {
-        // Ако је изабрана "Мера", прикажи блок за мере
-        blokMera.style.display = "block";
-    } else if (vrsta === "Оцена владања") {
-        // Ако је изабрана "Оцена владања", прикажи блок за оцене
-        blokOcena.style.display = "block";
-    }
-    // "Напомена" нема свој блок, па се у том случају ништа додатно не приказује
-}
-
-                                        <div class="form-group" id="blok-izbor-ocene" style="margin:0; display:none;">
-                                            <label>Изаберите оцену:</label>
-                                            <select class="form-control" id="vladanje-ocena-select">
-                                                <option value="5">5</option>
-                                                <option value="4">4</option>
-                                                <option value="3">3</option>
-                                                <option value="2">2</option>
-                                                <option value="1">1</option>
-
-                                                
-                                            </select>
-                                        </div>
- 
-
-                                        <div class="form-group" id="blok-izbor-ocene" style="margin:0; display:none;">
-     
                                     </div>
                                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:12px;" id="vladanje-detalji-napomene-blok">
                                         <div class="form-group" style="margin:0;">
@@ -529,6 +488,10 @@ $0="UTF-8">
                 <div id="stranica-admin" class="page-section">
                     <div class="admin-layout">
                         <div class="admin-menu">
+                            <button class="admin-menu-btn active" id="ab-predmeti" onclick="prebaciAdminTab('pane-predmeti', 'ab-predmeti')">Предмети</button>
+                            <button class="admin-menu-btn" id="ab-odeljenja" onclick="prebaciAdminTab('pane-odeljenja', 'ab-odeljenja')">Одељења</button>
+                            <button class="admin-menu-btn" id="ab-ucenici" onclick="prebaciAdminTab('pane-ucenici', 'ab-ucenici')">Ученици</button>
+                            <button class="admin-menu-btn" id="ab-nastavnici" onclick="prebaciAdminTab('pane-nastavnici', 'ab-nastavnici')">Наставни кадар</button>
                         </div>
                         <div class="admin-panes-box">
                             <div id="pane-predmeti" class="admin-pane active">
@@ -992,7 +955,7 @@ $0="UTF-8">
             document.querySelectorAll('.matrix-grade-btn').forEach(btn => btn.classList.remove('selected-m-grade'));
             let peticaBtn = document.querySelectorAll('.matrix-grade-btn')[4];
             if(peticaBtn) peticaBtn.classList.add('selected-m-grade');
-            document.getElementById('nova-ocena-kategorija').value = "";
+            document.getElementById('nova-ocena-kategorija').value = "Усмена провера";
             otvoriProzorZaOcenjivanje();
         }
         async function brziUpisNapomene(uId) {
@@ -1008,7 +971,7 @@ $0="UTF-8">
         async function brziUpisAktivnosti(uId) {
             let u = sviUcenici.find(x => (x._id === uId || x.id == uId));
             if(u) {
-                if(!u.ocene) u.ocene = []; u.ocene.push({ id: Date.now(), tip: 'Активност', vrednost: ' 🙂 ', vrsta: 'Похвала', predmet: aktivanCasPodaci.predmetId, datum: `${TRENUTNI_MESEC_NUM.toString().padStart(2, '0')}/${odabraniDanKalendara.toString().padStart(2, '0')}/${TRENUTNA_GODINA_NUM}` });
+                if(!u.ocene) u.ocene = []; u.ocene.push({ id: Date.now(), tip: 'Активност', vrednost: ' 🙂 ', vrsta: 'Похвала на часу', predmet: aktivanCasPodaci.predmetId, datum: `${TRENUTNI_MESEC_NUM.toString().padStart(2, '0')}/${odabraniDanKalendara.toString().padStart(2, '0')}/${TRENUTNA_GODINA_NUM}` });
                 await AzurirajUcenikaNaServeruBezDosijea(u); 
                 document.getElementById('crni-marks-count').innerText = Number(document.getElementById('crni-marks-count').innerText) + 1;
                 document.getElementById('crni-marks-lista').innerHTML += `<br>${u.ime} (Активност:  🙂 )`;
@@ -1043,7 +1006,7 @@ $0="UTF-8">
                     await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }).catch(() => null); 
                 }
             }
-            
+            alert("Час је успешно евидентиран i завршен!"); 
             document.getElementById('lekcija-naziv').value = ""; 
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
@@ -1357,7 +1320,7 @@ $0="UTF-8">
                 uspesnoUlogovanUInterfejs(); 
             } 
             else { 
-                alert("Грешка при пријави! Проверите корисничко име и лозинку."); 
+                alert("Погрешни подаци."); 
             }
         }
         function uspesnoUlogovanUInterfejs() { 
