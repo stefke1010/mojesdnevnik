@@ -309,7 +309,7 @@ $0="UTF-8">
                                 <strong>Претходна наставна јединица:</strong>
                                 <p id="txt-prethodna-lekcija" style="margin-top: 4px; color: #4a5568; font-style: italic;">Нема података.</p>
                             </div>
-                            <h3 style="color: var(--es-dark-blue); margin-bottom: 15px;"><i class="fa-solid fa-circle-plus"></i> Додај час +</h3>
+                            <h3 style="color: var(--es-dark-blue); margin-bottom: 15px;"><i class="fa-solid fa-circle-plus"></i> Додај наставни час</h3>
                             
                             <div class="form-group">
                                 <label>Одабрани датум рада:</label>
@@ -325,7 +325,7 @@ $0="UTF-8">
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час i отвори</button>
                         </div>
                     </div>
                 </div>
@@ -343,8 +343,8 @@ $0="UTF-8">
                                 <div class="crni-list-items" id="crni-absent-lista">Нема одсутних ученика.</div>
                             </div>
                             <div class="crni-stats-block">
-                                <div class="crni-stats-title"><span>Забележене оцене и активности:</span> <span id="crni-marks-count">0</span></div>
-                                <div class="crni-list-items" id="crni-marks-lista">Нема унетих оцена/активности.</div>
+                                <div class="crni-stats-title"><span>Забележене оцене i активности:</span> <span id="crni-marks-count">0</span></div>
+                                <div class="crni-list-items" id="crni-marks-lista">Нема унетих оцена.</div>
                             </div>
                             <button class="btn btn-success" style="margin-top: auto; padding: 12px;" onclick="zavrsiCasKomplet()"><i class="fa-solid fa-square-check"></i> Заврши час</button>
                         </div>
@@ -372,7 +372,7 @@ $0="UTF-8">
                         <div class="profile-right">
                             <div class="tabs-header">
                                 <div class="tab-link active" onclick="otvoriLokalniTab(event, 'tab-dosije-ocene')">Бројчане оцене</div>
-                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-aktivnosti')">Описне оцене и активности</div>
+                                <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-aktivnosti')">Описне оцене и Активности</div>
                                 <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-izostanci')">Изостанци</div>
                                 <div class="tab-link" onclick="otvoriLokalniTab(event, 'tab-dosije-vladanje')">Владање</div>
                             </div>
@@ -412,12 +412,12 @@ $0="UTF-8">
                             <div id="tab-dosije-vladanje" class="tab-content">
                                 <div style="background:#f1f5f9; padding:15px; border:1px solid var(--es-border); border-radius:6px; margin-bottom:15px; display:flex; gap:15px; align-items:center;">
                                     <div class="sel-block">
-                                        <span>Закључно владање:</span>
+                                        <span>Оцена / Закључно владање:</span>
                                         <select class="form-control" id="zakljucno-vladanje-select" style="width:180px;">
-                                            <option value="/">Неоцењено</option><option value="5">Примерно (5)</option><option value="4">Врло добро (4)</option><option value="3">Добро (3)</option><option value="2">Довољно (2)</option><option value="1">Незадовољавајуће (1)</option>
+                                            <option value="5">Примерно (5)</option><option value="4">Врло добро (4)</option><option value="3">Добро (3)</option><option value="2">Довољно (2)</option><option value="1">Незадовољавајуће (1)</option>
                                         </select>
                                     </div>
-                                    <button class="btn btn-primary" style="width:auto; margin-top:15px;" onclick="sacuvajOcenuVladanja()">Сачувај</button>
+                                    <button class="btn btn-primary" style="width:auto; margin-top:15px;" onclick="sacuvajOcenuVladanja()">Оцени владање</button>
                                 </div>
                                 <div style="background:#f8fafc; padding:15px; border:1px solid var(--es-border); border-radius:6px; margin-bottom:15px;">
                                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:12px;">
@@ -425,7 +425,7 @@ $0="UTF-8">
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
                                                 <option value="Напомена">Владање на часу</option>
-                                                <option value="Васпирна мера">Васпитно-дисциплинска мера</option>
+                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
                                             </select>
                                         </div>
                                         
@@ -477,7 +477,7 @@ $0="UTF-8">
                                             <option value="друштвено-користан рад">друштвено-користан рад</option>
                                         </select>
                                     </div>
-                                    <div class="form-group"><label>Белешка:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите белешку овде..."></textarea></div>
+                                    <div class="form-group"><label>Белешка:</label><textarea id="vladanje-tekst-input" class="form-control" placeholder="Упишите детаље..."></textarea></div>
                                     <button class="btn btn-success" onclick="dodajVladanjeIzTaba()"><i class="fa-solid fa-plus"></i> Упиши напомену/меру</button>
                                 </div>
                                 <ul class="history-list" id="lista-vladanja-kontejner" style="padding:0;"></ul>
@@ -1006,7 +1006,7 @@ $0="UTF-8">
                     await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }).catch(() => null); 
                 }
             }
-            alert("Час је успешно завршен!"); 
+            alert("Час је успешно евидентиран i завршен!"); 
             document.getElementById('lekcija-naziv').value = ""; 
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
@@ -1320,7 +1320,7 @@ $0="UTF-8">
                 uspesnoUlogovanUInterfejs(); 
             } 
             else { 
-                alert("Погрешни подаци."); 
+                alert("Грешка при пријави! Проверите корисничко име и лозинку. (Пробајте admin / admin123)"); 
             }
         }
         function uspesnoUlogovanUInterfejs() { 
