@@ -325,7 +325,7 @@ $0="UTF-8">
                                     <option value="0">0. час</option><option value="1" selected>1. час</option><option value="2">2. час</option><option value="3">3. час</option><option value="4">4. час</option><option value="5">5. час</option><option value="6">6. час</option><option value="7">7. час</option><option value="8">8. час</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час i отвори</button>
+                            <button class="btn btn-primary" onclick="zapocniAktivniCas()"><i class="fa-solid fa-play"></i> Започни час</button>
                         </div>
                     </div>
                 </div>
@@ -414,7 +414,7 @@ $0="UTF-8">
                                     <div class="sel-block">
                                         <span>Оцена / Закључно владање:</span>
                                         <select class="form-control" id="zakljucno-vladanje-select" style="width:180px;">
-                                            <option value="5">Примерно (5)</option><option value="4">Врло добро (4)</option><option value="3">Добро (3)</option><option value="2">Довољно (2)</option><option value="1">Незадовољавајуће (1)</option>
+                                            <option value="/">Неоцењено</option><option value="5">Примерно (5)</option><option value="4">Врло добро (4)</option><option value="3">Добро (3)</option><option value="2">Довољно (2)</option><option value="1">Незадовољавајуће (1)</option>
                                         </select>
                                     </div>
                                     <button class="btn btn-primary" style="width:auto; margin-top:15px;" onclick="sacuvajOcenuVladanja()">Оцени владање</button>
@@ -424,8 +424,8 @@ $0="UTF-8">
                                         <div class="form-group" style="margin:0;">
                                             <label>Врста уноса:</label>
                                             <select class="form-control" id="vladanje-vrsta-select" onchange="promenaVrsteVladanjaMera()">
-                                                <option value="Напомена">Владање на часу</option>
-                                                <option value="Васпитна мера">Васпитно-дисциплинска мера</option>
+                                                <option value="Напомена">Напомена</option>
+                                                <option value="Мера">Мера</option>
                                             </select>
                                         </div>
                                         
@@ -503,7 +503,7 @@ $0="UTF-8">
                                 <table class="es-table"><thead><tr><th>Разред</th><th>Статус</th><th>Акција</th></tr></thead><tbody id="tabela-admin-odeljenja"></tbody></table>
                             </div>
                             <div id="pane-ucenici" class="admin-pane">
-                                <div class="form-group"><label>Име i презиме ђака:</label><input type="text" id="admin-ucenik-ime-input" class="form-control" placeholder="Марко Марковић"></div>
+                                <div class="form-group"><label>Презиме и име ђака:</label><input type="text" id="admin-ucenik-ime-input" class="form-control" placeholder="Марко Марковић"></div>
                                 <button class="btn btn-primary" onclick="dodajUcenikaIzAdminPanela()">Упиши ученика у базу</button>
                             </div>
                             <div id="pane-nastavnici" class="admin-pane">
@@ -596,7 +596,7 @@ $0="UTF-8">
             ],
             ucenici: [
                 { id: "u1", ime: "Марко Марковић", odeljenje: "IV-3", ocene: [
-                    { id: 1001, tip: "Оцена", vrednost: "5", vrsta: "Усмена провера", predmet: "Српски језик", datum: `${TRENUTNI_MESEC_NUM}/10/${TRENUTNA_GODINA_NUM}` },
+                    { id: 1001, tip: "Оцена", vrednost: "5", vrsta: "", predmet: "Српски језик", datum: `${TRENUTNI_MESEC_NUM}/10/${TRENUTNA_GODINA_NUM}` },
                     { id: 1002, tip: "Оцена", vrednost: "4", vrsta: "Тест", predmet: "Српски језик", datum: `${TRENUTNI_MESEC_NUM}/15/${TRENUTNA_GODINA_NUM}` }
                 ], izostanci: [], aktivnosti: [], vladanje_lista: [], ocena_vladanja: "5" },
                 { id: "u2", ime: "Јелена Јанковић", odeljenje: "IV-3", ocene: [], izostanci: [], aktivnosti: [], vladanje_lista: [], ocena_vladanja: "5" },
@@ -955,7 +955,7 @@ $0="UTF-8">
             document.querySelectorAll('.matrix-grade-btn').forEach(btn => btn.classList.remove('selected-m-grade'));
             let peticaBtn = document.querySelectorAll('.matrix-grade-btn')[4];
             if(peticaBtn) peticaBtn.classList.add('selected-m-grade');
-            document.getElementById('nova-ocena-kategorija').value = "Усмена провера";
+            document.getElementById('nova-ocena-kategorija').value = "";
             otvoriProzorZaOcenjivanje();
         }
         async function brziUpisNapomene(uId) {
@@ -1006,7 +1006,6 @@ $0="UTF-8">
                     await fetch(`${API_URL}/api/ucenici/${uId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(u) }).catch(() => null); 
                 }
             }
-            alert("Час је успешно евидентиран i завршен!"); 
             document.getElementById('lekcija-naziv').value = ""; 
             document.getElementById('crni-marks-count').innerText = "0";
             document.getElementById('crni-marks-lista').innerText = "Нема унетих оцена.";
@@ -1087,7 +1086,7 @@ $0="UTF-8">
                 }
                 
                 let infotekst = jeNapomena ? 
-                    `<strong>Напомена из предмета: ${v.predmet} (${v.cas}. час)</strong>` : 
+                    `<strong>Владање на часу -  ${v.predmet} (${v.cas}. час)</strong>` : 
                     `<strong>${v.vrsta}</strong><br><small style="font-weight:bold; color:var(--es-red);">Последица: ${v.posledica || 'Нема'}</small>`;
                 vladanjeKontejner.innerHTML += `
                     <li class="history-item ${linijaVladanja}">
@@ -1165,7 +1164,7 @@ $0="UTF-8">
             let u = sviUcenici.find(x => (x._id === odabraniUcenikId || x.id == odabraniUcenikId));
             if(!u) return;
             let val = privremenaSelektovanaOcenaModala; 
-            let kat = document.getElementById('nova-ocena-kategorija').value || "Усмена провера";
+            let kat = document.getElementById('nova-ocena-kategorija').value || "";
             
             if(!u.ocene) u.ocene = [];
             u.ocene.push({ id: Date.now(), tip: 'Оцена', vrednost: val, vrsta: kat, predmet: document.getElementById('global-predmet').value, datum: `${TRENUTNI_MESEC_NUM.toString().padStart(2, '0')}/${odabraniDanKalendara.toString().padStart(2, '0')}/${TRENUTNA_GODINA_NUM}` });
