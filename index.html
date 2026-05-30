@@ -507,30 +507,35 @@ $0="UTF-8">
                                 <button class="btn btn-primary" onclick="dodajUcenikaIzAdminPanela()">Упиши ученика у базу</button>
                             </div>
                             <div id="pane-nastavnici" class="admin-pane">
-                                <h3>Креирање корисничких профила за наставнике</h3><br>
-                                <div class="form-group"><label>Име i презиме наставника:</label><input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић"></div>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
-                                    <div class="form-group"><label>Username:</label><input type="text" id="admin-nastavnik-user" class="form-control" placeholder="korisnik"></div>
-                                    <div class="form-group"><label>Password:</label><input type="text" id="admin-nastavnik-pass" class="form-control" placeholder="sifra123"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Системска улога:</label>
-                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељењски старешина</option><option>Администратор</option></select>
-                                </div>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-                                    <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
-                                    <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
-                                </div>
-                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Активирај профил</button>
-                                <br><br>
-                                <table class="es-table"><thead><tr><th>Наставник i улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h3>Креирање корисничких профила за наставнике</h3><br>
+    
+    <div class="form-group">
+        <label>Име и презиме наставника:</label>
+        <input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић">
     </div>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+        <div class="form-group"><label>Username:</label><input type="text" id="admin-nastavnik-user" class="form-control"></div>
+        <div class="form-group"><label>Password:</label><input type="text" id="admin-nastavnik-pass" class="form-control"></div>
+    </div>
+    
+    <div class="form-group">
+        <label>Системска улога:</label>
+        <select class="form-control" id="admin-nastavnik-uloga">
+            <option value="nastavnik">Наставник</option>
+            <option value="koordinator">Школски координатор</option>
+        </select>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
+        <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
+        <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
+    </div>
+
+    <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Активирај профил</button>
+    <br><br>
+    <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
+</div>
     <div class="modal-overlay" id="modal-ocena-upis">
         <div class="modal-box" style="max-width: 400px;">
             <div class="modal-header">
