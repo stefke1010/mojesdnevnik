@@ -246,7 +246,12 @@ $0="UTF-8">
             <ul class="nav-menu">
                 <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник</li>
                 <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
-                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li>
+                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li><li class="nav-item nav-admin" id="nav-admin-link" onclick="switchPage('stranica-admin')">
+    <i class="fa-solid fa-gear"></i> Администрација
+</li>
+                #nav-admin-link {
+    display: none;
+}
             </ul>
         </div>
         <div class="main-container">
@@ -1215,6 +1220,16 @@ $0="UTF-8">
             let trenches = document.getElementById('global-odeljenje').value; let filtrirani = sviUcenici.filter(x => x.odeljenje === trenches);
             let rand = filtrirani[Math.floor(Math.random() * filtrirani.length)]; if(rand) prikažiDosijeUčenika(rand._id || rand.id);
         }
+        function proveriUloguIKonkretnoPrikazi(uloga) {
+    const adminTab = document.getElementById('nav-admin-link');
+    
+    // Ако је корисник Школски координатор, мењамо display из none у flex
+    if (uloga === 'Школски координатор') {
+        adminTab.style.display = 'flex';
+    } else {
+        adminTab.style.display = 'none';
+    }
+}
         function IscrtajAdminTabele() {
             let tPred = document.getElementById('tabela-admin-predmeti'); let tOdelj = document.getElementById('tabela-admin-odeljenja'); let tNast = document.getElementById('tabela-admin-nastavnici-lista');
             if(tPred) tPred.innerHTML = regPredmeti.map((p) => `<tr><td><strong>${p.id}</strong></td><td>${p.naziv}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetSistem('${p.id}')">Обриши</button></td></tr>`).join('');
