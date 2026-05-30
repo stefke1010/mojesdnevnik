@@ -243,17 +243,16 @@ $0="UTF-8">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <div><p>електронски Дневник</p></div>
             </div>
-          <ul class="nav-menu">
-    <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')">
-        <i class="fa-solid fa-book-open"></i> Дневник
-    </li>
-    <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')">
-        <i class="fa-solid fa-users"></i> Именик
-    </li>
-    <li class="nav-item nav-admin" id="nav-admin-link" onclick="switchPage('stranica-admin')">
-        <i class="fa-solid fa-gear"></i> Администрација
-    </li>
-</ul>
+            <ul class="nav-menu">
+                <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник</li>
+                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
+                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li>
+            </ul>
+        </div>
+        <div class="main-container">
+            
+            <div class="header">
+                <div class="school-selectors">
                     <div class="sel-block">
                         <span class="trans-node" data-cyr="Одељење" data-lat="Odeljenje">Одељење</span>
                         <select class="es-select" id="global-odeljenje" onchange="promenaFiltera()"></select>
@@ -508,35 +507,30 @@ $0="UTF-8">
                                 <button class="btn btn-primary" onclick="dodajUcenikaIzAdminPanela()">Упиши ученика у базу</button>
                             </div>
                             <div id="pane-nastavnici" class="admin-pane">
-    <h3>Креирање корисничких профила за наставнике</h3><br>
-    
-    <div class="form-group">
-        <label>Име и презиме наставника:</label>
-        <input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић">
+                                <h3>Креирање корисничких профила за наставнике</h3><br>
+                                <div class="form-group"><label>Име i презиме наставника:</label><input type="text" id="admin-nastavnik-ime" class="form-control" placeholder="нпр. Светлана Јакшић"></div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+                                    <div class="form-group"><label>Username:</label><input type="text" id="admin-nastavnik-user" class="form-control" placeholder="korisnik"></div>
+                                    <div class="form-group"><label>Password:</label><input type="text" id="admin-nastavnik-pass" class="form-control" placeholder="sifra123"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Системска улога:</label>
+                                    <select class="form-control" id="admin-nastavnik-uloga"><option>Предметни наставник</option><option>Одељењски старешина</option><option>Администратор</option></select>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
+                                    <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
+                                    <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
+                                </div>
+                                <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Активирај профил</button>
+                                <br><br>
+                                <table class="es-table"><thead><tr><th>Наставник i улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
-        <div class="form-group"><label>Username:</label><input type="text" id="admin-nastavnik-user" class="form-control"></div>
-        <div class="form-group"><label>Password:</label><input type="text" id="admin-nastavnik-pass" class="form-control"></div>
-    </div>
-    
-    <div class="form-group">
-        <label>Системска улога:</label>
-        <select class="form-control" id="admin-nastavnik-uloga">
-            <option value="nastavnik">Наставник</option>
-            <option value="koordinator">Школски координатор</option>
-        </select>
-    </div>
-
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-        <div class="form-group"><label>Додели одељења:</label><div class="checkbox-container" id="admin-nastavnik-odeljenja-checks"></div></div>
-        <div class="form-group"><label>Додели предмете:</label><div class="checkbox-container" id="admin-nastavnik-predmeti-checks"></div></div>
-    </div>
-
-    <button class="btn btn-success" onclick="dodajNastavnikaSistem()">Активирај профил</button>
-    <br><br>
-    <table class="es-table"><thead><tr><th>Наставник и улога</th><th>Username</th><th>Акција</th></tr></thead><tbody id="tabela-admin-nastavnici-lista"></tbody></table>
-</div>
     <div class="modal-overlay" id="modal-ocena-upis">
         <div class="modal-box" style="max-width: 400px;">
             <div class="modal-header">
@@ -598,7 +592,7 @@ $0="UTF-8">
             ],
             nastavnici: [
                 { ime: "Светлана Јакшић", uloga: "Предметни наставник", username: "svetlana", password: "123", odeljenja: ["IV-3"], predmeti: ["Српски језик"] },
-                { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin1236666666666666666666666666666666666666666666666666kojhgfdysdfguiojphgfdysxfcgvhbjnm,", odeljenja: ["IV-3", "VII-2", "VIII-1"], predmeti: ["Српски језик", "Математика", "Физика"] }
+                { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin123", odeljenja: ["IV-3", "VII-2", "VIII-1"], predmeti: ["Српски језик", "Математика", "Физика"] }
             ],
             ucenici: [
                 { id: "u1", ime: "Марко Марковић", odeljenje: "IV-3", ocene: [
@@ -1216,16 +1210,6 @@ $0="UTF-8">
             let trenches = document.getElementById('global-odeljenje').value; let filtrirani = sviUcenici.filter(x => x.odeljenje === trenches);
             let rand = filtrirani[Math.floor(Math.random() * filtrirani.length)]; if(rand) prikažiDosijeUčenika(rand._id || rand.id);
         }
-        function proveriUloguIKonkretnoPrikazi(uloga) {
-    const adminTab = document.getElementById('nav-admin-link');
-    
-    // Ако је корисник Школски координатор, мењамо display из none у flex
-    if (uloga === 'Школски координатор') {
-        adminTab.style.display = 'flex';
-    } else {
-        adminTab.style.display = 'none';
-    }
-}
         function IscrtajAdminTabele() {
             let tPred = document.getElementById('tabela-admin-predmeti'); let tOdelj = document.getElementById('tabela-admin-odeljenja'); let tNast = document.getElementById('tabela-admin-nastavnici-lista');
             if(tPred) tPred.innerHTML = regPredmeti.map((p) => `<tr><td><strong>${p.id}</strong></td><td>${p.naziv}</td><td><button class="btn btn-danger btn-xs" onclick="obrisiPredmetSistem('${p.id}')">Обриши</button></td></tr>`).join('');
@@ -1322,8 +1306,8 @@ $0="UTF-8">
             let pass = document.getElementById('sys-auth-pass').value.trim();
             
             // Provjera administratorskog login-a
-            if(user === 'admin' && pass === 'admin123admin1236666666666666666666666666666666666666666666666666kojhgfdysdfguiojphgfdysxfcgvhbjnm,') { 
-                trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admisdfghgfdduztuerethjhgdhgfhmgfdhsgnxgnsgefdfsgfdfsdnfgfbydsgbggdfgfb xfbfbbffddfweewe2222222n" }; 
+            if(user === 'admin' && pass === 'admin123') { 
+                trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" }; 
                 uspesnoUlogovanUInterfejs(); 
                 return; 
             }
@@ -1335,7 +1319,7 @@ $0="UTF-8">
                 uspesnoUlogovanUInterfejs(); 
             } 
             else { 
-                alert("Грешка при пријави! Проверите корисничко име и лозинку."); 
+                alert("Грешка при пријави! Проверите корисничко име и лозинку. (Пробајте admin / admin123)"); 
             }
         }
         function uspesnoUlogovanUInterfejs() { 
