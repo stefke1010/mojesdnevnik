@@ -243,21 +243,17 @@ $0="UTF-8">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <div><p>електронски Дневник</p></div>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')"><i class="fa-solid fa-book-open"></i> Дневник</li>
-                <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')"><i class="fa-solid fa-users"></i> Именик</li>
-                <li class="nav-item nav-admin" onclick="switchPage('stranica-admin')"><i class="fa-solid fa-gear"></i> Администрација</li><li class="nav-item nav-admin" id="nav-admin-link" onclick="switchPage('stranica-admin')">
-    <i class="fa-solid fa-gear"></i> Администрација
-</li>
-                #nav-admin-link {
-    display: none;
-}
-            </ul>
-        </div>
-        <div class="main-container">
-            
-            <div class="header">
-                <div class="school-selectors">
+          <ul class="nav-menu">
+    <li class="nav-item active" id="m-imenik" onclick="switchPage('stranica-pocetna')">
+        <i class="fa-solid fa-book-open"></i> Дневник
+    </li>
+    <li class="nav-item" id="m-lista-imenik" onclick="switchPage('stranica-lista-imenik')">
+        <i class="fa-solid fa-users"></i> Именик
+    </li>
+    <li class="nav-item nav-admin" id="nav-admin-link" onclick="switchPage('stranica-admin')">
+        <i class="fa-solid fa-gear"></i> Администрација
+    </li>
+</ul>
                     <div class="sel-block">
                         <span class="trans-node" data-cyr="Одељење" data-lat="Odeljenje">Одељење</span>
                         <select class="es-select" id="global-odeljenje" onchange="promenaFiltera()"></select>
