@@ -592,7 +592,7 @@ $0="UTF-8">
             ],
             nastavnici: [
                 { ime: "Светлана Јакшић", uloga: "Предметни наставник", username: "svetlana", password: "123", odeljenja: ["IV-3"], predmeti: ["Српски језик"] },
-                { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin123", odeljenja: ["IV-3", "VII-2", "VIII-1"], predmeti: ["Српски језик", "Математика", "Физика"] }
+                { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin", password: "admin1236666666666666666666666666666666666666666666666666kojhgfdysdfguiojphgfdysxfcgvhbjnm,", odeljenja: ["IV-3", "VII-2", "VIII-1"], predmeti: ["Српски језик", "Математика", "Физика"] }
             ],
             ucenici: [
                 { id: "u1", ime: "Марко Марковић", odeljenje: "IV-3", ocene: [
@@ -1306,8 +1306,8 @@ $0="UTF-8">
             let pass = document.getElementById('sys-auth-pass').value.trim();
             
             // Provjera administratorskog login-a
-            if(user === 'admin' && pass === 'admin123') { 
-                trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admin" }; 
+            if(user === 'admin' && pass === 'admin123admin1236666666666666666666666666666666666666666666666666kojhgfdysdfguiojphgfdysxfcgvhbjnm,') { 
+                trenutnoUlogovaniKorisnik = { ime: "Стефан Михајловић", uloga: "ШКОЛСКИ КООРДИНАТОР", username: "admisdfghgfdduztuerethjhgdhgfhmgfdhsgnxgnsgefdfsgfdfsdnfgfbydsgbggdfgfb xfbfbbffddfweewe2222222n" }; 
                 uspesnoUlogovanUInterfejs(); 
                 return; 
             }
@@ -1319,7 +1319,7 @@ $0="UTF-8">
                 uspesnoUlogovanUInterfejs(); 
             } 
             else { 
-                alert("Грешка при пријави! Проверите корисничко име и лозинку. (Пробајте admin / admin123)"); 
+                alert("Грешка при пријави! Проверите корисничко име и лозинку."); 
             }
         }
         function uspesnoUlogovanUInterfejs() { 
